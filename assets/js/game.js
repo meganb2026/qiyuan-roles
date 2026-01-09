@@ -139,7 +139,7 @@ class Game {
 
                     <h3>📦 初始装备</h3>
                     <ul>
-                        ${char.initialItems.map(item => `<li>${item}</li>`).join('')}
+                        ${char.initialItems.map(item => `<li>${window.getItemDisplayName(item)}</li>`).join('')}
                     </ul>
 
                     <div class="character-actions">
@@ -211,7 +211,7 @@ class Game {
 
                         <h4>初始装备：</h4>
                         <ul>
-                            ${char.initialItems.map(item => `<li>${item}</li>`).join('')}
+                            ${char.initialItems.map(item => `<li>${window.getItemDisplayName(item)}</li>`).join('')}
                         </ul>
                     </div>
 
@@ -254,7 +254,7 @@ class Game {
                             ${this.gameState.playerInventory.length === 0 ?
                                 '<p class="empty">背包是空的</p>' :
                                 this.gameState.playerInventory.map(item =>
-                                    `<div class="inventory-item">${item}</div>`
+                                    `<div class="inventory-item">${window.getItemDisplayName(item)}</div>`
                                 ).join('')
                             }
                         </div>
@@ -286,7 +286,7 @@ class Game {
                         <div class="player-items">
                             ${this.gameState.playerInventory.map((item, index) =>
                                 `<div class="exchange-item player-item" data-item="${item}" data-index="${index}">
-                                    ${item}
+                                    ${window.getItemDisplayName(item)}
                                 </div>`
                             ).join('')}
                         </div>
@@ -301,7 +301,7 @@ class Game {
                                     <div class="npc-items">
                                         ${npc.items.map(item =>
                                             `<div class="exchange-item npc-item" data-item="${item}" data-npc="${npc.id}">
-                                                ${item}
+                                                ${window.getItemDisplayName(item)}
                                             </div>`
                                         ).join('')}
                                     </div>
@@ -447,14 +447,14 @@ class Game {
 
                     <h3>你的最终装备：</h3>
                     <ul>
-                        ${this.gameState.playerInventory.map(item => `<li>${item}</li>`).join('')}
+                        ${this.gameState.playerInventory.map(item => `<li>${window.getItemDisplayName(item)}</li>`).join('')}
                     </ul>
 
                     <h3>交换记录：</h3>
                     ${this.gameState.exchangeHistory.length > 0 ?
                         `<ul>
                             ${this.gameState.exchangeHistory.map(record =>
-                                `<li>第 ${record.day} 天：与 ${record.with} 交换了 "${record.myItem}" ↔ "${record.npcItem}"</li>`
+                                `<li>第 ${record.day} 天：与 ${record.with} 交换了 "${window.getItemDisplayName(record.myItem)}" ↔ "${window.getItemDisplayName(record.npcItem)}"</li>`
                             ).join('')}
                         </ul>` :
                         '<p>你没有进行任何装备交换。</p>'
@@ -521,13 +521,13 @@ class Game {
 
                 <h4>📦 背包</h4>
                 <div id="mobile-inventory">
-                    ${this.gameState.playerInventory.length === 0 ?
-                        '<div style="color: #999; font-style: italic;">背包是空的</div>' :
-                        this.gameState.playerInventory.map(item =>
-                            `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${item}</div>`
-                        ).join('')
-                    }
-                </div>
+                        ${this.gameState.playerInventory.length === 0 ?
+                            '<div style="color: #999; font-style: italic;">背包是空的</div>' :
+                            this.gameState.playerInventory.map(item =>
+                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${window.getItemDisplayName(item)}</div>`
+                            ).join('')
+                        }
+                    </div>
 
                 <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
                     <strong>第 ${this.gameState.currentDay} 天</strong>

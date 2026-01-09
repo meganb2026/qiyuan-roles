@@ -32,16 +32,15 @@
 
                     <div class="dialogue-bubble king-bubble">
                         <p>"诸位！"</p>
-                        <p>国王的声音在大殿中回荡，威严而有力。</p>
+                        <p>丹麦王的声音穿透空气，直上三楼。</p>
                         <p>"皇宫的修建事关国家颜面，容不得半点闪失！昨天竟然在施工现场发现一具无名尸体，这简直是奇耻大辱！"</p>
-                        <p>"我命令所有人立即展开调查，务必查清真相！无论是谁干的，都要严惩不贷！"</p>
-                        <p>"皇宫必须按时完工，完工者重赏！找出真相者，封侯拜相！"</p>
-                        <p>克劳狄斯的目光扫过众人，威严中带着一丝焦虑。</p>
+                        <p>"朕命令所有人找出元凶，第一个查清者有重赏。"</p>
+                        <p>"发现尸体处封起来保护现场，闲杂人等不得入内。"</p>
                     </div>
                 </div>
 
                 <div class="narrative-text">
-                    <p>克劳狄斯演讲完毕，全场安静了片刻。突然，一个身影从众人中站了出来。</p>
+                    <p>演讲完毕，全场安静了片刻。突然，一个身影从众人中站了出来。</p>
                 </div>
 
                 <div class="dialogue-section">
@@ -52,7 +51,6 @@
 
                     <div class="dialogue-bubble hefei-bubble">
                         <p>"陛下，我有一个办法！"</p>
-                        <p>何非自信地笑了笑，眼中闪烁着狡黠的光芒。</p>
                     </div>
                 </div>
 
@@ -98,6 +96,7 @@
     <!-- 加载脚本 -->
     <script src="assets/js/characters.js"></script>
     <script src="assets/js/items.js"></script>
+    <script src="assets/js/itemStories.js"></script>
     <script>
         // 从URL参数获取角色信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -151,7 +150,7 @@
                         ${gameState.playerInventory.length === 0 ?
                             '<div style="color: #999; font-style: italic;">背包是空的</div>' :
                             gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${item}</div>`
+                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
                             ).join('')
                         }
                     </div>

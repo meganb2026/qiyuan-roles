@@ -59,6 +59,7 @@
     <!-- 加载脚本 -->
     <script src="../assets/js/characters.js"></script>
     <script src="../assets/js/items.js"></script>
+    <script src="../assets/js/itemStories.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -79,75 +80,6 @@
             playerInventory: [],
             allCharactersItems: {},
             npcs: []
-        };
-
-        // 物品故事数据
-        const itemStories = {
-            "皇冠": {
-                name: "皇冠",
-                description: "象征王权的物品，通常由国王佩戴。",
-                story: "这顶皇冠是丹麦王室的传承之物，上面镶嵌着无数珍贵的宝石。每一位国王登基时都会佩戴它，以显示至高无上的权力。然而，这顶皇冠背后隐藏着一个不为人知的秘密：它的内侧刻着前任国王的死亡日期。克劳狄斯继承王位后，这个秘密成为了他的心病。他害怕有人发现皇冠上的刻痕，那将揭露他篡位的真相。"
-            },
-            "珍珠通关信物": {
-                name: "珍珠通关信物",
-                description: "一枚镶嵌珍珠的信物，用于在皇宫内通行无阻。",
-                story: "这枚珍珠信物是皇宫守卫的通行证，只有少数人才能持有。相传这枚信物是由第一代丹麦国王亲手制作，象征着绝对的忠诚和权力。它能打开皇宫中大部分的禁闭区域，包括那些隐藏着古老秘密的地下室。然而，持有这枚信物的人必须时刻小心，因为它同时也是一个追踪器，记录着持有者的每一次行动。"
-            },
-            "金钱": {
-                name: "金钱",
-                description: "一袋金币，用于贿赂或购买物品。",
-                story: "这袋金币表面看起来普通，但每一枚都铸有特殊的标记。这些金币来自于克劳狄斯登基后铸造的新币，上面印着他的头像。金币的流通让克劳狄斯能够掌握皇宫内外的经济命脉，他可以通过金币的流向追踪潜在的叛徒。同时，这些金币也成为了权力的象征，持有它们的人往往能买通人心，获得重要的情报。"
-            },
-            "中草药": {
-                name: "中草药",
-                description: "各种珍贵的中草药材，由御医亲自采集。",
-                story: "这些中草药都是程婴多年来精心采集的珍贵药材，其中不乏一些失传已久的秘方。程婴一直怀疑前任国王的死因与中毒有关，他通过研究这些药材，希望能找出解药或者毒药的成分。这些药材不仅能救人性命，也能悄无声息地夺走生命。程婴知道，皇宫中的每一个人都可能成为他的实验对象。"
-            },
-            "安眠药": {
-                name: "安眠药",
-                description: "能让人深度睡眠的药物。",
-                story: "这种安眠药是程婴的独门秘方，能够让人陷入深度睡眠，忘记一切烦恼。然而，这种药物的副作用是会让人产生幻觉，看到内心深处的恐惧。程婴曾经用这种药物治疗过克劳狄斯的失眠，但克劳狄斯从此变得更加多疑。程婴怀疑，这种药物可能被用来掩盖某些不可告人的秘密。"
-            },
-            "潜水装备": {
-                name: "潜水装备",
-                description: "专业的潜水工具，包括氧气瓶、潜水服等。",
-                story: "这套潜水装备是何非的职业工具，他曾经是一名专业的潜水教练。这些装备不仅能让他在水下自由活动，还能让他潜入皇宫的下水道系统，寻找隐藏的宝藏。何非知道皇宫的地下水道错综复杂，隐藏着许多不为人知的秘密。他利用这些装备，多次潜入禁区，寻找能让他一夜暴富的机会。"
-            },
-            "骰子": {
-                name: "骰子",
-                description: "一副普通的赌博骰子。",
-                story: "这副骰子表面看起来普通，但实际上被何非做过手脚，能控制点数。何非靠赌博为生，但他的赌运一直不好，直到他学会了出千的技巧。这些骰子让他在赌场中如鱼得水，也让他欠下了巨额赌债。何非知道，如果他不能在三天内还清债务，他的下场会很惨。"
-            },
-            "画具": {
-                name: "画具",
-                description: "一套完整的绘画工具，包括画笔、颜料等。",
-                story: "这些画具是何非的另一个身份——艺术家的象征。他曾经梦想成为一名画家，但现实让他成为了赌徒。这些画具不仅能创作美丽的画作，还能伪造文件和信件。何非曾经用这些画具伪造过克劳狄斯的签名，帮他完成过一些不可告人的交易。现在，这些画具成为了何非最后的救命稻草。"
-            },
-            "地下系统设计图": {
-                name: "地下系统设计图",
-                description: "皇宫地下水道和排污系统的完整设计图纸。",
-                story: "这张设计图是李想的心血之作，详细标注了皇宫地下系统的每一个角落。图纸上不仅有水道的走向，还有许多隐藏的密室和暗道。李想知道，这些密道曾经被用来运送违禁物品，现在可能隐藏着前任国王的秘密。李想必须证明尸体的发现与他的设计无关，否则他的职业生涯将就此结束。"
-            },
-            "皇宫地面部分设计图": {
-                name: "皇宫地面部分设计图",
-                description: "皇宫地面建筑的详细设计图纸。",
-                story: "这张设计图是吴智哲导师留下的珍贵遗产，记录了皇宫的每一个角落。图纸上标注了许多不为人知的机关和密道，这些都是为了保护皇室的秘密而设计的。吴智哲的导师在去世前，将这些秘密托付给了他。现在，吴智哲必须找到导师留下的真正秘密，才能完成他的使命。"
-            },
-            "导师手记": {
-                name: "导师手记",
-                description: "已故建筑设计师留下的笔记和心得。",
-                story: "这本手记记录了吴智哲导师一生的建筑心得，其中隐藏着许多不为人知的秘密。导师在笔记中暗示，皇宫的设计并非表面那么简单，其中隐藏着一个巨大的阴谋。吴智哲知道，这些笔记是揭开真相的关键，但他必须小心，因为知道太多秘密的人，往往会遭遇不测。"
-            },
-            "皇宫地图": {
-                name: "皇宫地图",
-                description: "皇宫的完整平面图，标注了所有重要位置。",
-                story: "这张地图是王卫国的必备工具，他需要用它来规划施工路线和物资运输。地图上不仅标注了建筑的位置，还记录了许多不为人知的捷径和密道。王卫国知道，这些密道曾经被用来运送违禁物品，现在可能与尸体事件有关。他必须确保工程按时完成，否则他的团队将面临处罚。"
-            },
-            "周报": {
-                name: "周报",
-                description: "施工队的每周工作报告。",
-                story: "这份周报记录了施工队的每一项工作进度和发现。王卫国在报告中发现了一些可疑的痕迹，暗示有人在暗中破坏工程。报告中提到了地下水道的异常情况，这可能与尸体事件的真相有关。王卫国知道，如果他不能及时发现问题，整个工程都可能泡汤。"
-            }
         };
 
         // 从localStorage加载游戏状态
@@ -176,7 +108,7 @@
 
         // 显示物品详情
         function showItemDetail() {
-            const itemData = itemStories[itemName];
+            const itemData = window.itemStories[itemName];
             if (itemData) {
                 document.getElementById('item-name').textContent = itemData.name;
                 document.getElementById('item-description').textContent = itemData.description;
@@ -240,7 +172,7 @@
                         ${gameState.playerInventory.length === 0 ?
                             '<div style="color: #999; font-style: italic;">背包是空的</div>' :
                             gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${item}</div>`
+                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
                             ).join('')
                         }
                     </div>
@@ -271,7 +203,7 @@
                         ${gameState.playerInventory.length === 0 ?
                             '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
                             gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${item}</div>`
+                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${getItemDisplayName(item)}</div>`
                             ).join('')
                         }
                     </div>
@@ -325,7 +257,7 @@
                             ${gameState.playerInventory.length === 0 ?
                                 '<div style="color: #999; font-style: italic;">背包是空的</div>' :
                                 gameState.playerInventory.map(item =>
-                                    `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${item}</div>`
+                                    `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
                                 ).join('')
                             }
                         </div>
