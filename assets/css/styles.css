@@ -934,6 +934,108 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 	}
 }
 
+/* 交换物品页面样式 */
+.exchange-info-section {
+	background: #f8f9ff;
+	padding: 20px;
+	border-radius: 10px;
+	margin-bottom: 30px;
+	border: 2px solid #667eea;
+}
+
+.exchange-section {
+	margin: 20px 0;
+	padding: 20px;
+	background: #fafafa;
+	border-radius: 8px;
+}
+
+.exchange-section h3 {
+	margin: 0 0 15px 0;
+	color: #667eea;
+	border-bottom: 2px solid #667eea;
+	padding-bottom: 8px;
+	font-size: 18px;
+}
+
+.items-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 10px;
+	margin-top: 15px;
+}
+
+.exchange-item {
+	padding: 12px 15px;
+	background: white;
+	border: 2px solid #e0e0e0;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	text-align: center;
+	font-size: 14px;
+	min-height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.exchange-item:hover {
+	border-color: #667eea;
+	background: #f8f9ff;
+}
+
+.exchange-item.selected {
+	border-color: #28a745;
+	background: #e8f5e9;
+	box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
+}
+
+.player-item {
+	border-left: 4px solid #667eea;
+}
+
+.target-item {
+	border-left: 4px solid #28a745;
+}
+
+.exchange-controls {
+	text-align: center;
+	margin: 30px 0;
+	padding: 20px;
+}
+
+.exchange-controls .action-btn {
+	min-width: 200px;
+	font-size: 16px;
+	padding: 12px 24px;
+}
+
+.exchange-actions {
+	text-align: center;
+	margin: 40px 0;
+	padding: 30px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+	.items-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 8px;
+	}
+
+	.exchange-item {
+		padding: 10px;
+		font-size: 13px;
+		min-height: 35px;
+	}
+
+	.exchange-controls .action-btn {
+		width: 100%;
+		min-width: auto;
+	}
+}
+
 /* 对话页面样式 */
 .dialogue-container {
 	max-width: 1000px;
