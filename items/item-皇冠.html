@@ -176,11 +176,7 @@
 
         // 显示物品详情
         function showItemDetail() {
-        function continueInvestigation() {
-            // 返回第二天故事页面
-            const gameUrl = `../day2-story.html?character=${currentCharacter}&day=2&from=item-detail`;
-            window.location.href = gameUrl;
-        }            const itemData = itemStories[itemName];
+            const itemData = itemStories[itemName];
             if (itemData) {
                 document.getElementById('item-name').textContent = itemData.name;
                 document.getElementById('item-description').textContent = itemData.description;
