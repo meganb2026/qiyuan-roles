@@ -7,7 +7,7 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
             // 克劳狄斯（国王）：需要珍珠通关信物 + 至少两个其他关键物品
             if (!inventory.includes("珍珠通关信物")) return false;
 
-            const keyItems = ["导师手记", "周报", "地下系统设计图", "皇宫地面部分设计图", "皇宫地图"];
+            const keyItems = ["导师手记", "工作周报", "地下系统设计图", "皇宫地面部分设计图", "皇宫地图"];
             let count = 0;
             keyItems.forEach(item => {
                 if (inventory.includes(item)) count++;
@@ -19,7 +19,7 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
             // 程婴（御医）：需要中草药 + 安眠药 + 至少一个其他线索
             if (!inventory.includes("中草药") || !inventory.includes("安眠药")) return false;
 
-            const clueItems = ["导师手记", "地下系统设计图", "周报"];
+            const clueItems = ["导师手记", "地下系统设计图", "工作周报"];
             return clueItems.some(item => inventory.includes(item));
         },
 
@@ -27,7 +27,7 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
             // 何非（潜水教练）：需要潜水装备 + 至少两个其他关键物品
             if (!inventory.includes("潜水装备")) return false;
 
-            const keyItems = ["地下系统设计图", "导师手记", "皇宫地图", "周报", "珍珠通关信物"];
+            const keyItems = ["地下系统设计图", "导师手记", "皇宫地图", "工作周报", "珍珠通关信物"];
             let count = 0;
             keyItems.forEach(item => {
                 if (inventory.includes(item)) count++;
@@ -39,7 +39,7 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
             // 李想（市政排水总工程师）：需要地下系统设计图 + 至少两个其他线索
             if (!inventory.includes("地下系统设计图")) return false;
 
-            const clueItems = ["周报", "导师手记", "皇宫地图", "皇宫地面部分设计图"];
+            const clueItems = ["工作周报", "导师手记", "皇宫地图", "皇宫地面部分设计图"];
             let count = 0;
             clueItems.forEach(item => {
                 if (inventory.includes(item)) count++;
@@ -51,13 +51,13 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
             // 吴智哲（建筑设计师）：需要皇宫地面部分设计图 + 导师手记 + 至少一个其他物品
             if (!inventory.includes("皇宫地面部分设计图") || !inventory.includes("导师手记")) return false;
 
-            const otherItems = ["地下系统设计图", "周报", "皇宫地图"];
+            const otherItems = ["地下系统设计图", "工作周报", "皇宫地图"];
             return otherItems.some(item => inventory.includes(item));
         },
 
         "wangweiguo": function(inventory) {
             // 王卫国（施工运输队队长）：需要皇宫地图 + 周报 + 至少一个其他线索
-            if (!inventory.includes("皇宫地图") || !inventory.includes("周报")) return false;
+            if (!inventory.includes("皇宫地图") || !inventory.includes("工作周报")) return false;
 
             const clueItems = ["地下系统设计图", "导师手记", "珍珠通关信物"];
             return clueItems.some(item => inventory.includes(item));

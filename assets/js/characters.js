@@ -3,7 +3,7 @@ const characters = {
 	"claudius": {
 		name: "克劳狄斯",
 		title: "国王",
-		publicDescription: "威严的丹麦王，统治着整个国家。",
+		publicDescription: "老国王哈姆雷特的弟弟，他登基后娶了嫂嫂，当前最畅销的民间画本主人公",
 		description: "你是丹麦王克劳狄斯，这王位本是你哥哥的。一场阴谋让他命丧黄泉。这深宫里，藏着你的秘密，那是你最深的恐惧。",
 		initialItems: ["crown", "pearl-pass", "money"],
 		goal: "毒死持有证据的人",
@@ -13,7 +13,7 @@ const characters = {
 	"chengying": {
 		name: "程婴",
 		title: "御医",
-		publicDescription: "医术高明的皇宫御医，深得国王信任。",
+		publicDescription: "医术高明但风评非常阴狠的御医，传说就是他曾陷害死了公孙杵臼",
 		description: "天下人皆骂你，其实你卧薪尝胆，只为揭开当年的真相。",
 		initialItems: ["chinese-herbs", "sleeping-pill"],
 		goal: "找到先王的死因",
@@ -23,7 +23,7 @@ const characters = {
 	"hefei": {
 		name: "何非",
 		title: "潜水教练",
-		publicDescription: "消息灵通的潜水教练，认识各种人物。",
+		publicDescription: "消息非常灵通，什么人都认识。写作江湖百晓生，读作江湖骗子",
 		description: "你是个贪财好色之人，唯利是图但也遍交朋友。",
 		initialItems: ["diving-equipment", "dice", "painting-tools"],
 		goal: "在三天内获取足够的钱还清赌债。",
@@ -33,7 +33,7 @@ const characters = {
 	"lixiang": {
 		name: "李想",
 		title: "市政排水总工程师",
-		publicDescription: "负责皇宫排水系统设计的专业工程师。",
+		publicDescription: "王国里最熟悉给排水系统的人，代表作是曾建设新城的完整地下水道设计",
 		description: "负责皇宫的排水系统设计。",
 		initialItems: ["underground-system-blueprint"],
 		goal: "找到尸体不是因排水系统设计有问题造成的死亡案件。",
@@ -43,18 +43,18 @@ const characters = {
 	"wuzhizhe": {
 		name: "吴智哲",
 		title: "建筑设计师",
-		publicDescription: "年轻有为的建筑设计师，师从著名设计师。",
-		description: "已故皇宫总建筑设计师的关门弟子。",
+		publicDescription: "已故皇宫总建筑设计师的关门弟子。皇宫建筑设计是当年读书时老板接的横向，因此对皇宫也略知一二",
+		description: "已故皇宫总建筑设计师的关门弟子。皇宫建筑设计是当年读书时老板接的横向，因此对皇宫也略知一二。",
 		initialItems: ["palace-ground-blueprint", "mentor-notes"],
-		goal: "在三天内找到师傅留下的秘密并保护它",
+		goal: "在三天内解出导师留下的线索并保护秘密",
 		goalKey: "protect_secret",
-		backstory: "你的导师在去世前留下了一些重要的秘密。你知道它们很重要但并不清楚细节，决定一探真相。"
+		backstory: "你的导师在去世前给你留下了手记，里面有一些神秘的流水图案。你遍寻不着思路，决定趁此机会来皇宫碰碰运气。"
 	},
 	"wangweiguo": {
 		name: "王卫国",
 		title: "施工运输队队长",
-		publicDescription: "经验丰富的施工运输队队长，管理着大量工人。",
-		description: "负责施工运输的队长，掌握着物资和人员的流动。",
+		publicDescription: "他的团队每天穿梭于皇宫运输材料，每天皇宫里发生了什么新鲜事他都知道",
+		description: "你的团队每天穿梭于皇宫运输材料，每天皇宫里发生了什么新鲜事你都知道。",
 		initialItems: ["palace-map", "weekly-report"],
 		goal: "按时交付皇宫修建工程",
 		goalKey: "stop_illegal_transport",
