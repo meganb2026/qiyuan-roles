@@ -73,29 +73,43 @@ done
 echo -e "${GREEN}✓ 所有文件已合并到: $TEMP_TWEE${NC}"
 
 # 检查是否有 Twine 命令行工具
-if command -v twee &> /dev/null; then
+if command -v tweego &> /dev/null; then
+    echo -e "${YELLOW}检测到 Tweego，编译游戏...${NC}"
+
+    # 使用 tweego 编译 (SugarCube格式)
+    tweego -f sugarcube-2 -o "$OUTPUT_DIR/game.html" "$TEMP_TWEE"
+
+    if [ -f "$OUTPUT_DIR/game.html" ]; then
+        echo -e "${GREEN}✓ 游戏已成功编译到: $OUTPUT_DIR/game.html${NC}"
+        echo -e "${GREEN}文件大小: $(stat -f%z "$OUTPUT_DIR/game.html" 2>/dev/null || stat -c%s "$OUTPUT_DIR/game.html" 2>/dev/null || echo "未知") 字节${NC}"
+        # 清理临时文件
+        rm -f "$TEMP_TWEE"
+    else
+        echo -e "${RED}错误: 编译失败，未生成 game.html${NC}"
+        exit 1
+    fi
+elif command -v twee &> /dev/null; then
     echo -e "${YELLOW}检测到 Twine 命令行工具，尝试编译...${NC}"
-    
+
     # 使用 twee 编译
     twee "$TEMP_TWEE" "$OUTPUT_DIR/game.html" 2>&1 || {
-        echo -e "${YELLOW}警告: 自动编译失败，请手动在 Twine 编辑器中导入 $TEMP_TWEE${NC}"
+        echo -e "${RED}错误: Twine 编译失败${NC}"
+        exit 1
     }
-    
+
     if [ -f "$OUTPUT_DIR/game.html" ]; then
         echo -e "${GREEN}✓ 游戏已成功编译到: $OUTPUT_DIR/game.html${NC}"
         # 清理临时文件
         rm -f "$TEMP_TWEE"
     fi
 else
-    echo -e "${YELLOW}未检测到 Twine 命令行工具${NC}"
-    echo -e "${YELLOW}请按照以下步骤操作：${NC}"
-    echo "  1. 打开 Twine 编辑器 (https://twinery.org/)"
-    echo "  2. 选择 'Import from File'"
-    echo "  3. 选择文件: $TEMP_TWEE"
-    echo "  4. 在 Twine 编辑器中点击 'Build' -> 'Publish to File'"
-    echo "  5. 保存为: $OUTPUT_DIR/game.html"
+    echo -e "${RED}错误: 未检测到 Twine 编译器 (tweego 或 twee)${NC}"
+    echo -e "${YELLOW}请手动编译：${NC}"
+    echo "  1. 下载 Tweego: https://www.motoslave.net/tweego/"
+    echo "  2. 运行: tweego -f sugarcube-2 -o game.html game.twee"
     echo ""
     echo -e "${GREEN}合并的 .twee 文件已保存到: $TEMP_TWEE${NC}"
+    exit 1
 fi
 
 echo -e "${GREEN}构建完成！${NC}"
