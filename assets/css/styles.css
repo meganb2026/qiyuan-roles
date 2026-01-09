@@ -520,6 +520,246 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 	}
 }
 
+/* 剧情页面样式 */
+.scene-content {
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+.dialogue-section {
+	display: flex;
+	margin: 30px 0;
+	align-items: flex-start;
+	gap: 20px;
+}
+
+.character-portrait {
+	flex-shrink: 0;
+	text-align: center;
+	min-width: 80px;
+}
+
+.portrait-circle {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	margin: 0 auto 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.character-name {
+	font-size: 12px;
+	font-weight: bold;
+	color: #555;
+}
+
+.dialogue-bubble {
+	flex: 1;
+	padding: 20px;
+	border-radius: 15px;
+	position: relative;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	line-height: 1.6;
+}
+
+.dialogue-bubble::before {
+	content: '';
+	position: absolute;
+	top: 20px;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+}
+
+.king-bubble {
+	background: linear-gradient(135deg, #ffd700, #ffed4e);
+	color: #333;
+	border: 2px solid #ffd700;
+}
+
+.king-bubble::before {
+	left: -20px;
+	border-right-color: #ffd700;
+}
+
+.hefei-bubble {
+	background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+	color: white;
+	border: 2px solid #ff6b6b;
+}
+
+.hefei-bubble::before {
+	right: -20px;
+	border-left-color: #ff6b6b;
+}
+
+.narrative-text {
+	background: #f8f9fa;
+	padding: 20px;
+	border-radius: 10px;
+	margin: 20px 0;
+	border-left: 4px solid #667eea;
+	font-style: italic;
+	color: #555;
+	line-height: 1.7;
+}
+
+.scene-actions {
+	text-align: center;
+	margin: 40px 0;
+	padding: 30px;
+}
+
+/* 内心独白页面样式 */
+.inner-thoughts-content {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.character-header {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	margin-bottom: 40px;
+	padding: 20px;
+	background: #f8f9ff;
+	border-radius: 10px;
+	border: 2px solid #667eea;
+}
+
+.character-avatar {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 32px;
+	font-weight: bold;
+	color: white;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.emotion-badge {
+	display: inline-block;
+	padding: 5px 15px;
+	border-radius: 20px;
+	font-size: 14px;
+	font-weight: bold;
+	margin-top: 8px;
+}
+
+.emotion-badge.焦虑 {
+	background: #fff3cd;
+	color: #856404;
+}
+
+.emotion-badge.坚定 {
+	background: #d1ecf1;
+	color: #0c5460;
+}
+
+.emotion-badge.得意 {
+	background: #f8d7da;
+	color: #721c24;
+}
+
+.emotion-badge.担忧 {
+	background: #fff3cd;
+	color: #856404;
+}
+
+.emotion-badge.好奇 {
+	background: #d1ecf1;
+	color: #0c5460;
+}
+
+.emotion-badge.谨慎 {
+	background: #e2e3e5;
+	color: #383d41;
+}
+
+.thoughts-list {
+	margin: 30px 0;
+}
+
+.thought-item {
+	margin: 25px 0;
+	opacity: 0;
+	animation: fadeInUp 0.8s ease forwards;
+}
+
+.thought-bubble {
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	color: white;
+	padding: 20px 25px;
+	border-radius: 15px;
+	position: relative;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	line-height: 1.6;
+}
+
+.thought-bubble::after {
+	content: '';
+	position: absolute;
+	bottom: -10px;
+	left: 30px;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+	border-top-color: #667eea;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.thoughts-actions {
+	text-align: center;
+	margin: 50px 0;
+	padding: 30px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+	.dialogue-section {
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+	}
+
+	.dialogue-bubble::before {
+		display: none;
+	}
+
+	.character-portrait {
+		order: -1;
+	}
+
+	.character-header {
+		flex-direction: column;
+		text-align: center;
+		gap: 15px;
+	}
+
+	.thought-bubble {
+		margin: 0 10px;
+	}
+}
+
 /* 确保侧边栏在正确位置 */
 #game-sidebar {
 	position: fixed !important;

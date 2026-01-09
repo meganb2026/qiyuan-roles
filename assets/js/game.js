@@ -19,7 +19,23 @@ class Game {
 
     init() {
         this.bindEvents();
-        this.showCharacterSelect();
+
+        // 检查URL参数，看是否从剧情页面跳转回来
+        const urlParams = new URLSearchParams(window.location.search);
+        const from = urlParams.get('from');
+        const character = urlParams.get('character');
+
+        if (from === 'inner-thoughts' && character) {
+            // 从内心独白页面返回，直接开始游戏
+            this.gameState.selectedCharacter = character;
+            const char = window.characters[character];
+            this.gameState.playerInventory = [...char.initialItems];
+            this.gameState.gameStarted = true;
+            this.showDayStart();
+        } else {
+            // 正常流程
+            this.showCharacterSelect();
+        }
     }
 
     bindEvents() {
@@ -131,10 +147,12 @@ class Game {
                         <button class="action-btn primary large" onclick="game.selectCharacter('${characterId}')">
                             开启旅途
                         </button>
-                        <br><br>
-                        <button class="action-btn secondary" onclick="game.navigateTo('character-select')">
-                            返回选择
-                        </button>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 15px; background: #f0f2ff; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="margin: 0; color: #555; font-size: 14px;">
+                            💡 <strong>提示：</strong>游戏开始后，点击右下角的 📦 按钮可以查看当前背包物品和角色信息。
+                        </p>
                     </div>
                 </div>
             </div>
@@ -212,7 +230,9 @@ class Game {
 
     // 开始游戏
     startGame() {
-        this.navigateTo('day-start');
+        // 跳转到第一天剧情页面
+        const sceneUrl = `day1-scene1.html?character=${this.gameState.selectedCharacter}`;
+        window.location.href = sceneUrl;
     }
 
     // 显示天开始页面
