@@ -35,9 +35,9 @@
                     </div>
 
                     <div class="dialogue-bubble visitor-bubble">
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
+                        <p>程御医，你好啊。</p>
+                        <p>最近宫里不太平，我想和你聊聊。</p>
+                        <p>听说你对宫中事务很了解。</p>
                     </div>
                 </div>
 
@@ -48,9 +48,9 @@
                     </div>
 
                     <div class="dialogue-bubble host-bubble">
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
+                        <p>陛下客气了，老臣只是做本分之事。</p>
+                        <p>陛下想知道什么，尽管问吧。</p>
+                        <p>只要是老臣知道的，一定如实相告。</p>
                     </div>
                 </div>
 
@@ -61,9 +61,9 @@
                     </div>
 
                     <div class="dialogue-bubble visitor-bubble">
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
+                        <p>前几日宫中发现尸体，你可有耳闻？</p>
+                        <p>此事关系重大，本王必须查个水落石出。</p>
+                        <p>你身为御医，可曾注意到什么异常？</p>
                     </div>
                 </div>
 
@@ -74,9 +74,9 @@
                     </div>
 
                     <div class="dialogue-bubble host-bubble">
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
+                        <p>陛下，此事老臣略有耳闻。</p>
+                        <p>尸体是在下水道附近发现的，伤势严重。</p>
+                        <p>建议陛下询问李大人，他对下水道最熟悉。</p>
                     </div>
                 </div>
 
@@ -87,9 +87,9 @@
                     </div>
 
                     <div class="dialogue-bubble visitor-bubble">
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
-                        <p>编一点对话</p>
+                        <p>多谢程御医指点。</p>
+                        <p>本王记下了。</p>
+                        <p>你继续忙吧。</p>
                     </div>
                 </div>
 
