@@ -96,8 +96,9 @@ your-twine-game/
 ## 开发说明
 
 - 所有游戏内容都在 `src/` 目录下的 `.twee` 文件中编写
-- 使用 `tools/build.sh` 脚本可以将所有源文件合并成单个 `game.html`
-- 使用 `tools/setup-git.sh` 脚本可以快速设置 Git 仓库和 GitHub 部署
+- 使用 `tools/build.sh` 生成 `game.twee` 文件
+- 使用 Twine 编辑器导出 `game.html` 文件（详见 [EXPORT_GUIDE.md](EXPORT_GUIDE.md)）
+- 代码推送到 GitHub 后自动部署到 Pages
 - 详细的设计文档、部署指南和更新日志请查看 `docs/` 目录
 
 ## 许可证
