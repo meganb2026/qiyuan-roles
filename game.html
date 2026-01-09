@@ -359,34 +359,86 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 
 /* 移动端适配 */
 @media (max-width: 768px) {
+	/* 移动端侧边栏改为覆盖层模式 */
 	#game-sidebar {
-		width: 250px;
-		transform: translateX(-250px);
+		position: fixed !important;
+		top: 0 !important;
+		left: 0 !important;
+		width: 280px !important;
+		height: 100vh !important;
+		background: rgba(255, 255, 255, 0.98) !important;
+		box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+		z-index: 10000 !important;
+		transform: translateX(-100%) !important; /* 默认隐藏 */
+		transition: transform 0.3s ease !important;
 	}
 
-	#game-sidebar.collapsed {
-		transform: translateX(-200px);
+	#game-sidebar.mobile-open {
+		transform: translateX(0) !important; /* 显示时从左侧滑入 */
 	}
 
-	#game-sidebar:not([style*="display: none"]):not(.collapsed) ~ * .passage,
-	body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
-		margin-left: 270px;
+	/* 移动端切换按钮位置调整 */
+	#game-sidebar .sidebar-toggle {
+		right: -50px !important;
+		top: 50% !important;
+		transform: translateY(-50%) rotate(90deg) !important;
+		background: #667eea !important;
+		border-radius: 20px 20px 0 0 !important;
+		padding: 8px 12px !important;
+		font-size: 14px !important;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+	}
+
+	#game-sidebar.mobile-open .sidebar-toggle {
+		right: -50px !important;
+		transform: translateY(-50%) rotate(90deg) scaleX(-1) !important; /* 翻转文字 */
+	}
+
+	/* 移动端主内容区域 */
+	.passage {
+		margin-left: 0 !important;
+		padding-left: 1em !important;
+		padding-right: 1em !important;
+		transition: none !important;
+	}
+
+	/* 移动端遮罩层 */
+	#mobile-sidebar-overlay {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background: rgba(0, 0, 0, 0.5);
+		z-index: 9999;
+	}
+
+	#mobile-sidebar-overlay.active {
+		display: block !important;
 	}
 }
 
 @media (max-width: 480px) {
+	/* 小屏幕使用覆盖层模式 */
 	#game-sidebar {
-		width: 280px;
-		transform: translateX(-280px);
+		width: 100vw !important;
+		max-width: 320px !important;
 	}
 
-	#game-sidebar.collapsed {
-		transform: translateX(-230px);
+	#game-sidebar .sidebar-toggle {
+		right: -60px !important;
+		padding: 6px 10px !important;
+		font-size: 12px !important;
 	}
 
-	#game-sidebar:not([style*="display: none"]):not(.collapsed) ~ * .passage,
-	body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
-		margin-left: 300px;
+	/* 小屏幕浮动按钮调整 */
+	#mobile-sidebar-btn {
+		bottom: 15px !important;
+		right: 15px !important;
+		width: 45px !important;
+		height: 45px !important;
+		font-size: 18px !important;
 	}
 }
 
@@ -576,9 +628,21 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 		$(document).on(&#39;:passagerender&#39;, function() {
 			setTimeout(updateSidebar, 10);
 		});
-		
+
 		$(document).on(&#39;:passagedisplay&#39;, function() {
 			setTimeout(updateSidebar, 10);
+		});
+
+		// 监听窗口大小变化，在移动端和桌面端之间切换时更新侧边栏
+		$(window).on(&#39;resize&#39;, function() {
+			setTimeout(updateSidebar, 100);
+		});
+
+		// ESC键关闭移动端侧边栏
+		$(document).on(&#39;keydown&#39;, function(e) {
+			if (e.keyCode === 27) { // ESC key
+				closeMobileSidebar();
+			}
 		});
 	});
 	
@@ -599,33 +663,73 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 	(function() {
 		// 创建或更新侧边栏
 		var sidebar = document.getElementById(&#39;game-sidebar&#39;);
+		var overlay = document.getElementById(&#39;mobile-sidebar-overlay&#39;);
+
 		if (!sidebar) {
 			sidebar = document.createElement(&#39;div&#39;);
 			sidebar.id = &#39;game-sidebar&#39;;
 			sidebar.className = &#39;collapsed&#39;; // 默认折叠状态
 			document.body.appendChild(sidebar);
 
+			// 创建遮罩层（移动端使用）
+			overlay = document.createElement(&#39;div&#39;);
+			overlay.id = &#39;mobile-sidebar-overlay&#39;;
+			document.body.appendChild(overlay);
+
 			// 添加切换按钮
 			var toggleBtn = document.createElement(&#39;button&#39;);
 			toggleBtn.className = &#39;sidebar-toggle&#39;;
-			toggleBtn.innerHTML = &#39;📦&#39;;
-			toggleBtn.title = &#39;切换背包显示&#39;;
+			toggleBtn.innerHTML = &#39;背包&#39;;
+			toggleBtn.title = &#39;查看背包和角色信息&#39;;
 			toggleBtn.onclick = function() {
-				sidebar.classList.toggle(&#39;collapsed&#39;);
-				// 保存状态到本地存储
-				var isCollapsed = sidebar.classList.contains(&#39;collapsed&#39;);
-				localStorage.setItem(&#39;sidebarCollapsed&#39;, isCollapsed);
+				var isMobile = window.innerWidth &lt;= 768;
+				if (isMobile) {
+					// 移动端：切换覆盖层模式
+					var isOpen = sidebar.classList.contains(&#39;mobile-open&#39;);
+					if (isOpen) {
+						closeMobileSidebar();
+					} else {
+						openMobileSidebar();
+					}
+				} else {
+					// 桌面端：切换折叠模式
+					sidebar.classList.toggle(&#39;collapsed&#39;);
+					var isCollapsed = sidebar.classList.contains(&#39;collapsed&#39;);
+					localStorage.setItem(&#39;sidebarCollapsed&#39;, isCollapsed);
+				}
 			};
 			sidebar.appendChild(toggleBtn);
 
-			// 从本地存储恢复状态
+			// 遮罩层点击关闭
+			overlay.onclick = closeMobileSidebar;
+
+			// 从本地存储恢复桌面端状态
 			var savedCollapsed = localStorage.getItem(&#39;sidebarCollapsed&#39;);
 			if (savedCollapsed === &#39;false&#39;) {
 				sidebar.classList.remove(&#39;collapsed&#39;);
 			}
 		}
 
+		// 移动端侧边栏控制函数
+		function openMobileSidebar() {
+			sidebar.classList.add(&#39;mobile-open&#39;);
+			overlay.classList.add(&#39;active&#39;);
+			document.body.style.overflow = &#39;hidden&#39;; // 防止背景滚动
+		}
+
+		function closeMobileSidebar() {
+			sidebar.classList.remove(&#39;mobile-open&#39;);
+			overlay.classList.remove(&#39;active&#39;);
+			document.body.style.overflow = &#39;&#39;; // 恢复滚动
+		}
+
+		// 全局函数供外部调用
+		window.openMobileSidebar = openMobileSidebar;
+		window.closeMobileSidebar = closeMobileSidebar;
+
 		// 检查游戏是否开始
+		var isMobile = window.innerWidth &lt;= 768;
+		console.log(&#39;UpdateSidebar called - isMobile:&#39;, isMobile, &#39;gameStarted:&#39;, State.variables.gameStarted, &#39;selectedCharacter:&#39;, State.variables.selectedCharacter);
 		if (State.variables.gameStarted &amp;&amp; State.variables.selectedCharacter) {
 			// 更新侧边栏内容
 			var char = State.variables.characters[State.variables.selectedCharacter];
@@ -668,9 +772,65 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 			}
 
 			sidebar.style.display = &#39;block&#39;;
+
+			// 移动端：显示浮动按钮
+			if (isMobile) {
+				showMobileSidebarButton();
+			} else {
+				hideMobileSidebarButton();
+			}
 		} else {
-			// 隐藏侧边栏
+			// 游戏未开始时隐藏侧边栏
 			sidebar.style.display = &#39;none&#39;;
+			hideMobileSidebarButton();
+		}
+
+		// 移动端按钮管理函数
+		function showMobileSidebarButton() {
+			var mobileBtn = document.getElementById(&#39;mobile-sidebar-btn&#39;);
+			if (!mobileBtn) {
+				mobileBtn = document.createElement(&#39;button&#39;);
+				mobileBtn.id = &#39;mobile-sidebar-btn&#39;;
+				mobileBtn.innerHTML = &#39;📦&#39;;
+				mobileBtn.title = &#39;查看背包和角色信息&#39;;
+				mobileBtn.style.cssText = `
+					position: fixed;
+					bottom: 20px;
+					right: 20px;
+					width: 50px;
+					height: 50px;
+					border-radius: 50%;
+					background: #667eea;
+					color: white;
+					border: none;
+					font-size: 20px;
+					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+					z-index: 1000;
+					cursor: pointer;
+					transition: all 0.3s ease;
+				`;
+				mobileBtn.onmouseover = function() {
+					this.style.transform = &#39;scale(1.1)&#39;;
+					this.style.background = &#39;#764ba2&#39;;
+				};
+				mobileBtn.onmouseout = function() {
+					this.style.transform = &#39;scale(1)&#39;;
+					this.style.background = &#39;#667eea&#39;;
+				};
+				mobileBtn.onclick = openMobileSidebar;
+				document.body.appendChild(mobileBtn);
+				console.log(&#39;Mobile sidebar button created&#39;);
+			}
+			mobileBtn.style.display = &#39;block&#39;;
+			console.log(&#39;Mobile sidebar button shown&#39;);
+		}
+
+		function hideMobileSidebarButton() {
+			var mobileBtn = document.getElementById(&#39;mobile-sidebar-btn&#39;);
+			if (mobileBtn) {
+				mobileBtn.style.display = &#39;none&#39;;
+				console.log(&#39;Mobile sidebar button hidden&#39;);
+			}
 		}
 	})();
 &lt;&lt;/script&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="StoryInterface" tags="" position="525,25" size="100,100">&lt;div id=&quot;passages&quot;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="CharacterSelect" tags="" position="650,25" size="100,100">&lt;div class=&quot;no-sidebar-margin&quot;&gt;

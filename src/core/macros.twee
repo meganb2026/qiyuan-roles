@@ -182,9 +182,21 @@
 		$(document).on(':passagerender', function() {
 			setTimeout(updateSidebar, 10);
 		});
-		
+
 		$(document).on(':passagedisplay', function() {
 			setTimeout(updateSidebar, 10);
+		});
+
+		// 监听窗口大小变化，在移动端和桌面端之间切换时更新侧边栏
+		$(window).on('resize', function() {
+			setTimeout(updateSidebar, 100);
+		});
+
+		// ESC键关闭移动端侧边栏
+		$(document).on('keydown', function(e) {
+			if (e.keyCode === 27) { // ESC key
+				closeMobileSidebar();
+			}
 		});
 	});
 	
@@ -214,33 +226,73 @@
 	(function() {
 		// 创建或更新侧边栏
 		var sidebar = document.getElementById('game-sidebar');
+		var overlay = document.getElementById('mobile-sidebar-overlay');
+
 		if (!sidebar) {
 			sidebar = document.createElement('div');
 			sidebar.id = 'game-sidebar';
 			sidebar.className = 'collapsed'; // 默认折叠状态
 			document.body.appendChild(sidebar);
 
+			// 创建遮罩层（移动端使用）
+			overlay = document.createElement('div');
+			overlay.id = 'mobile-sidebar-overlay';
+			document.body.appendChild(overlay);
+
 			// 添加切换按钮
 			var toggleBtn = document.createElement('button');
 			toggleBtn.className = 'sidebar-toggle';
-			toggleBtn.innerHTML = '📦';
-			toggleBtn.title = '切换背包显示';
+			toggleBtn.innerHTML = '背包';
+			toggleBtn.title = '查看背包和角色信息';
 			toggleBtn.onclick = function() {
-				sidebar.classList.toggle('collapsed');
-				// 保存状态到本地存储
-				var isCollapsed = sidebar.classList.contains('collapsed');
-				localStorage.setItem('sidebarCollapsed', isCollapsed);
+				var isMobile = window.innerWidth <= 768;
+				if (isMobile) {
+					// 移动端：切换覆盖层模式
+					var isOpen = sidebar.classList.contains('mobile-open');
+					if (isOpen) {
+						closeMobileSidebar();
+					} else {
+						openMobileSidebar();
+					}
+				} else {
+					// 桌面端：切换折叠模式
+					sidebar.classList.toggle('collapsed');
+					var isCollapsed = sidebar.classList.contains('collapsed');
+					localStorage.setItem('sidebarCollapsed', isCollapsed);
+				}
 			};
 			sidebar.appendChild(toggleBtn);
 
-			// 从本地存储恢复状态
+			// 遮罩层点击关闭
+			overlay.onclick = closeMobileSidebar;
+
+			// 从本地存储恢复桌面端状态
 			var savedCollapsed = localStorage.getItem('sidebarCollapsed');
 			if (savedCollapsed === 'false') {
 				sidebar.classList.remove('collapsed');
 			}
 		}
 
+		// 移动端侧边栏控制函数
+		function openMobileSidebar() {
+			sidebar.classList.add('mobile-open');
+			overlay.classList.add('active');
+			document.body.style.overflow = 'hidden'; // 防止背景滚动
+		}
+
+		function closeMobileSidebar() {
+			sidebar.classList.remove('mobile-open');
+			overlay.classList.remove('active');
+			document.body.style.overflow = ''; // 恢复滚动
+		}
+
+		// 全局函数供外部调用
+		window.openMobileSidebar = openMobileSidebar;
+		window.closeMobileSidebar = closeMobileSidebar;
+
 		// 检查游戏是否开始
+		var isMobile = window.innerWidth <= 768;
+		console.log('UpdateSidebar called - isMobile:', isMobile, 'gameStarted:', State.variables.gameStarted, 'selectedCharacter:', State.variables.selectedCharacter);
 		if (State.variables.gameStarted && State.variables.selectedCharacter) {
 			// 更新侧边栏内容
 			var char = State.variables.characters[State.variables.selectedCharacter];
@@ -283,9 +335,65 @@
 			}
 
 			sidebar.style.display = 'block';
+
+			// 移动端：显示浮动按钮
+			if (isMobile) {
+				showMobileSidebarButton();
+			} else {
+				hideMobileSidebarButton();
+			}
 		} else {
-			// 隐藏侧边栏
+			// 游戏未开始时隐藏侧边栏
 			sidebar.style.display = 'none';
+			hideMobileSidebarButton();
+		}
+
+		// 移动端按钮管理函数
+		function showMobileSidebarButton() {
+			var mobileBtn = document.getElementById('mobile-sidebar-btn');
+			if (!mobileBtn) {
+				mobileBtn = document.createElement('button');
+				mobileBtn.id = 'mobile-sidebar-btn';
+				mobileBtn.innerHTML = '📦';
+				mobileBtn.title = '查看背包和角色信息';
+				mobileBtn.style.cssText = `
+					position: fixed;
+					bottom: 20px;
+					right: 20px;
+					width: 50px;
+					height: 50px;
+					border-radius: 50%;
+					background: #667eea;
+					color: white;
+					border: none;
+					font-size: 20px;
+					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+					z-index: 1000;
+					cursor: pointer;
+					transition: all 0.3s ease;
+				`;
+				mobileBtn.onmouseover = function() {
+					this.style.transform = 'scale(1.1)';
+					this.style.background = '#764ba2';
+				};
+				mobileBtn.onmouseout = function() {
+					this.style.transform = 'scale(1)';
+					this.style.background = '#667eea';
+				};
+				mobileBtn.onclick = openMobileSidebar;
+				document.body.appendChild(mobileBtn);
+				console.log('Mobile sidebar button created');
+			}
+			mobileBtn.style.display = 'block';
+			console.log('Mobile sidebar button shown');
+		}
+
+		function hideMobileSidebarButton() {
+			var mobileBtn = document.getElementById('mobile-sidebar-btn');
+			if (mobileBtn) {
+				mobileBtn.style.display = 'none';
+				console.log('Mobile sidebar button hidden');
+			}
 		}
 	})();
 <</script>>
