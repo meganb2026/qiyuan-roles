@@ -123,7 +123,7 @@
 
                     <div class="exchange-actions">
                         <button class="action-btn primary large" onclick="finishExchange()">
-                            完成交换 - 继续调查
+                            继续调查
                         </button>
                     </div>
                 </div>
@@ -180,12 +180,18 @@
             const targetIndex = targetItems.indexOf(selectedTargetItem);
 
             if (playerIndex !== -1 && targetIndex !== -1) {
+                // 记录新获得的物品
+                const newItem = selectedTargetItem;
+
                 // 交换物品
                 [currentItems[playerIndex], targetItems[targetIndex]] =
                 [targetItems[targetIndex], currentItems[playerIndex]];
 
                 // 更新玩家背包显示
                 gameState.playerInventory = [...currentItems];
+
+                // 记录新获得的物品到游戏状态
+                gameState.newlyAcquiredItem = newItem;
 
                 // 保存状态
                 saveGameState();
@@ -201,14 +207,22 @@
             }
         }
 
-        // 完成交换，返回游戏
+        // 完成交换，跳转到物品详情页
         function finishExchange() {
             // 保存最终状态
             saveGameState();
 
-            // 返回主游戏
-            const gameUrl = `../game.html?character=${currentCharacter}&day=${day}&from=exchange`;
-            window.location.href = gameUrl;
+            // 获取新获得的物品
+            const newItem = gameState.newlyAcquiredItem;
+            if (newItem) {
+                // 跳转到物品详情页
+                const itemDetailUrl = `../items/item-${encodeURIComponent(newItem)}.html?character=${currentCharacter}&day=${day}&from=exchange`;
+                window.location.href = itemDetailUrl;
+            } else {
+                // 如果没有新物品，直接返回游戏
+                const gameUrl = `../game.html?character=${currentCharacter}&day=${day}&from=exchange`;
+                window.location.href = gameUrl;
+            }
         }
 
         // 更新移动端信息面板
