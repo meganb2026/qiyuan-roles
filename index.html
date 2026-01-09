@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇缘48 -  奇迹元元的文字冒险游戏</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .start-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .description {
+            margin: 2rem 0;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .feature {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>奇缘48</h1>
+        <p class="subtitle">奇迹元元的皇宫冒险 · 文字解密游戏</p>
+
+        <div class="description">
+            <p>伟大的丹麦王克劳狄斯正在修建他的宫殿，如今距离预计交付仅剩3天，突发巨变</p>
+            <p>请探寻真相，揭开谜团</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <h3>🎭 六种身份</h3>
+                <p>国王、御医、潜水教练、下水道工程师、建筑设计师、施工运输队队长，每个角色都有独特的背景和目标</p>
+            </div>
+            <div class="feature">
+                <h3>🔄 策略交换</h3>
+                <p>你有机会与其他角色进行装备交换，选择合适的时机和对象至关重要</p>
+            </div>
+            <div class="feature">
+                <h3>⏰ 三天时限</h3>
+                <p>时间紧迫，决策果断，每一步都可能影响最终结局</p>
+            </div>
+        </div>
+
+        <a href="game.html" class="start-button">🎮 开始游戏</a>
+
+        <div style="margin-top: 2rem; opacity: 0.6; font-size: 0.9rem;">
+            <p>游戏基于 Twine 框架开发 · 纯文字交互体验</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# 奇缘角色 (Qiyuan Roles)
+# 奇缘48
 
 一个基于 Twine 框架开发的交互式文字冒险游戏。
 
@@ -25,9 +25,19 @@
 - **目标达成**：在三天内收集到完成角色目标所需的装备即为成功，否则失败
 - **策略性**：需要仔细规划每天的交换策略，因为每天只能交换一次
 
+## 在线游玩
+
+如果你已经将项目部署到 GitHub Pages，可以直接在浏览器中访问游戏：
+
+[🎮 点击此处开始游戏](https://meganb2026.github.io/qiyuan-roles/)
+
 ## 运行方式
 
-### 方式一：直接运行（推荐）
+### 方式一：在线游玩（推荐）
+
+访问上面的游戏链接即可在浏览器中直接游玩，无需下载。
+
+### 方式二：本地运行
 
 1. 确保已安装 Twine 2.x 或使用在线版本
 2. 运行构建脚本生成游戏文件：
@@ -47,10 +57,15 @@
 
 ```
 your-twine-game/
+├── .github/              # GitHub 配置
+│   └── workflows/        # GitHub Actions 工作流
+│       └── deploy.yml    # 自动构建和部署配置
 ├── .gitignore            # Git忽略文件
 ├── README.md             # 项目说明
 ├── LICENSE               # 开源许可证
+├── index.html            # GitHub Pages 主页
 ├── game.html             # 最终生成的可运行游戏文件
+├── game.twee             # 合并后的源文件（临时）
 ├── src/                  # 源文件目录
 │   ├── chapters/         # 章节文件
 │   ├── core/             # 核心配置
@@ -58,13 +73,16 @@ your-twine-game/
 ├── tools/                # 工具脚本
 │   └── build.sh          # 自动化合并脚本
 └── docs/                 # 文档
+    ├── design-notes.md     # 设计思路
+    └── changelog.md        # 更新日志
 ```
 
 ## 开发说明
 
 - 所有游戏内容都在 `src/` 目录下的 `.twee` 文件中编写
 - 使用 `tools/build.sh` 脚本可以将所有源文件合并成单个 `game.html`
-- 详细的设计文档和更新日志请查看 `docs/` 目录
+- 使用 `tools/setup-git.sh` 脚本可以快速设置 Git 仓库和 GitHub 部署
+- 详细的设计文档、部署指南和更新日志请查看 `docs/` 目录
 
 ## 许可证
 
