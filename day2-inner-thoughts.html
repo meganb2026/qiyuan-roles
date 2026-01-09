@@ -130,29 +130,34 @@
             }
 
             const thoughtsHtml = thoughts.thoughts.map((thought, index) => `
-                <div class="thought-bubble" style="animation-delay: ${index * 0.5}s">
-                    <div class="thought-content">
+                <div class="thought-item" style="animation-delay: ${index * 0.5}s">
+                    <div class="thought-bubble">
                         <p>${thought}</p>
                     </div>
-                    <div class="thought-tail"></div>
                 </div>
             `).join('');
 
             const html = `
                 <div class="page-container">
-                    <div class="inner-thoughts-header">
-                        <h2>${thoughts.title}</h2>
-                        <div class="day-indicator">第 2 天</div>
-                    </div>
+                    <h2>${thoughts.title}</h2>
 
-                    <div class="thoughts-container">
-                        ${thoughtsHtml}
-                    </div>
+                    <div class="inner-thoughts-content">
+                        <div class="character-header">
+                            <div class="character-avatar">${window.characters[selectedCharacter].name.charAt(0)}</div>
+                            <div class="character-info">
+                                <h3>${window.characters[selectedCharacter].name} - ${window.characters[selectedCharacter].title}</h3>
+                            </div>
+                        </div>
 
-                    <div class="thoughts-actions">
-                        <button class="action-btn primary large" onclick="proceedToNextDay()">
-                            继续调查 - 第3天
-                        </button>
+                        <div class="thoughts-list">
+                            ${thoughtsHtml}
+                        </div>
+
+                        <div class="thoughts-actions">
+                            <button class="action-btn primary large" onclick="proceedToNextDay()">
+                                继续调查 - 第3天
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;

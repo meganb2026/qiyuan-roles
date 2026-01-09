@@ -36,7 +36,7 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
         },
 
         "lixiang": function(inventory) {
-            // 李想（下水道工程设计师）：需要地下系统设计图 + 至少两个其他线索
+            // 李想（市政排水总工程师）：需要地下系统设计图 + 至少两个其他线索
             if (!inventory.includes("地下系统设计图")) return false;
 
             const clueItems = ["周报", "导师手记", "皇宫地图", "皇宫地面部分设计图"];

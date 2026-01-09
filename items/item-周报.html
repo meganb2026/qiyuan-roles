@@ -202,7 +202,7 @@
             window.location.href = gameUrl;
         }
 
-        // 更新信息面板（支持移动端和电脑端）
+        // 更新信息面板内容（支持移动端和电脑端）
         function updateInfoPanel() {
             const isMobile = window.innerWidth <= 768;
 
@@ -217,13 +217,13 @@
                 return;
             }
 
-            // 如果是电脑端，直接显示侧边栏
+            // 更新电脑端侧边栏内容，但不自动显示
             if (!isMobile) {
-                showDesktopSidebar();
+                updateDesktopSidebarContent();
                 return;
             }
 
-            // 移动端显示面板
+            // 更新移动端面板内容，但不自动显示
             const char = window.characters[gameState.selectedCharacter];
             const panel = document.getElementById('mobile-info-panel');
 
@@ -249,12 +249,11 @@
                         <strong>第 ${gameState.currentDay} 天</strong>
                     </div>
                 `;
-                panel.style.display = 'block';
             }
         }
 
-        // 显示电脑端侧边栏
-        function showDesktopSidebar() {
+        // 更新电脑端侧边栏内容
+        function updateDesktopSidebarContent() {
             const sidebar = document.getElementById('desktop-sidebar');
             const content = document.getElementById('desktop-sidebar-content');
 
@@ -281,6 +280,14 @@
                         <strong>第 ${gameState.currentDay} 天</strong>
                     </div>
                 `;
+            }
+        }
+
+        // 显示电脑端侧边栏
+        function showDesktopSidebar() {
+            updateDesktopSidebarContent();
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
                 sidebar.style.display = 'block';
             }
         }

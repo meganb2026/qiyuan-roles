@@ -95,9 +95,8 @@ class Game {
         const characterCards = Object.keys(window.characters).map(charId => {
             const char = window.characters[charId];
             return `
-                <div class="character-card" onclick="game.navigateTo('character-detail', {characterId: '${charId}'})">
-                    <h3>${char.name} - ${char.title}</h3>
-                    <p><em>${char.description}</em></p>
+                <div class="character-card" onclick="game.navigateTo('character-detail', {characterId: '${charId}'})"><h3>${char.name} - ${char.title}</h3>
+                    <p><em>${char.publicDescription}</em></p>
                     <div class="character-select-btn">选择角色</div>
                 </div>
             `;
@@ -207,7 +206,7 @@ class Game {
                 <div class="character-confirm">
                     <div class="character-info-large">
                         <h3>${char.name} - ${char.title}</h3>
-                        <p><strong>身份：</strong> ${char.description}</p>
+                        <p><strong>身份：</strong> ${char.publicDescription}</p>
                         <p><strong>目标：</strong> ${char.goal}</p>
 
                         <h4>初始装备：</h4>
