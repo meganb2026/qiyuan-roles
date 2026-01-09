@@ -72,34 +72,36 @@
 ## 项目结构
 
 ```
-your-twine-game/
-├── .github/              # GitHub 配置
-│   └── workflows/        # GitHub Actions 工作流
-│       └── deploy.yml    # 自动构建和部署配置
-├── .gitignore            # Git忽略文件
+qiyuan-roles/
+├── index.html            # 主页介绍页面
+├── game.html             # 游戏主文件（纯HTML/JavaScript）
 ├── README.md             # 项目说明
 ├── LICENSE               # 开源许可证
-├── index.html            # GitHub Pages 主页
-├── game.html             # 最终生成的可运行游戏文件
-├── game.twee             # 合并后的源文件（临时）
-├── src/                  # 源文件目录
-│   ├── chapters/         # 章节文件
-│   ├── core/             # 核心配置
-│   └── assets/           # 角色/设定/资源
-├── tools/                # 工具脚本
-│   └── build.sh          # 自动化合并脚本
-└── docs/                 # 文档
-    ├── design-notes.md     # 设计思路
-    └── changelog.md        # 更新日志
+├── .gitignore            # Git忽略文件
+├── assets/               # 静态资源目录
+│   ├── css/
+│   │   └── styles.css    # 游戏样式表
+│   └── js/
+│       ├── characters.js # 角色数据定义
+│       ├── items.js      # 物品逻辑和目标检查
+│       └── game.js       # 游戏主逻辑和UI控制
+├── docs/                 # 文档目录
+│   ├── design-notes.md   # 设计思路
+│   └── changelog.md      # 更新日志
+├── tools/                # 工具脚本（可选）
+└── test-js.html          # JavaScript功能测试页面
 ```
 
 ## 开发说明
 
-- 所有游戏内容都在 `src/` 目录下的 `.twee` 文件中编写
-- 使用 `tools/build.sh` 生成 `game.twee` 文件
-- 使用 Twine 编辑器导出 `game.html` 文件（详见 [EXPORT_GUIDE.md](EXPORT_GUIDE.md)）
+- **游戏数据**：`assets/js/characters.js` 和 `assets/js/items.js`
+- **游戏逻辑**：`assets/js/game.js`
+- **游戏样式**：`assets/css/styles.css`
+- **主页介绍**：`index.html`
+- **游戏入口**：`game.html`
+- 直接修改相应文件即可，无需编译步骤
 - 代码推送到 GitHub 后自动部署到 Pages
-- 详细的设计文档、部署指南和更新日志请查看 `docs/` 目录
+- 详细的设计文档和更新日志请查看 `docs/` 目录
 
 ## 许可证
 
