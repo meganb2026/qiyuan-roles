@@ -67,6 +67,17 @@ class Game {
 
     // 显示角色选择页面
     showCharacterSelect() {
+        const characterCards = Object.keys(window.characters).map(charId => {
+            const char = window.characters[charId];
+            return `
+                <div class="character-card" onclick="game.navigateTo('character-detail', {characterId: '${charId}'})">
+                    <h3>${char.name} - ${char.title}</h3>
+                    <p><em>${char.description}</em></p>
+                    <div class="character-select-btn">选择角色</div>
+                </div>
+            `;
+        }).join('');
+
         const html = `
             <div class="page-container">
                 <h2>选择你的角色</h2>
@@ -78,16 +89,7 @@ class Game {
                 <p><em>请选择你的角色，并查看角色详情。</em></p>
 
                 <div class="character-grid">
-                    ${Object.keys(window.characters).map(charId => {
-                        const char = window.characters[charId];
-                        return `
-                            <div class="character-card" onclick="game.navigateTo('character-detail', {characterId: '${charId}'})">
-                                <h3>${char.name} - ${char.title}</h3>
-                                <p><em>${char.description}</em></p>
-                                <div class="character-select-btn">选择角色</div>
-                            </div>
-                        `;
-                    }).join('')}
+                    ${characterCards}
                 </div>
             </div>
         `;
@@ -112,14 +114,15 @@ class Game {
                     <p>${char.goal}</p>
 
                     <h3>📦 初始装备</h3>
-                    <ul class="initial-items">
+                    <ul>
                         ${char.initialItems.map(item => `<li>${item}</li>`).join('')}
                     </ul>
 
                     <div class="character-actions">
-                        <button class="action-btn primary" onclick="game.selectCharacter('${characterId}')">
+                        <button class="action-btn primary large" onclick="game.selectCharacter('${characterId}')">
                             开启旅途
                         </button>
+                        <br><br>
                         <button class="action-btn secondary" onclick="game.navigateTo('character-select')">
                             返回选择
                         </button>
@@ -177,8 +180,8 @@ class Game {
                 <div class="character-confirm">
                     <div class="character-info-large">
                         <h3>${char.name} - ${char.title}</h3>
-                        <p><strong>身份：</strong>${char.description}</p>
-                        <p><strong>目标：</strong>${char.goal}</p>
+                        <p><strong>身份：</strong> ${char.description}</p>
+                        <p><strong>目标：</strong> ${char.goal}</p>
 
                         <h4>初始装备：</h4>
                         <ul>

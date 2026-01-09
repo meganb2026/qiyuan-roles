@@ -6,22 +6,255 @@ body {
 	color: #333;
 }
 
-.passage {
+.page-container {
 	background: rgba(255, 255, 255, 0.95);
 	border-radius: 10px;
 	padding: 2em;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	max-width: 800px;
-	margin: 0 auto;
+	margin: 20px auto;
 	transition: margin-left 0.3s ease;
+	line-height: 1.6;
+}
+
+.page-container h2 {
+	margin-top: 0;
+	color: #667eea;
+	border-bottom: 2px solid #667eea;
+	padding-bottom: 10px;
+}
+
+.page-container h3 {
+	color: #667eea;
+	margin-top: 1.5em;
+	margin-bottom: 0.5em;
+}
+
+.page-container p {
+	margin: 1em 0;
+	line-height: 1.6;
+}
+
+.page-container em {
+	font-style: italic;
+	color: #666;
+}
+
+.page-container ul, .page-container ol {
+	margin: 1em 0;
+	padding-left: 2em;
+}
+
+.page-container li {
+	margin: 0.5em 0;
+	line-height: 1.5;
 }
 
 /* 角色选择页面特殊样式 */
-.character-select-grid {
-	text-align: left !important;
-	margin: 20px auto !important;
-	max-width: 800px !important;
-	width: 100% !important;
+.character-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 20px;
+	margin: 20px 0;
+	text-align: left;
+}
+
+.character-card {
+	border: 2px solid #667eea;
+	padding: 20px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	background: white;
+}
+
+.character-card:hover {
+	background: #f8f9ff;
+	border-color: #764ba2;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.character-card h3 {
+	margin: 0 0 10px 0;
+	color: #667eea;
+	font-size: 1.2em;
+}
+
+.character-card p {
+	margin: 10px 0;
+	line-height: 1.5;
+	color: #555;
+}
+
+.character-select-btn {
+	margin-top: 15px;
+	padding: 8px 16px;
+	background: #667eea;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background 0.3s ease;
+}
+
+.character-select-btn:hover {
+	background: #764ba2;
+}
+
+/* 通用按钮样式 */
+.action-btn {
+	padding: 12px 24px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: bold;
+	transition: all 0.3s ease;
+	display: inline-block;
+	text-decoration: none;
+	text-align: center;
+	min-width: 120px;
+}
+
+.action-btn.primary {
+	background: #667eea;
+	color: white;
+}
+
+.action-btn.primary:hover {
+	background: #764ba2;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.action-btn.secondary {
+	background: #f8f9fa;
+	color: #667eea;
+	border: 2px solid #667eea;
+}
+
+.action-btn.secondary:hover {
+	background: #667eea;
+	color: white;
+}
+
+.action-btn.large {
+	padding: 16px 32px;
+	font-size: 18px;
+	min-width: 160px;
+}
+
+.action-btn:active {
+	transform: translateY(0);
+}
+
+/* 游戏状态相关样式 */
+.day-info, .character-confirm, .exchange-info, .ending-content {
+	margin: 20px 0;
+}
+
+.character-status, .inventory-status {
+	background: #f8f9ff;
+	padding: 20px;
+	border-radius: 8px;
+	margin: 15px 0;
+	border-left: 4px solid #667eea;
+}
+
+.inventory-list, .inventory-display {
+	margin-top: 10px;
+}
+
+.inventory-item {
+	padding: 8px 12px;
+	margin: 5px 0;
+	background: #f0f2ff;
+	border-radius: 5px;
+	border-left: 3px solid #667eea;
+	font-size: 14px;
+}
+
+.inventory-empty {
+	color: #999;
+	font-style: italic;
+	padding: 10px;
+	text-align: center;
+}
+
+.exchange-section {
+	margin: 20px 0;
+	padding: 20px;
+	background: #fafafa;
+	border-radius: 8px;
+}
+
+.exchange-item {
+	padding: 10px 15px;
+	margin: 8px 0;
+	background: white;
+	border: 2px solid #e0e0e0;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-size: 14px;
+}
+
+.exchange-item:hover {
+	border-color: #667eea;
+	background: #f8f9ff;
+}
+
+.exchange-item.selected {
+	border-color: #667eea;
+	background: #e8f0ff;
+	box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+
+.player-item {
+	border-left: 4px solid #28a745;
+}
+
+.npc-item {
+	border-left: 4px solid #dc3545;
+}
+
+.day-actions, .confirm-actions, .exchange-actions, .ending-actions {
+	text-align: center;
+	margin: 30px 0;
+	padding: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+	.page-container {
+		padding: 1em;
+		margin: 10px;
+	}
+
+	.character-grid {
+		grid-template-columns: 1fr;
+		gap: 15px;
+	}
+
+	.character-card {
+		padding: 15px;
+	}
+
+	.action-btn {
+		width: 100%;
+		margin: 5px 0;
+	}
+
+	.day-info, .character-confirm, .exchange-info {
+		padding: 15px;
+	}
+
+	.exchange-section {
+		padding: 15px;
+		margin: 15px 0;
+	}
 }
 
 /* 响应式设计 - 小屏幕上改为单列布局 */
