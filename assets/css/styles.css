@@ -934,6 +934,118 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 	}
 }
 
+/* 对话页面样式 */
+.dialogue-container {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.dialogue-scene {
+	background: #f8f9fa;
+	padding: 20px;
+	border-radius: 10px;
+	margin: 20px 0;
+	border-left: 4px solid #667eea;
+}
+
+.scene-description {
+	margin: 0;
+	font-style: italic;
+	color: #555;
+	line-height: 1.6;
+}
+
+.dialogue-section {
+	display: flex;
+	margin: 30px 0;
+	align-items: flex-start;
+	gap: 20px;
+}
+
+.character-portrait.visitor {
+	flex-direction: row-reverse;
+}
+
+.character-portrait.host {
+	flex-direction: row;
+}
+
+.dialogue-bubble {
+	flex: 1;
+	padding: 20px;
+	border-radius: 15px;
+	position: relative;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	line-height: 1.6;
+	max-width: 600px;
+}
+
+.dialogue-bubble p {
+	margin: 8px 0;
+}
+
+.dialogue-bubble::before {
+	content: '';
+	position: absolute;
+	top: 20px;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+}
+
+.visitor-bubble {
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	color: white;
+}
+
+.visitor-bubble::before {
+	right: -20px;
+	border-left-color: #667eea;
+}
+
+.host-bubble {
+	background: linear-gradient(135deg, #28a745, #20c997);
+	color: white;
+}
+
+.host-bubble::before {
+	left: -20px;
+	border-right-color: #28a745;
+}
+
+.dialogue-actions {
+	text-align: center;
+	margin: 40px 0;
+	padding: 30px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+	.dialogue-section {
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+	}
+
+	.dialogue-bubble::before {
+		display: none;
+	}
+
+	.character-portrait {
+		order: -1;
+	}
+
+	.dialogue-bubble {
+		margin: 0 10px;
+		width: calc(100% - 20px);
+	}
+
+	.dialogue-scene {
+		padding: 15px;
+		margin: 15px 10px;
+	}
+}
+
 /* 确保侧边栏在正确位置 */
 #game-sidebar {
 	position: fixed !important;

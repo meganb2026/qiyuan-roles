@@ -20,3 +20,6 @@ Thumbs.db
 node_modules/
 package-lock.json
 yarn.lock
+
+# 临时脚本文件
+create_dialogues.sh
