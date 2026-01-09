@@ -31,6 +31,15 @@ class Game {
             }
         });
 
+        // 移动端信息按钮点击事件
+        const mobileBtn = document.getElementById('mobile-info-btn');
+        if (mobileBtn) {
+            mobileBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // 防止事件冒泡
+                this.toggleMobileInfoPanel();
+            });
+        }
+
         // ESC键关闭面板
         document.addEventListener('keydown', (e) => {
             if (e.keyCode === 27) {
@@ -463,6 +472,16 @@ class Game {
     // 更新移动端信息面板
     updateMobileInfoPanel() {
         const isMobile = window.innerWidth <= 768;
+        const mobileBtn = document.getElementById('mobile-info-btn');
+
+        // 控制按钮显示
+        if (mobileBtn) {
+            if (isMobile && this.gameState.gameStarted) {
+                mobileBtn.style.display = 'flex';
+            } else {
+                mobileBtn.style.display = 'none';
+            }
+        }
 
         if (!isMobile || !this.gameState.gameStarted) {
             this.hideMobileInfoPanel();
@@ -495,6 +514,19 @@ class Game {
                     <strong>第 ${this.gameState.currentDay} 天</strong>
                 </div>
             `;
+        }
+    }
+
+    // 切换移动端信息面板显示/隐藏
+    toggleMobileInfoPanel() {
+        const panel = document.getElementById('mobile-info-panel');
+        if (panel) {
+            const isVisible = panel.style.display === 'block';
+            if (isVisible) {
+                this.hideMobileInfoPanel();
+            } else {
+                this.showMobileInfoPanel();
+            }
         }
     }
 
