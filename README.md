@@ -39,6 +39,22 @@
 
 ### 方式二：本地运行
 
+1. **准备游戏文件**：
+   ```bash
+   ./tools/build.sh  # 生成 game.twee 文件
+   ```
+
+2. **导出HTML文件**：
+   - 打开 [Twine在线编辑器](https://twinery.org/)
+   - 点击 **Import From File** 导入 `game.twee`
+   - 点击 **Build** → **Publish to File**
+   - 保存为 `game.html`
+
+3. **运行游戏**：
+   在浏览器中打开 `game.html` 文件
+
+### 方式三：开发模式
+
 1. 确保已安装 Twine 2.x 或使用在线版本
 2. 运行构建脚本生成游戏文件：
    ```bash

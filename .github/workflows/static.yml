@@ -32,23 +32,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Tweego (Twine compiler)
+      - name: Check for game.html
         run: |
-          # 下载并安装 tweego (Go实现的Twine编译器)
-          curl -L -o tweego.tar.gz https://github.com/tmedwards/tweego/releases/download/v2.1.1/tweego-2.1.1-linux-x64.tar.gz
-          tar -xzf tweego.tar.gz
-          sudo mv tweego /usr/local/bin/
-          chmod +x /usr/local/bin/tweego
-
-      - name: Build Game
-        run: |
-          chmod +x tools/build.sh
-          ./tools/build.sh
+          if [ ! -f "game.html" ]; then
+            echo "❌ game.html 文件不存在，请确保已导出游戏文件"
+            echo "请按照以下步骤操作："
+            echo "1. 打开 Twine 编辑器 (https://twinery.org/)"
+            echo "2. 导入 game.twee 文件"
+            echo "3. 导出为 HTML 文件"
+            echo "4. 保存为 game.html 并提交到仓库"
+            exit 1
+          else
+            echo "✅ 发现 game.html 文件，大小: $(stat -f%z game.html 2>/dev/null || stat -c%s game.html 2>/dev/null || echo "未知") 字节"
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
