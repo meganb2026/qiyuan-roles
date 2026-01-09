@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二天的故事 - 何非的戏</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <!-- 移动端信息按钮 -->
+    <div id="mobile-info-btn" style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1000; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
+
+    <!-- 移动端信息面板 -->
+    <div id="mobile-info-panel" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 250px; max-height: 300px; background: rgba(255, 255, 255, 0.98); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); z-index: 1000; padding: 15px; overflow-y: auto;">
+        <!-- 内容由JavaScript动态填充 -->
+    </div>
+
+    <!-- 电脑端侧边栏 -->
+    <div id="desktop-sidebar" style="display: none; position: fixed; top: 20px; right: 20px; width: 280px; max-height: 80vh; background: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); z-index: 1000; padding: 20px; overflow-y: auto; border: 1px solid #e0e0e0;">
+        <h4 style="margin: 0 0 15px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 8px;">角色信息</h4>
+        <div id="desktop-sidebar-content">
+            <!-- 内容由JavaScript动态填充 -->
+        </div>
+    </div>
+
+    <!-- 遮罩层 -->
+    <div id="mobile-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+    <!-- 故事内容区域 -->
+    <div id="story-content">
+        <div class="page-container">
+            <h2>第二天 - 何非的戏</h2>
+
+            <div class="story-container">
+                <div class="story-header">
+                    <div class="day-indicator">
+                        <span class="day-number">第 2 天</span>
+                        <span class="story-title">何非的戏剧</span>
+                    </div>
+                </div>
+
+                <div class="story-content">
+                    <div class="scene-description">
+                        <p>按照克劳狄斯的指示，你们一行人来到上海文化广场。</p>
+                        <p>台上正在上演何非精心准备的戏剧《夜半歌声》。</p>
+                    </div>
+
+                    <div class="narrative-section">
+                        <h3>🎭 上海文化广场</h3>
+                        <p>夜幕降临，上海文化广场灯火通明。台上演员们正在倾情演绎《夜半歌声》，歌声悠扬，剧情扣人心弦。</p>
+                        <p>台下，你们这些皇宫的调查者们表面上在欣赏戏剧，暗地里却在仔细观察其他人的反应。</p>
+                        <p>每个人都想从别人的表情和动作中看出端倪，寻找线索。</p>
+                    </div>
+
+                    <div class="character-reactions">
+                        <h4>👀 众人反应</h4>
+                        <div class="reaction-grid">
+                            <div class="reaction-item">
+                                <div class="character-avatar">👑</div>
+                                <p><strong>克劳狄斯</strong>：眉头紧锁，似乎在回想什么往事</p>
+                            </div>
+                            <div class="reaction-item">
+                                <div class="character-avatar">⚕️</div>
+                                <p><strong>程婴</strong>：专注地看着舞台，偶尔点头</p>
+                            </div>
+                            <div class="reaction-item">
+                                <div class="character-avatar">🎭</div>
+                                <p><strong>何非</strong>：自信满满，嘴角带着微笑</p>
+                            </div>
+                            <div class="reaction-item">
+                                <div class="character-avatar">🔧</div>
+                                <p><strong>李想</strong>：有些走神，不时低头思考</p>
+                            </div>
+                            <div class="reaction-item">
+                                <div class="character-avatar">📐</div>
+                                <p><strong>吴智哲</strong>：认真观看，偶尔做笔记</p>
+                            </div>
+                            <div class="reaction-item">
+                                <div class="character-avatar">🚛</div>
+                                <p><strong>王卫国</strong>：坐立不安，显得有些焦虑</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-dialogue">
+                        <h4>💬 演出结束后</h4>
+                        <div class="dialogue-scene">
+                            <p>演出结束，掌声雷动。克劳狄斯站起身来，环视众人。</p>
+                        </div>
+
+                        <div class="dialogue-section">
+                            <div class="character-portrait king">
+                                <div class="portrait-circle">👑</div>
+                                <div class="character-name">克劳狄斯</div>
+                            </div>
+                            <div class="dialogue-bubble king-bubble">
+                                <p>"各位，看了何非的戏，大家有什么感想？"</p>
+                                <p>"案情进展如何？有没有新的发现？"</p>
+                            </div>
+                        </div>
+
+                        <div class="dialogue-section">
+                            <div class="character-portrait group">
+                                <div class="portrait-circle">👥</div>
+                                <div class="character-name">众人</div>
+                            </div>
+                            <div class="dialogue-bubble group-bubble">
+                                <p>"陛下，还要再想想..."</p>
+                                <p>"还需要一点时间..."</p>
+                                <p>"快有眉目了..."</p>
+                            </div>
+                        </div>
+
+                        <div class="dialogue-section">
+                            <div class="character-portrait king">
+                                <div class="portrait-circle">👑</div>
+                                <div class="character-name">克劳狄斯</div>
+                            </div>
+                            <div class="dialogue-bubble king-bubble">
+                                <p>"好吧，我再给你们最后一天时间！"</p>
+                                <p>"明天必须给我一个交代，否则我就封闭皇宫，等到来年春天再处理！"</p>
+                                <p>"这案子不能再拖下去了！"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-reflection">
+                        <h4>🤔 剧情反思</h4>
+                        <p>克劳狄斯的最后通牒让气氛更加紧张。每个人都意识到，明天将是关键的一天。</p>
+                        <p>戏剧虽然精彩，但似乎每个人都从中学到了不同的东西。</p>
+                        <p>皇宫的秘密，即将浮出水面...</p>
+                    </div>
+                </div>
+
+                <div class="story-actions">
+                    <button class="action-btn primary large" onclick="proceedToInnerThoughts()">
+                        继续 - 查看内心独白
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="assets/js/characters.js"></script>
+    <script src="assets/js/items.js"></script>
+    <script>
+        // 从URL参数获取信息
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCharacter = urlParams.get('character') || 'claudius';
+        const day = urlParams.get('day') || '2';
+        const from = urlParams.get('from') || 'item-detail';
+
+        // 游戏状态
+        let gameState = {
+            selectedCharacter: currentCharacter,
+            currentDay: parseInt(day),
+            gameStarted: true,
+            playerInventory: [],
+            allCharactersItems: {},
+            npcs: []
+        };
+
+        // 从localStorage加载游戏状态
+        function loadGameState() {
+            const savedState = localStorage.getItem('qiyuanGameState');
+            if (savedState) {
+                const parsedState = JSON.parse(savedState);
+                gameState = { ...gameState, ...parsedState };
+            } else {
+                // 初始化默认物品
+                initDefaultItems();
+            }
+        }
+
+        // 初始化默认物品
+        function initDefaultItems() {
+            const char = window.characters[currentCharacter];
+            gameState.playerInventory = [...char.initialItems];
+            gameState.allCharactersItems = {};
+
+            // 为所有角色初始化物品
+            Object.keys(window.characters).forEach(charId => {
+                gameState.allCharactersItems[charId] = [...window.characters[charId].initialItems];
+            });
+        }
+
+        // 更新信息面板（支持移动端和电脑端）
+        function updateInfoPanel() {
+            const isMobile = window.innerWidth <= 768;
+
+            // 控制按钮显示
+            const mobileBtn = document.getElementById('mobile-info-btn');
+            if (mobileBtn) {
+                mobileBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+
+            if (!gameState.gameStarted) {
+                hideMobileInfoPanel();
+                return;
+            }
+
+            // 如果是电脑端，直接显示侧边栏
+            if (!isMobile) {
+                showDesktopSidebar();
+                return;
+            }
+
+            // 移动端显示面板
+            const char = window.characters[gameState.selectedCharacter];
+            const panel = document.getElementById('mobile-info-panel');
+
+            if (panel) {
+                panel.innerHTML = `
+                    <div class="character-info">
+                        <strong>角色：</strong>
+                        <span>${char.name}</span><br>
+                        <small style="color: #666;">${char.title}</small>
+                    </div>
+
+                    <h4>📦 背包</h4>
+                    <div id="mobile-inventory">
+                        ${gameState.playerInventory.length === 0 ?
+                            '<div style="color: #999; font-style: italic;">背包是空的</div>' :
+                            gameState.playerInventory.map(item =>
+                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${item}</div>`
+                            ).join('')
+                        }
+                    </div>
+
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                        <strong>第 ${gameState.currentDay} 天</strong>
+                    </div>
+                `;
+                panel.style.display = 'block';
+            }
+        }
+
+        // 显示电脑端侧边栏
+        function showDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            const content = document.getElementById('desktop-sidebar-content');
+
+            if (sidebar && content) {
+                const char = window.characters[gameState.selectedCharacter];
+                content.innerHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <strong>当前角色：</strong><br>
+                        <span style="color: #667eea; font-size: 16px;">${char.name}</span><br>
+                        <small style="color: #666;">${char.title}</small>
+                    </div>
+
+                    <h4 style="margin: 15px 0 10px 0; color: #667eea; font-size: 14px;">📦 背包</h4>
+                    <div id="desktop-inventory">
+                        ${gameState.playerInventory.length === 0 ?
+                            '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
+                            gameState.playerInventory.map(item =>
+                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${item}</div>`
+                            ).join('')
+                        }
+                    </div>
+
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                        <strong>第 ${gameState.currentDay} 天</strong>
+                    </div>
+                `;
+                sidebar.style.display = 'block';
+            }
+        }
+
+        // 隐藏移动端信息面板
+        function hideMobileInfoPanel() {
+            const panel = document.getElementById('mobile-info-panel');
+            const overlay = document.getElementById('mobile-overlay');
+
+            if (panel && overlay) {
+                panel.style.display = 'none';
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+
+        // 继续到内心独白
+        function proceedToInnerThoughts() {
+            // 更新游戏状态到第二天
+            gameState.currentDay = 2;
+
+            // 保存状态
+            localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
+
+            // 跳转到第二天的内心独白页面
+            const innerThoughtsUrl = `day2-inner-thoughts.html?character=${currentCharacter}&day=2&from=story`;
+            window.location.href = innerThoughtsUrl;
+        }
+
+        // 切换移动端信息面板
+        function toggleMobileInfoPanel() {
+            const panel = document.getElementById('mobile-info-panel');
+            if (panel) {
+                const isVisible = panel.style.display === 'block';
+                if (isVisible) {
+                    hideMobileInfoPanel();
+                } else {
+                    const char = window.characters[gameState.selectedCharacter];
+                    panel.innerHTML = `
+                        <div class="character-info">
+                            <strong>角色：</strong>
+                            <span>${char.name}</span><br>
+                            <small style="color: #666;">${char.title}</small>
+                        </div>
+
+                        <h4>📦 背包</h4>
+                        <div id="mobile-inventory">
+                            ${gameState.playerInventory.length === 0 ?
+                                '<div style="color: #999; font-style: italic;">背包是空的</div>' :
+                                gameState.playerInventory.map(item =>
+                                    `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${item}</div>`
+                                ).join('')
+                            }
+                        </div>
+
+                        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                            <strong>第 ${gameState.currentDay} 天</strong>
+                        </div>
+                    `;
+                    panel.style.display = 'block';
+                    document.getElementById('mobile-overlay').style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        }
+
+        // 事件绑定
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGameState();
+            updateInfoPanel();
+
+            // 移动端按钮事件
+            const mobileBtn = document.getElementById('mobile-info-btn');
+            if (mobileBtn) {
+                mobileBtn.addEventListener('click', toggleMobileInfoPanel);
+            }
+
+            // 遮罩层点击关闭
+            document.addEventListener('click', function(e) {
+                if (e.target.id === 'mobile-overlay') {
+                    hideMobileInfoPanel();
+                }
+            });
+
+            // ESC键关闭
+            document.addEventListener('keydown', function(e) {
+                if (e.keyCode === 27) {
+                    hideMobileInfoPanel();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
