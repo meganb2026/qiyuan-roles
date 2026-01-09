@@ -1,4 +1,5 @@
 :: CharacterSelect
+<div class="no-sidebar-margin">
 <h2>选择你的角色</h2>
 
 <p>伟大的丹麦王克劳狄斯正在修建他的宫殿，如今距离预计交付仅剩3天，突发巨变！</p>
@@ -7,7 +8,7 @@
 
 <p><em>请选择你的角色，并查看角色详情。</em></p>
 
-<div class="character-select-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+<div class="character-select-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px auto; max-width: 800px; width: 100%;">
 	<div style="border: 2px solid #667eea; padding: 15px; border-radius: 8px;">
 		<h3>克劳狄斯 - 国王</h3>
 		<p><em>威严的国王，掌握着王国的最高权力。</em></p>
@@ -43,6 +44,7 @@
 		<p><em>本次施工的运输队队长，熟知皇宫每日施工进度。</em></p>
 		<div style="margin-top: 10px;">[[选择角色|CharacterWangweiguo]]</div>
 	</div>
+</div>
 </div>
 
 :: CharacterClaudius

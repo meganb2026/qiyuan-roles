@@ -122,6 +122,28 @@ body {
 	transition: margin-left 0.3s ease;
 }
 
+/* 角色选择页面特殊样式 */
+.character-select-grid {
+	text-align: left !important;
+	margin: 20px auto !important;
+	max-width: 800px !important;
+	width: 100% !important;
+}
+
+/* 响应式设计 - 小屏幕上改为单列布局 */
+@media (max-width: 768px) {
+	.character-select-grid {
+		grid-template-columns: 1fr !important;
+		max-width: 100% !important;
+		margin: 20px 10px !important;
+	}
+
+	.no-sidebar-margin .passage {
+		padding-left: 1em !important;
+		padding-right: 1em !important;
+	}
+}
+
 .passage a {
 	color: #667eea;
 	text-decoration: none;
@@ -215,6 +237,57 @@ body {
 	padding: 20px;
 	box-sizing: border-box;
 	font-size: 14px;
+	transition: transform 0.3s ease, width 0.3s ease;
+}
+
+#game-sidebar.collapsed {
+	width: 50px;
+	padding: 15px 10px;
+	transform: translateX(-150px); /* 隐藏主要内容，只留切换按钮 */
+}
+
+#game-sidebar .sidebar-toggle {
+	position: absolute;
+	right: -15px;
+	top: 20px;
+	width: 30px;
+	height: 30px;
+	background: #667eea;
+	color: white;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	z-index: 1001;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	transition: all 0.3s ease;
+}
+
+#game-sidebar.collapsed .sidebar-toggle {
+	right: -15px;
+	transform: rotate(180deg);
+}
+
+#game-sidebar .sidebar-toggle:hover {
+	background: #764ba2;
+	transform: scale(1.1);
+}
+
+#game-sidebar .sidebar-toggle:active {
+	transform: scale(0.95);
+}
+
+#game-sidebar .sidebar-content {
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+
+#game-sidebar.collapsed .sidebar-content {
+	opacity: 0;
+	pointer-events: none;
 }
 
 #game-sidebar.hidden {
@@ -269,10 +342,52 @@ body {
 	font-size: 12px;
 }
 
-/* 当侧边栏显示时，调整主内容区域 */
-#game-sidebar:not([style*="display: none"]) ~ * .passage,
-body:has(#game-sidebar:not([style*="display: none"])) .passage {
+/* 当侧边栏显示且展开时，调整主内容区域 */
+#game-sidebar:not([style*="display: none"]):not(.collapsed) ~ * .passage,
+body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 	margin-left: 220px;
+}
+
+/* 角色选择页面和其他非游戏页面，不应用侧边栏边距 */
+.no-sidebar-margin .passage,
+.passage:has(.character-select-grid) {
+	margin-left: 0 !important;
+	max-width: none !important;
+	padding-left: 2em !important;
+	padding-right: 2em !important;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+	#game-sidebar {
+		width: 250px;
+		transform: translateX(-250px);
+	}
+
+	#game-sidebar.collapsed {
+		transform: translateX(-200px);
+	}
+
+	#game-sidebar:not([style*="display: none"]):not(.collapsed) ~ * .passage,
+	body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
+		margin-left: 270px;
+	}
+}
+
+@media (max-width: 480px) {
+	#game-sidebar {
+		width: 280px;
+		transform: translateX(-280px);
+	}
+
+	#game-sidebar.collapsed {
+		transform: translateX(-230px);
+	}
+
+	#game-sidebar:not([style*="display: none"]):not(.collapsed) ~ * .passage,
+	body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
+		margin-left: 300px;
+	}
 }
 
 /* 确保侧边栏在正确位置 */
@@ -487,9 +602,29 @@ body:has(#game-sidebar:not([style*="display: none"])) .passage {
 		if (!sidebar) {
 			sidebar = document.createElement(&#39;div&#39;);
 			sidebar.id = &#39;game-sidebar&#39;;
+			sidebar.className = &#39;collapsed&#39;; // 默认折叠状态
 			document.body.appendChild(sidebar);
+
+			// 添加切换按钮
+			var toggleBtn = document.createElement(&#39;button&#39;);
+			toggleBtn.className = &#39;sidebar-toggle&#39;;
+			toggleBtn.innerHTML = &#39;📦&#39;;
+			toggleBtn.title = &#39;切换背包显示&#39;;
+			toggleBtn.onclick = function() {
+				sidebar.classList.toggle(&#39;collapsed&#39;);
+				// 保存状态到本地存储
+				var isCollapsed = sidebar.classList.contains(&#39;collapsed&#39;);
+				localStorage.setItem(&#39;sidebarCollapsed&#39;, isCollapsed);
+			};
+			sidebar.appendChild(toggleBtn);
+
+			// 从本地存储恢复状态
+			var savedCollapsed = localStorage.getItem(&#39;sidebarCollapsed&#39;);
+			if (savedCollapsed === &#39;false&#39;) {
+				sidebar.classList.remove(&#39;collapsed&#39;);
+			}
 		}
-		
+
 		// 检查游戏是否开始
 		if (State.variables.gameStarted &amp;&amp; State.variables.selectedCharacter) {
 			// 更新侧边栏内容
@@ -498,13 +633,15 @@ body:has(#game-sidebar:not([style*="display: none"])) .passage {
 			var charTitle = char.title;
 			var inventory = State.variables.playerInventory || [];
 			var currentDay = State.variables.currentDay || 1;
-			
-			var html = &#39;&lt;div class=&quot;character-info&quot;&gt;&#39;;
+
+			var html = &#39;&lt;div class=&quot;sidebar-content&quot;&gt;&#39;;
+
+			html += &#39;&lt;div class=&quot;character-info&quot;&gt;&#39;;
 			html += &#39;&lt;strong&gt;角色：&lt;/strong&gt;&#39;;
 			html += &#39;&lt;span&gt;&#39; + charName + &#39;&lt;/span&gt;&lt;br&gt;&#39;;
 			html += &#39;&lt;small style=&quot;color: #666;&quot;&gt;&#39; + charTitle + &#39;&lt;/small&gt;&#39;;
 			html += &#39;&lt;/div&gt;&#39;;
-			
+
 			html += &#39;&lt;h3&gt;📦 背包&lt;/h3&gt;&#39;;
 			html += &#39;&lt;div id=&quot;inventory-display&quot;&gt;&#39;;
 			if (inventory.length === 0) {
@@ -515,19 +652,29 @@ body:has(#game-sidebar:not([style*="display: none"])) .passage {
 				}
 			}
 			html += &#39;&lt;/div&gt;&#39;;
-			
+
 			html += &#39;&lt;div style=&quot;margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;&quot;&gt;&#39;;
 			html += &#39;&lt;strong&gt;第 &#39; + currentDay + &#39; 天&lt;/strong&gt;&#39;;
 			html += &#39;&lt;/div&gt;&#39;;
-			
-			sidebar.innerHTML = html;
+
+			html += &#39;&lt;/div&gt;&#39;;
+
+			// 更新内容（保留切换按钮）
+			var contentDiv = sidebar.querySelector(&#39;.sidebar-content&#39;);
+			if (contentDiv) {
+				contentDiv.innerHTML = html.slice(22, -7); // 移除&lt;div class=&quot;sidebar-content&quot;&gt;包装
+			} else {
+				sidebar.insertAdjacentHTML(&#39;beforeend&#39;, html);
+			}
+
 			sidebar.style.display = &#39;block&#39;;
 		} else {
 			// 隐藏侧边栏
 			sidebar.style.display = &#39;none&#39;;
 		}
 	})();
-&lt;&lt;/script&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="StoryInterface" tags="" position="525,25" size="100,100">&lt;div id=&quot;passages&quot;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="CharacterSelect" tags="" position="650,25" size="100,100">&lt;h2&gt;选择你的角色&lt;/h2&gt;
+&lt;&lt;/script&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="StoryInterface" tags="" position="525,25" size="100,100">&lt;div id=&quot;passages&quot;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="CharacterSelect" tags="" position="650,25" size="100,100">&lt;div class=&quot;no-sidebar-margin&quot;&gt;
+&lt;h2&gt;选择你的角色&lt;/h2&gt;
 
 &lt;p&gt;伟大的丹麦王克劳狄斯正在修建他的宫殿，如今距离预计交付仅剩3天，突发巨变！&lt;/p&gt;
 
@@ -535,7 +682,7 @@ body:has(#game-sidebar:not([style*="display: none"])) .passage {
 
 &lt;p&gt;&lt;em&gt;请选择你的角色，并查看角色详情。&lt;/em&gt;&lt;/p&gt;
 
-&lt;div class=&quot;character-select-grid&quot; style=&quot;display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;&quot;&gt;
+&lt;div class=&quot;character-select-grid&quot; style=&quot;display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px auto; max-width: 800px; width: 100%;&quot;&gt;
 	&lt;div style=&quot;border: 2px solid #667eea; padding: 15px; border-radius: 8px;&quot;&gt;
 		&lt;h3&gt;克劳狄斯 - 国王&lt;/h3&gt;
 		&lt;p&gt;&lt;em&gt;威严的国王，掌握着王国的最高权力。&lt;/em&gt;&lt;/p&gt;
@@ -571,6 +718,7 @@ body:has(#game-sidebar:not([style*="display: none"])) .passage {
 		&lt;p&gt;&lt;em&gt;本次施工的运输队队长，熟知皇宫每日施工进度。&lt;/em&gt;&lt;/p&gt;
 		&lt;div style=&quot;margin-top: 10px;&quot;&gt;[[选择角色|CharacterWangweiguo]]&lt;/div&gt;
 	&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="7" name="CharacterClaudius" tags="" position="775,25" size="100,100">&lt;&lt;set $char = $characters.claudius&gt;&gt;
 
 &lt;h2&gt;克劳狄斯 - 国王&lt;/h2&gt;

@@ -228,9 +228,29 @@
 		if (!sidebar) {
 			sidebar = document.createElement('div');
 			sidebar.id = 'game-sidebar';
+			sidebar.className = 'collapsed'; // 默认折叠状态
 			document.body.appendChild(sidebar);
+
+			// 添加切换按钮
+			var toggleBtn = document.createElement('button');
+			toggleBtn.className = 'sidebar-toggle';
+			toggleBtn.innerHTML = '📦';
+			toggleBtn.title = '切换背包显示';
+			toggleBtn.onclick = function() {
+				sidebar.classList.toggle('collapsed');
+				// 保存状态到本地存储
+				var isCollapsed = sidebar.classList.contains('collapsed');
+				localStorage.setItem('sidebarCollapsed', isCollapsed);
+			};
+			sidebar.appendChild(toggleBtn);
+
+			// 从本地存储恢复状态
+			var savedCollapsed = localStorage.getItem('sidebarCollapsed');
+			if (savedCollapsed === 'false') {
+				sidebar.classList.remove('collapsed');
+			}
 		}
-		
+
 		// 检查游戏是否开始
 		if (State.variables.gameStarted && State.variables.selectedCharacter) {
 			// 更新侧边栏内容
@@ -239,13 +259,15 @@
 			var charTitle = char.title;
 			var inventory = State.variables.playerInventory || [];
 			var currentDay = State.variables.currentDay || 1;
-			
-			var html = '<div class="character-info">';
+
+			var html = '<div class="sidebar-content">';
+
+			html += '<div class="character-info">';
 			html += '<strong>角色：</strong>';
 			html += '<span>' + charName + '</span><br>';
 			html += '<small style="color: #666;">' + charTitle + '</small>';
 			html += '</div>';
-			
+
 			html += '<h3>📦 背包</h3>';
 			html += '<div id="inventory-display">';
 			if (inventory.length === 0) {
@@ -256,12 +278,21 @@
 				}
 			}
 			html += '</div>';
-			
+
 			html += '<div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">';
 			html += '<strong>第 ' + currentDay + ' 天</strong>';
 			html += '</div>';
-			
-			sidebar.innerHTML = html;
+
+			html += '</div>';
+
+			// 更新内容（保留切换按钮）
+			var contentDiv = sidebar.querySelector('.sidebar-content');
+			if (contentDiv) {
+				contentDiv.innerHTML = html.slice(22, -7); // 移除<div class="sidebar-content">包装
+			} else {
+				sidebar.insertAdjacentHTML('beforeend', html);
+			}
+
 			sidebar.style.display = 'block';
 		} else {
 			// 隐藏侧边栏
@@ -290,6 +321,28 @@ body {
 	max-width: 800px;
 	margin: 0 auto;
 	transition: margin-left 0.3s ease;
+}
+
+/* 角色选择页面特殊样式 */
+.character-select-grid {
+	text-align: left !important;
+	margin: 20px auto !important;
+	max-width: 800px !important;
+	width: 100% !important;
+}
+
+/* 响应式设计 - 小屏幕上改为单列布局 */
+@media (max-width: 768px) {
+	.character-select-grid {
+		grid-template-columns: 1fr !important;
+		max-width: 100% !important;
+		margin: 20px 10px !important;
+	}
+
+	.no-sidebar-margin .passage {
+		padding-left: 1em !important;
+		padding-right: 1em !important;
+	}
 }
 
 .passage a {
@@ -385,6 +438,57 @@ body {
 	padding: 20px;
 	box-sizing: border-box;
 	font-size: 14px;
+	transition: transform 0.3s ease, width 0.3s ease;
+}
+
+#game-sidebar.collapsed {
+	width: 50px;
+	padding: 15px 10px;
+	transform: translateX(-150px); /* 隐藏主要内容，只留切换按钮 */
+}
+
+#game-sidebar .sidebar-toggle {
+	position: absolute;
+	right: -15px;
+	top: 20px;
+	width: 30px;
+	height: 30px;
+	background: #667eea;
+	color: white;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	z-index: 1001;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	transition: all 0.3s ease;
+}
+
+#game-sidebar.collapsed .sidebar-toggle {
+	right: -15px;
+	transform: rotate(180deg);
+}
+
+#game-sidebar .sidebar-toggle:hover {
+	background: #764ba2;
+	transform: scale(1.1);
+}
+
+#game-sidebar .sidebar-toggle:active {
+	transform: scale(0.95);
+}
+
+#game-sidebar .sidebar-content {
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+
+#game-sidebar.collapsed .sidebar-content {
+	opacity: 0;
+	pointer-events: none;
 }
 
 #game-sidebar.hidden {
@@ -439,10 +543,52 @@ body {
 	font-size: 12px;
 }
 
-/* 当侧边栏显示时，调整主内容区域 */
-#game-sidebar:not([style*="display: none"]) ~ * .passage,
-body:has(#game-sidebar:not([style*="display: none"])) .passage {
+/* 当侧边栏显示且展开时，调整主内容区域 */
+#game-sidebar:not([style*="display: none"]):not(.collapsed) ~ * .passage,
+body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 	margin-left: 220px;
+}
+
+/* 角色选择页面和其他非游戏页面，不应用侧边栏边距 */
+.no-sidebar-margin .passage,
+.passage:has(.character-select-grid) {
+	margin-left: 0 !important;
+	max-width: none !important;
+	padding-left: 2em !important;
+	padding-right: 2em !important;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+	#game-sidebar {
+		width: 250px;
+		transform: translateX(-250px);
+	}
+
+	#game-sidebar.collapsed {
+		transform: translateX(-200px);
+	}
+
+	#game-sidebar:not([style*="display: none"]):not(.collapsed) ~ * .passage,
+	body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
+		margin-left: 270px;
+	}
+}
+
+@media (max-width: 480px) {
+	#game-sidebar {
+		width: 280px;
+		transform: translateX(-280px);
+	}
+
+	#game-sidebar.collapsed {
+		transform: translateX(-230px);
+	}
+
+	#game-sidebar:not([style*="display: none"]):not(.collapsed) ~ * .passage,
+	body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
+		margin-left: 300px;
+	}
 }
 
 /* 确保侧边栏在正确位置 */
@@ -451,6 +597,7 @@ body:has(#game-sidebar:not([style*="display: none"])) .passage {
 }
 
 :: CharacterSelect
+<div class="no-sidebar-margin">
 <h2>选择你的角色</h2>
 
 <p>伟大的丹麦王克劳狄斯正在修建他的宫殿，如今距离预计交付仅剩3天，突发巨变！</p>
@@ -459,7 +606,7 @@ body:has(#game-sidebar:not([style*="display: none"])) .passage {
 
 <p><em>请选择你的角色，并查看角色详情。</em></p>
 
-<div class="character-select-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+<div class="character-select-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px auto; max-width: 800px; width: 100%;">
 	<div style="border: 2px solid #667eea; padding: 15px; border-radius: 8px;">
 		<h3>克劳狄斯 - 国王</h3>
 		<p><em>威严的国王，掌握着王国的最高权力。</em></p>
@@ -495,6 +642,7 @@ body:has(#game-sidebar:not([style*="display: none"])) .passage {
 		<p><em>本次施工的运输队队长，熟知皇宫每日施工进度。</em></p>
 		<div style="margin-top: 10px;">[[选择角色|CharacterWangweiguo]]</div>
 	</div>
+</div>
 </div>
 
 :: CharacterClaudius

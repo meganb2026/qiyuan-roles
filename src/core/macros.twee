@@ -217,9 +217,29 @@
 		if (!sidebar) {
 			sidebar = document.createElement('div');
 			sidebar.id = 'game-sidebar';
+			sidebar.className = 'collapsed'; // 默认折叠状态
 			document.body.appendChild(sidebar);
+
+			// 添加切换按钮
+			var toggleBtn = document.createElement('button');
+			toggleBtn.className = 'sidebar-toggle';
+			toggleBtn.innerHTML = '📦';
+			toggleBtn.title = '切换背包显示';
+			toggleBtn.onclick = function() {
+				sidebar.classList.toggle('collapsed');
+				// 保存状态到本地存储
+				var isCollapsed = sidebar.classList.contains('collapsed');
+				localStorage.setItem('sidebarCollapsed', isCollapsed);
+			};
+			sidebar.appendChild(toggleBtn);
+
+			// 从本地存储恢复状态
+			var savedCollapsed = localStorage.getItem('sidebarCollapsed');
+			if (savedCollapsed === 'false') {
+				sidebar.classList.remove('collapsed');
+			}
 		}
-		
+
 		// 检查游戏是否开始
 		if (State.variables.gameStarted && State.variables.selectedCharacter) {
 			// 更新侧边栏内容
@@ -228,13 +248,15 @@
 			var charTitle = char.title;
 			var inventory = State.variables.playerInventory || [];
 			var currentDay = State.variables.currentDay || 1;
-			
-			var html = '<div class="character-info">';
+
+			var html = '<div class="sidebar-content">';
+
+			html += '<div class="character-info">';
 			html += '<strong>角色：</strong>';
 			html += '<span>' + charName + '</span><br>';
 			html += '<small style="color: #666;">' + charTitle + '</small>';
 			html += '</div>';
-			
+
 			html += '<h3>📦 背包</h3>';
 			html += '<div id="inventory-display">';
 			if (inventory.length === 0) {
@@ -245,12 +267,21 @@
 				}
 			}
 			html += '</div>';
-			
+
 			html += '<div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">';
 			html += '<strong>第 ' + currentDay + ' 天</strong>';
 			html += '</div>';
-			
-			sidebar.innerHTML = html;
+
+			html += '</div>';
+
+			// 更新内容（保留切换按钮）
+			var contentDiv = sidebar.querySelector('.sidebar-content');
+			if (contentDiv) {
+				contentDiv.innerHTML = html.slice(22, -7); // 移除<div class="sidebar-content">包装
+			} else {
+				sidebar.insertAdjacentHTML('beforeend', html);
+			}
+
 			sidebar.style.display = 'block';
 		} else {
 			// 隐藏侧边栏
