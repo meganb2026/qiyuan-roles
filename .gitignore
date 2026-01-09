@@ -1,0 +1,25 @@
+# 编译生成的文件
+game.html
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# 编辑器文件
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# 临时文件
+*.tmp
+*.log
+*.bak
+
+# 依赖和包管理（如果有）
+node_modules/
+package-lock.json
+yarn.lock

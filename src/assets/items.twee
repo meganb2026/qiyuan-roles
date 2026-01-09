@@ -1,0 +1,230 @@
+:: CheckGoal
+<<set $char = $characters[$selectedCharacter]>>
+<<set $goalCompleted = false>>
+
+<<if $selectedCharacter eq "claudius">>
+	// 克劳狄斯（国王）：找到并阻止针对王位的阴谋
+	// 需要：珍珠通关信物 + 至少两个其他关键物品（来自其他角色）
+	<<if $playerInventory.includes("珍珠通关信物")>>
+		<<set _keyItems = 0>>
+		<<if $playerInventory.includes("导师手记")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("周报")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("地下系统设计图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地面部分设计图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地图")>><<set _keyItems++>><</if>>
+		<<if _keyItems gte 2>>
+			<<set $goalCompleted = true>>
+			<p style="color: green; font-weight: bold;">✓ 你成功找到了阻止阴谋的关键线索！</p>
+		<</if>>
+	<</if>>
+	
+<<elseif $selectedCharacter eq "chengying">>
+	// 程婴（御医）：查明国王的病因并找到解药
+	// 需要：中草药 + 安眠药 + 至少一个其他线索
+	<<if $playerInventory.includes("中草药") and $playerInventory.includes("安眠药")>>
+		<<if $playerInventory.includes("导师手记") or $playerInventory.includes("地下系统设计图") or $playerInventory.includes("周报")>>
+			<<set $goalCompleted = true>>
+			<p style="color: green; font-weight: bold;">✓ 你成功找到了病因和解药！</p>
+		<</if>>
+	<</if>>
+	
+<<elseif $selectedCharacter eq "hefei">>
+	// 何非（潜水教练）：证明自己的真实身份并完成秘密任务
+	// 需要：潜水装备 + 至少两个其他关键物品
+	<<if $playerInventory.includes("潜水装备")>>
+		<<set _keyItems = 0>>
+		<<if $playerInventory.includes("地下系统设计图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("导师手记")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("周报")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("珍珠通关信物")>><<set _keyItems++>><</if>>
+		<<if _keyItems gte 2>>
+			<<set $goalCompleted = true>>
+			<p style="color: green; font-weight: bold;">✓ 你成功证明了身份并完成了秘密任务！</p>
+		<</if>>
+	<</if>>
+	
+<<elseif $selectedCharacter eq "lixiang">>
+	// 李想（下水道工程设计师）：发现并揭露下水道中的秘密
+	// 需要：地下系统设计图 + 至少两个其他线索
+	<<if $playerInventory.includes("地下系统设计图")>>
+		<<set _keyItems = 0>>
+		<<if $playerInventory.includes("周报")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("导师手记")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地面部分设计图")>><<set _keyItems++>><</if>>
+		<<if _keyItems gte 2>>
+			<<set $goalCompleted = true>>
+			<p style="color: green; font-weight: bold;">✓ 你成功发现并揭露了下水道中的秘密！</p>
+		<</if>>
+	<</if>>
+	
+<<elseif $selectedCharacter eq "wuzhizhe">>
+	// 吴智哲（建筑设计师）：找到师傅留下的秘密并保护它
+	// 需要：皇宫地面部分设计图 + 导师手记 + 至少一个其他物品
+	<<if $playerInventory.includes("皇宫地面部分设计图") and $playerInventory.includes("导师手记")>>
+		<<if $playerInventory.includes("地下系统设计图") or $playerInventory.includes("周报") or $playerInventory.includes("皇宫地图")>>
+			<<set $goalCompleted = true>>
+			<p style="color: green; font-weight: bold;">✓ 你成功找到并保护了师傅留下的秘密！</p>
+		<</if>>
+	<</if>>
+	
+<<elseif $selectedCharacter eq "wangweiguo">>
+	// 王卫国（施工运输队队长）：阻止非法物资的运输并揭露真相
+	// 需要：皇宫地图 + 周报 + 至少一个其他线索
+	<<if $playerInventory.includes("皇宫地图") and $playerInventory.includes("周报")>>
+		<<if $playerInventory.includes("地下系统设计图") or $playerInventory.includes("导师手记") or $playerInventory.includes("珍珠通关信物")>>
+			<<set $goalCompleted = true>>
+			<p style="color: green; font-weight: bold;">✓ 你成功阻止了非法运输并揭露了真相！</p>
+		<</if>>
+	<</if>>
+<</if>>
+
+<<if $goalCompleted>>
+	<<if $currentDay eq 3>>
+		[[查看成功结局|GameSuccess]]
+	<<else>>
+		<p style="color: green; font-weight: bold;">恭喜！你已经完成了目标！但游戏还会继续，你可以探索更多内容。</p>
+		[[结束第 $currentDay 天|EndDay]]
+	<</if>>
+<<elseif $currentDay eq 3>>
+	[[查看失败结局|GameFailure]]
+<<else>>
+	<p style="color: #666;">你还需要更多线索来完成目标。继续努力！</p>
+	[[结束第 $currentDay 天|EndDay]]
+<</if>>
+
+:: FinalCheck
+<<set $char = $characters[$selectedCharacter]>>
+<<set $goalCompleted = false>>
+
+<<if $selectedCharacter eq "claudius">>
+	<<if $playerInventory.includes("珍珠通关信物")>>
+		<<set _keyItems = 0>>
+		<<if $playerInventory.includes("导师手记")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("周报")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("地下系统设计图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地面部分设计图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地图")>><<set _keyItems++>><</if>>
+		<<if _keyItems gte 2>>
+			<<set $goalCompleted = true>>
+		<</if>>
+	<</if>>
+<<elseif $selectedCharacter eq "chengying">>
+	<<if $playerInventory.includes("中草药") and $playerInventory.includes("安眠药")>>
+		<<if $playerInventory.includes("导师手记") or $playerInventory.includes("地下系统设计图") or $playerInventory.includes("周报")>>
+			<<set $goalCompleted = true>>
+		<</if>>
+	<</if>>
+<<elseif $selectedCharacter eq "hefei">>
+	<<if $playerInventory.includes("潜水装备")>>
+		<<set _keyItems = 0>>
+		<<if $playerInventory.includes("地下系统设计图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("导师手记")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("周报")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("珍珠通关信物")>><<set _keyItems++>><</if>>
+		<<if _keyItems gte 2>>
+			<<set $goalCompleted = true>>
+		<</if>>
+	<</if>>
+<<elseif $selectedCharacter eq "lixiang">>
+	<<if $playerInventory.includes("地下系统设计图")>>
+		<<set _keyItems = 0>>
+		<<if $playerInventory.includes("周报")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("导师手记")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地图")>><<set _keyItems++>><</if>>
+		<<if $playerInventory.includes("皇宫地面部分设计图")>><<set _keyItems++>><</if>>
+		<<if _keyItems gte 2>>
+			<<set $goalCompleted = true>>
+		<</if>>
+	<</if>>
+<<elseif $selectedCharacter eq "wuzhizhe">>
+	<<if $playerInventory.includes("皇宫地面部分设计图") and $playerInventory.includes("导师手记")>>
+		<<if $playerInventory.includes("地下系统设计图") or $playerInventory.includes("周报") or $playerInventory.includes("皇宫地图")>>
+			<<set $goalCompleted = true>>
+		<</if>>
+	<</if>>
+<<elseif $selectedCharacter eq "wangweiguo">>
+	<<if $playerInventory.includes("皇宫地图") and $playerInventory.includes("周报")>>
+		<<if $playerInventory.includes("地下系统设计图") or $playerInventory.includes("导师手记") or $playerInventory.includes("珍珠通关信物")>>
+			<<set $goalCompleted = true>>
+		<</if>>
+	<</if>>
+<</if>>
+
+<<if $goalCompleted>>
+	[[成功结局|GameSuccess]]
+<<else>>
+	[[失败结局|GameFailure]]
+<</if>>
+
+:: GameSuccess
+<h1 style="color: green; text-align: center;">🎉 成功！</h1>
+
+<<set $char = $characters[$selectedCharacter]>>
+
+<div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin: 20px 0;">
+	<h2>恭喜你，$char.name！</h2>
+	
+	<p>经过三天的努力，你成功完成了你的目标：</p>
+	<p><strong>$char.goal</strong></p>
+	
+	<h3>你的最终装备：</h3>
+	<ul>
+	<<for _i = 0; _i < $playerInventory.length; _i++>>
+		<li>$playerInventory[_i]</li>
+	<</for>>
+	</ul>
+	
+	<h3>交换记录：</h3>
+	<<if $exchangeHistory.length gt 0>>
+		<ul>
+		<<for _i = 0; _i < $exchangeHistory.length; _i++>>
+			<li>第 $exchangeHistory[_i].day 天：与 $exchangeHistory[_i].with 交换了 "$exchangeHistory[_i].myItem" ↔ "$exchangeHistory[_i].npcItem"</li>
+		<</for>>
+		</ul>
+	<<else>>
+		<p>你没有进行任何装备交换。</p>
+	<</if>>
+</div>
+
+<p>你的智慧和策略帮助你在三天内完成了看似不可能的任务。皇宫的秘密终于被揭开，真相大白于天下。</p>
+
+[[重新开始|CharacterSelect]]
+
+:: GameFailure
+<h1 style="color: red; text-align: center;">❌ 失败</h1>
+
+<<set $char = $characters[$selectedCharacter]>>
+
+<div style="background: #ffebee; padding: 20px; border-radius: 10px; margin: 20px 0;">
+	<h2>很遗憾，$char.name</h2>
+	
+	<p>三天过去了，你未能完成你的目标：</p>
+	<p><strong>$char.goal</strong></p>
+	
+	<h3>你的最终装备：</h3>
+	<ul>
+	<<for _i = 0; _i < $playerInventory.length; _i++>>
+		<li>$playerInventory[_i]</li>
+	<</for>>
+	</ul>
+	
+	<h3>交换记录：</h3>
+	<<if $exchangeHistory.length gt 0>>
+		<ul>
+		<<for _i = 0; _i < $exchangeHistory.length; _i++>>
+			<li>第 $exchangeHistory[_i].day 天：与 $exchangeHistory[_i].with 交换了 "$exchangeHistory[_i].myItem" ↔ "$exchangeHistory[_i].npcItem"</li>
+		<</for>>
+		</ul>
+	<<else>>
+		<p>你没有进行任何装备交换。</p>
+	<</if>>
+</div>
+
+<p>时间不等人，机会稍纵即逝。也许下一次，你需要更仔细地规划你的策略，更谨慎地选择交换的对象。</p>
+
+<p>但不要灰心，每一次尝试都是一次学习的机会。重新开始，也许你能找到更好的方法。</p>
+
+[[重新开始|CharacterSelect]]
