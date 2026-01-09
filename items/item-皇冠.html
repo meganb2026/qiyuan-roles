@@ -176,7 +176,11 @@
 
         // 显示物品详情
         function showItemDetail() {
-            const itemData = itemStories[itemName];
+        function continueInvestigation() {
+            // 返回第二天故事页面
+            const gameUrl = `../day2-story.html?character=${currentCharacter}&day=2&from=item-detail`;
+            window.location.href = gameUrl;
+        }            const itemData = itemStories[itemName];
             if (itemData) {
                 document.getElementById('item-name').textContent = itemData.name;
                 document.getElementById('item-description').textContent = itemData.description;
@@ -197,8 +201,8 @@
 
         // 继续调查
         function continueInvestigation() {
-            // 返回主游戏
-            <const gameUrl = `../day2-story.html?character=${currentCharacter}const gameUrl = `../game.html?character=${currentCharacter}&day=${day}&from=item-detail`;day=2const gameUrl = `../game.html?character=${currentCharacter}&day=${day}&from=item-detail`;from=item-detail`;
+            // 返回第二天故事页面
+            const gameUrl = `../day2-story.html?character=${currentCharacter}&day=2&from=item-detail`;
             window.location.href = gameUrl;
         }
 
