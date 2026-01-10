@@ -168,16 +168,22 @@
 
             if (!gameState.gameStarted) {
                 hideMobileInfoPanel();
+                hideDesktopSidebar();
                 return;
             }
 
-            // 如果是电脑端，直接显示侧边栏
+            // 屏幕切换时，先关闭所有面板
+            hideMobileInfoPanel();
+            hideDesktopSidebar();
+
+            // 根据屏幕大小更新对应面板内容，但不自动显示
             if (!isMobile) {
-                showDesktopSidebar();
+                // 电脑端更新侧边栏内容，但不自动显示
+                updateDesktopSidebarContent();
                 return;
             }
 
-            // 移动端显示面板
+            // 移动端更新面板内容，但不自动显示
             const char = window.characters[gameState.selectedCharacter];
             const panel = document.getElementById('mobile-info-panel');
 
@@ -203,7 +209,6 @@
                         <strong>第 ${gameState.currentDay} 天</strong>
                     </div>
                 `;
-                panel.style.display = 'block';
             }
         }
 

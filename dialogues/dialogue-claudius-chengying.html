@@ -172,7 +172,7 @@
                 return;
             }
 
-            // 移动端显示面板
+            // 移动端更新面板内容，但不自动显示
             const char = window.characters[gameState.selectedCharacter];
             const panel = document.getElementById('mobile-info-panel');
 
@@ -198,7 +198,6 @@
                         <strong>第 ${gameState.currentDay} 天</strong>
                     </div>
                 `;
-                panel.style.display = 'block';
             }
         }
 
