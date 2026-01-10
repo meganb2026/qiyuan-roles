@@ -59,6 +59,7 @@
     <!-- 加载脚本 -->
     <script src="../assets/js/characters.js"></script>
     <script src="../assets/js/items.js"></script>
+    <script src="../assets/js/itemStories.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -130,13 +131,13 @@
         function continueInvestigation() {
             // 计算下一天
             const nextDay = gameState.currentDay + 1;
-            
+
             // 更新游戏状态
             gameState.currentDay = nextDay;
             // 重置新获得物品标记
             gameState.newlyAcquiredItem = null;
             localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
-            
+
             // 跳转到下一天的故事页面
             const gameUrl = `../day${nextDay}-story.html?character=${currentCharacter}&day=${nextDay}&from=item-detail`;
             window.location.href = gameUrl;
