@@ -123,7 +123,7 @@
                     </div>
 
                     <div class="exchange-actions">
-                        <button class="action-btn primary large" onclick="finishExchange()">
+                        <button class="action-btn primary large" onclick="finishExchange()" ${!gameState.newlyAcquiredItem ? 'disabled' : ''} style="${!gameState.newlyAcquiredItem ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
                             继续调查
                         </button>
                     </div>
