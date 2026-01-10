@@ -3,65 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript测试</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .test-result {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    <title>JavaScript Syntax Test</title>
 </head>
 <body>
-    <h1>JavaScript执行测试</h1>
+    <h1>JavaScript Syntax Test</h1>
+    <div id="result"></div>
 
-    <div id="test-results">
-        <div class="test-result success">✅ HTML加载成功</div>
-    </div>
-
+    <!-- 测试从day2-inner-thoughts.html提取的JavaScript代码 -->
     <script>
-        console.log('JavaScript is working in console');
+        // 模拟从URL参数获取角色信息
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedCharacter = urlParams.get('character') || 'claudius';
 
-        // 添加一个测试结果
-        var resultsDiv = document.getElementById('test-results');
-        var testDiv = document.createElement('div');
-        testDiv.className = 'test-result success';
-        testDiv.innerHTML = '✅ JavaScript代码执行成功';
-        resultsDiv.appendChild(testDiv);
+        // 游戏状态
+        let gameState = {
+            selectedCharacter: selectedCharacter,
+            currentDay: 2,
+            gameStarted: true,
+            playerInventory: [],
+            allCharactersItems: {},
+            npcs: []
+        };
 
-        // 测试alert
-        alert('JavaScript Alert测试：如果看到这个，说明JavaScript能正常执行！');
+        // 从localStorage加载游戏状态
+        function loadGameState() {
+            const savedState = localStorage.getItem('qiyuanGameState');
+            if (savedState) {
+                const parsedState = JSON.parse(savedState);
+                gameState = { ...gameState, ...parsedState };
+            }
+        }
 
-        // 创建测试元素
-        var visualTest = document.createElement('div');
-        visualTest.className = 'test-result success';
-        visualTest.innerHTML = '✅ 页面元素创建成功 - ' + new Date().toLocaleTimeString();
-        visualTest.style.cssText = 'position: fixed; top: 10px; right: 10px; background: yellow; padding: 10px; z-index: 9999; border: 2px solid orange;';
-        document.body.appendChild(visualTest);
+        // 继续到选择交换对象
+        function proceedToGame() {
+            // 保存状态
+            localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
+
+            // 跳转到选择交换对象的页面
+            const selectUrl = `select-exchange-target.html?character=${selectedCharacter}&day=2`;
+            document.getElementById('result').innerHTML = `<p>测试通过！跳转URL: ${selectUrl}</p>`;
+        }
+
+        // 初始化测试
+        function initTest() {
+            loadGameState();
+            proceedToGame();
+        }
+
+        // 运行测试
+        window.onload = initTest;
     </script>
-
-    <h2>测试说明</h2>
-    <ul>
-        <li>如果能看到绿色的成功消息，说明JavaScript能执行</li>
-        <li>如果弹出alert对话框，说明alert函数正常</li>
-        <li>如果右上角有黄色的测试框，说明DOM操作正常</li>
-        <li>如果浏览器控制台有日志输出，说明console正常</li>
-    </ul>
-
-    <p><strong>如果所有测试都通过，说明浏览器和JavaScript环境正常，问题可能在Twine的编译过程中。</strong></p>
 </body>
 </html>

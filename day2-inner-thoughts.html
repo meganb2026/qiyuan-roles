@@ -165,8 +165,8 @@
                         </div>
 
                         <div class="thoughts-actions">
-                            <button class="action-btn primary large" onclick="proceedToNextDay()">
-                                继续调查 - 第3天
+                            <button class="action-btn primary large" onclick="proceedToGame()">
+                                选择拜访对象
                             </button>
                         </div>
                     </div>
@@ -177,17 +177,14 @@
             updateInfoPanel();
         }
 
-        // 继续到第三天
-        function proceedToNextDay() {
-            // 更新游戏状态到第三天
-            gameState.currentDay = 3;
-
+        // 继续到选择交换对象
+        function proceedToGame() {
             // 保存状态
             localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
 
-            // 跳转到第三天的选择页面（暂时跳转到游戏主页）
-            const gameUrl = `game.html?character=${selectedCharacter}&day=3&from=day2-thoughts`;
-            window.location.href = gameUrl;
+            // 跳转到选择交换对象的页面
+            const selectUrl = `select-exchange-target.html?character=${selectedCharacter}&day=2`;
+            window.location.href = selectUrl;
         }
 
         // 更新信息面板（支持移动端和电脑端）
