@@ -162,6 +162,9 @@ class Game {
 
     // 选择角色
     selectCharacter(characterId) {
+        // 清除localStorage缓存，确保每次开始都是新游戏
+        localStorage.removeItem('qiyuanGameState');
+        
         this.gameState.selectedCharacter = characterId;
         const char = window.characters[characterId];
 
@@ -474,6 +477,9 @@ class Game {
 
     // 重置游戏
     resetGame() {
+        // 清除localStorage缓存
+        localStorage.removeItem('qiyuanGameState');
+        
         this.gameState = {
             selectedCharacter: null,
             currentDay: 1,
