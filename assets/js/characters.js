@@ -6,14 +6,14 @@ const characters = {
 		publicDescription: "老国王哈姆雷特的弟弟，他登基后娶了嫂嫂，当前最畅销的民间画本主人公",
 		description: "你是丹麦王克劳狄斯，这王位本是你哥哥的。一场阴谋让他命丧黄泉。这深宫里，藏着你的秘密，那是你最深的恐惧。",
 		initialItems: ["crown", "pearl-pass", "money"],
-		goal: "毒死持有证据的人",
+		goal: "取到证据，或找到当前持有证据的人并毒死",
 		goalKey: "prevent_conspiracy",
 		backstory: "你的王位来路不正，这可千万不能让人知道。当年的知情人已经不多了，仅剩最后一件证据还流落民间。你决定利用这个案件，借机销毁证据。"
 	},
 	"chengying": {
 		name: "程婴",
 		title: "御医",
-		publicDescription: "医术高明但风评非常阴狠的御医，传说就是他曾陷害死了公孙杵臼",
+		publicDescription: "医术高明但风评阴狠的御医，传说就是他陷害死了公孙杵臼",
 		description: "天下人皆骂你，其实你卧薪尝胆，只为揭开当年的真相。",
 		initialItems: ["chinese-herbs", "sleeping-pill"],
 		goal: "找到先王的死因",
@@ -33,7 +33,7 @@ const characters = {
 	"lixiang": {
 		name: "李想",
 		title: "市政排水总工程师",
-		publicDescription: "王国里最熟悉给排水系统的人，代表作是曾建设新城的完整地下水道设计",
+		publicDescription: "王国里最熟悉给排水系统的人，代表作是新城的完整地下水道设计",
 		description: "负责皇宫的排水系统设计。",
 		initialItems: ["underground-system-blueprint"],
 		goal: "找到尸体不是因排水系统设计有问题造成的死亡案件。",
@@ -43,7 +43,7 @@ const characters = {
 	"wuzhizhe": {
 		name: "吴智哲",
 		title: "建筑设计师",
-		publicDescription: "已故皇宫总建筑设计师的关门弟子。皇宫建筑设计是当年读书时老板接的横向，因此对皇宫也略知一二",
+		publicDescription: "已故皇宫总建筑设计师的关门弟子",
 		description: "已故皇宫总建筑设计师的关门弟子。皇宫建筑设计是当年读书时老板接的横向，因此对皇宫也略知一二。",
 		initialItems: ["palace-ground-blueprint", "mentor-notes"],
 		goal: "在三天内解出导师留下的线索并保护秘密",
@@ -53,7 +53,7 @@ const characters = {
 	"wangweiguo": {
 		name: "王卫国",
 		title: "施工运输队队长",
-		publicDescription: "他的团队每天穿梭于皇宫运输材料，每天皇宫里发生了什么新鲜事他都知道",
+		publicDescription: "经验丰富的运输队长，他的团队每天穿梭于皇宫运输材料",
 		description: "你的团队每天穿梭于皇宫运输材料，每天皇宫里发生了什么新鲜事你都知道。",
 		initialItems: ["palace-map", "weekly-report"],
 		goal: "按时交付皇宫修建工程",
