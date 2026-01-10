@@ -25,7 +25,7 @@ const characters = {
 		title: "潜水教练",
 		publicDescription: "消息非常灵通，什么人都认识。写作江湖百晓生，读作江湖骗子",
 		description: "你是个贪财好色之人，唯利是图但也遍交朋友。",
-		initialItems: ["diving-equipment", "dice", "painting-tools"],
+		initialItems: ["diving-equipment", "dice"],
 		goal: "在三天内获取足够的钱还清赌债。",
 		goalKey: "prove_identity",
 		backstory: "克劳狄斯登基时，印了新头像的钱币。人人都知道，你最喜欢克劳狄斯的币了。"
@@ -35,7 +35,7 @@ const characters = {
 		title: "市政排水总工程师",
 		publicDescription: "王国里最熟悉给排水系统的人，代表作是新城的完整地下水道设计",
 		description: "负责皇宫的排水系统设计。",
-		initialItems: ["underground-system-blueprint"],
+		initialItems: ["underground-system-blueprint", "clothes"],
 		goal: "找到尸体不是因排水系统设计有问题造成的死亡案件。",
 		goalKey: "discover_secret",
 		backstory: "作为排水系统的总工程师，要是设计问题造成了工匠死亡，那可是很严重的。你必须找出真相。"
@@ -44,7 +44,7 @@ const characters = {
 		name: "吴智哲",
 		title: "建筑设计师",
 		publicDescription: "已故皇宫总建筑设计师的关门弟子",
-		description: "已故皇宫总建筑设计师的关门弟子。皇宫建筑设计是当年读书时老板接的横向，因此对皇宫也略知一二。",
+		description: "无知者无畏，你是吴智哲。",
 		initialItems: ["palace-ground-blueprint", "mentor-notes"],
 		goal: "在三天内解出导师留下的线索并保护秘密",
 		goalKey: "protect_secret",

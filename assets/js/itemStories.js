@@ -3,7 +3,7 @@ const itemStories = {
     "crown": {
         name: "皇冠",
         description: "象征王权的物品，通常由国王佩戴。",
-        story: "这顶皇冠是丹麦王室的传承之物，上面镶嵌着无数珍贵的宝石。每一位国王登基时都会佩戴它，以显示至高无上的权力。"
+        story: "这顶皇冠是王室的传承之物，上面镶嵌着无数珍贵的宝石。每一位国王登基时都会佩戴它，以显示至高无上的权力。"
     },
     "pearl-pass": {
         name: "珍珠通关信物",
@@ -17,8 +17,8 @@ const itemStories = {
     },
     "chinese-herbs": {
         name: "中草药",
-        description: "没什么东西，都是些甘草、桔梗和薄荷。",
-        story: "有传闻说，曾有人看到过程婴把这袋子甘草、桔梗和薄荷变成了人参。究竟是这药有毒，还是程婴其实是女巫？"
+        description: "里面是一支人参。",
+        story: "说是甘草、桔梗和薄荷，经御医的手却变成了人参。莫非这程婴其实是女巫？"
     },
     "sleeping-pill": {
         name: "安眠药",
@@ -35,10 +35,10 @@ const itemStories = {
         description: "一副普通的赌博骰子。",
         story: "什么人会带骰子在身上？赌徒？"
     },
-    "painting-tools": {
+    "clothes": {
         name: "羽绒服内胆",
-        description: "红的黄的绿的黑的白的...多种款式随你选择",
-        story: "谁见了都要问一句：叔叔，这么冷吗？"
+        description: "红的黄的绿的黑的白的...长袖短袖...翻开一件羽绒服下面还有一件",
+        story: "谁见了都要问一句：叔叔，这对吗？"
     },
     "underground-system-blueprint": {
         name: "地下系统设计图",
