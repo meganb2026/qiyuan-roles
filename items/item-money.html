@@ -133,6 +133,8 @@
             
             // 更新游戏状态
             gameState.currentDay = nextDay;
+            // 重置新获得物品标记
+            gameState.newlyAcquiredItem = null;
             localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
             
             // 跳转到下一天的故事页面
