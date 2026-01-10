@@ -82,7 +82,8 @@
             npcs: []
         };
 
-// 从localStorage加载游戏状态
+
+        // 从localStorage加载游戏状态
         function loadGameState() {
             const savedState = localStorage.getItem('qiyuanGameState');
             if (savedState) {
@@ -129,16 +130,9 @@
 
         // 继续调查
         function continueInvestigation() {
-            // 根据天数决定返回哪个页面
-            let nextUrl;
-            if (gameState.currentDay === 1) {
-                nextUrl = `../game.html?character=${currentCharacter}&day=${gameState.currentDay}&from=item-detail`;
-            } else if (gameState.currentDay === 2) {
-                nextUrl = `../day${gameState.currentDay}-story.html?character=${currentCharacter}&day=${gameState.currentDay}&from=item-detail`;
-            } else {
-                nextUrl = `../game.html?character=${currentCharacter}&day=${gameState.currentDay}&from=item-detail`;
-            }
-            window.location.href = nextUrl;
+            // 返回第二天故事页面
+            const gameUrl = `../day2-story.html?character=${currentCharacter}&day=2&from=item-detail`;
+            window.location.href = gameUrl;
         }
 
         // 更新信息面板内容（支持移动端和电脑端）
@@ -179,7 +173,7 @@
                         ${gameState.playerInventory.length === 0 ?
                             '<div style="color: #999; font-style: italic;">背包是空的</div>' :
                             gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${window.getItemDisplayName(item)}</div>`
+                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
                             ).join('')
                         }
                     </div>
@@ -210,7 +204,7 @@
                         ${gameState.playerInventory.length === 0 ?
                             '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
                             gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${window.getItemDisplayName(item)}</div>`
+                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${getItemDisplayName(item)}</div>`
                             ).join('')
                         }
                     </div>
@@ -264,7 +258,7 @@
                             ${gameState.playerInventory.length === 0 ?
                                 '<div style="color: #999; font-style: italic;">背包是空的</div>' :
                                 gameState.playerInventory.map(item =>
-                                    `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${window.getItemDisplayName(item)}</div>`
+                                    `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
                                 ).join('')
                             }
                         </div>
