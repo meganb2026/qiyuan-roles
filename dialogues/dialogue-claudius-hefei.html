@@ -176,10 +176,10 @@
             hideMobileInfoPanel();
             hideDesktopSidebar();
 
-            // 根据屏幕大小更新对应面板内容，但不自动显示
+            // 根据屏幕大小显示对应的面板
             if (!isMobile) {
-                // 电脑端更新侧边栏内容，但不自动显示
-                updateDesktopSidebarContent();
+                // 电脑端显示侧边栏
+                showDesktopSidebar();
                 return;
             }
 
@@ -241,6 +241,14 @@
                     </div>
                 `;
                 sidebar.style.display = 'block';
+            }
+        }
+        
+        // 隐藏电脑端侧边栏
+        function hideDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'none';
             }
         }
 
