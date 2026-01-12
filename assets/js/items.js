@@ -5,7 +5,7 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
     const goalCheckers = {
         "claudius": function(inventory) {
             // 克劳狄斯（国王）：需要珍珠通关信物 + 至少两个其他关键物品
-            if (!inventory.includes("珍珠通关信物")) return false;
+            if (!inventory.includes("通关信物")) return false;
 
             const keyItems = ["导师手记", "工作周报", "地下系统设计图", "皇宫地面部分设计图", "皇宫地图"];
             let count = 0;
@@ -27,7 +27,7 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
             // 何非（潜水教练）：需要潜水装备 + 至少两个其他关键物品
             if (!inventory.includes("潜水装备")) return false;
 
-            const keyItems = ["地下系统设计图", "导师手记", "皇宫地图", "工作周报", "珍珠通关信物"];
+            const keyItems = ["地下系统设计图", "导师手记", "皇宫地图", "工作周报", "通关信物"];
             let count = 0;
             keyItems.forEach(item => {
                 if (inventory.includes(item)) count++;
@@ -59,7 +59,7 @@ function checkGoal(playerInventory, selectedCharacter, currentDay) {
             // 王卫国（施工运输队队长）：需要皇宫地图 + 周报 + 至少一个其他线索
             if (!inventory.includes("皇宫地图") || !inventory.includes("工作周报")) return false;
 
-            const clueItems = ["地下系统设计图", "导师手记", "珍珠通关信物"];
+            const clueItems = ["地下系统设计图", "导师手记", "通关信物"];
             return clueItems.some(item => inventory.includes(item));
         }
     };
