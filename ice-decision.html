@@ -205,18 +205,24 @@
                         gameState.allCharactersItems[gameState.selectedCharacter].push(iceItem);
                     }
                 }
-                alert('你将寒冰放入了背包！');
+                
+                // 保存状态
+                saveGameState();
+                
+                // 跳转到寒冰揭秘页面
+                const revealUrl = `ice-reveal.html?character=${currentCharacter}&day=${gameState.currentDay}&from=decision&choice=${choice}`;
+                window.location.href = revealUrl;
             } else {
                 // 默默走开
                 alert('你选择了默默走开，当作无事发生。');
+                
+                // 保存状态
+                saveGameState();
+                
+                // 跳转到最终结果页面
+                const finalResultUrl = `final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&from=decision&choice=${choice}`;
+                window.location.href = finalResultUrl;
             }
-            
-            // 保存状态
-            saveGameState();
-            
-            // 跳转到最终结果页面
-            const finalResultUrl = `final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&from=decision&choice=${choice}`;
-            window.location.href = finalResultUrl;
         }
 
         // 更新信息面板（支持移动端和电脑端）
