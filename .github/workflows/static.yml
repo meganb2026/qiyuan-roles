@@ -1,142 +1,71 @@
-# Simple workflow for deploying static content (main + dev 分离部署，解决环境保护规则报错)
-name: Deploy static content (main + dev isolation - fix env protection)
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
 
 on:
+  # Runs on pushes targeting the default branch
   push:
-    branches: ["main", "dev"]
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# 权限配置：满足所有分支的操作需求
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write  # 支持 dev 分支向 main 推送，main 分支部署 Pages
-  pages: write     # 仅 main 分支使用
-  id-token: write  # 仅 main 分支使用
+  contents: read
+  pages: write
+  id-token: write
 
-# 并发控制：按分支隔离，避免互相干扰
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "pages-${{ github.ref }}"
-  cancel-in-progress: true
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  # ========== Job 1：仅处理 main 分支（正式环境，关联 github-pages 环境） ==========
-  deploy-main:
-    if: github.ref == 'refs/heads/main'  # 仅 main 分支执行
+  # Deploy job
+  deploy:
     environment:
-      name: github-pages  # 仅 main 分支关联该环境，符合保护规则
-      url: ${{ steps.main_deployment.outputs.page_url }}
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Verify game files (main branch)
+      - name: Verify game files
         run: |
-          echo "📁 Checking main branch project structure..."
-          required_files=("game.html" "index.html")
-          required_dirs=("assets")
-
-          for file in "${required_files[@]}"; do
-            if [ -f "$file" ]; then
-              echo "✅ $file exists"
-            else
-              echo "❌ $file not found"
-              exit 1
-            fi
-          done
-
-          for dir in "${required_dirs[@]}"; do
-            if [ -d "$dir" ]; then
-              echo "✅ $dir directory exists"
-            else
-              echo "❌ $dir directory not found"
-              exit 1
-            fi
-          done
-
-          # 自动创建 .nojekyll 文件
-          if [ ! -f ".nojekyll" ]; then
-            echo "📌 Creating .nojekyll file"
-            touch .nojekyll
+          echo "📁 Checking project structure..."
+          if [ -f "game.html" ]; then
+            echo "✅ game.html exists"
           else
-            echo "✅ .nojekyll file exists"
+            echo "❌ game.html not found"
+            exit 1
           fi
 
-          echo "🎮 Main branch structure verified"
+          if [ -f "index.html" ]; then
+            echo "✅ index.html exists"
+          else
+            echo "❌ index.html not found"
+            exit 1
+          fi
 
-      - name: Setup GitHub Pages (main only)
+          if [ -d "assets" ]; then
+            echo "✅ assets directory exists"
+          else
+            echo "❌ assets directory not found"
+            exit 1
+          fi
+
+          echo "🎮 Project structure verified"
+
+      - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload main branch artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
-      - name: Deploy main branch to GitHub Pages
-        id: main_deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # ========== Job 2：仅处理 dev 分支（开发环境，不关联任何环境） ==========
-  deploy-dev:
-    if: github.ref == 'refs/heads/dev'  # 仅 dev 分支执行
-    runs-on: ubuntu-latest
-    # 关键：不配置 environment，彻底脱离 github-pages 环境，规避保护规则
-    steps:
-      - name: Checkout code (full history)
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Verify game files (dev branch)
-        run: |
-          echo "📁 Checking dev branch project structure..."
-          required_files=("game.html" "index.html")
-          required_dirs=("assets")
-
-          for file in "${required_files[@]}"; do
-            if [ -f "$file" ]; then
-              echo "✅ $file exists"
-            else
-              echo "❌ $file not found"
-              exit 1
-            fi
-          done
-
-          for dir in "${required_dirs[@]}"; do
-            if [ -d "$dir" ]; then
-              echo "✅ $dir directory exists"
-            else
-              echo "❌ $dir directory not found"
-              exit 1
-            fi
-          done
-
-          # 自动创建 .nojekyll 文件（同步到 main/dev/ 目录）
-          if [ ! -f ".nojekyll" ]; then
-            echo "📌 Creating .nojekyll file"
-            touch .nojekyll
-          else
-            echo "✅ .nojekyll file exists"
-          fi
-
-          echo "🎮 Dev branch structure verified"
-
-      - name: Dev branch - Deploy to main/dev/ directory
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: main
-          folder: '.'
-          target-folder: dev
-          clean: true
-          clean-exclude: |
-            index.html
-            game.html
-            assets/
-            .nojekyll
-            README.md
-          commit-message: "Auto deploy dev branch to main/dev/ [skip ci]"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          disable-jekyll: true
