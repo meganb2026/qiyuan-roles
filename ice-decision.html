@@ -192,23 +192,6 @@
         // 处理决策
         function handleDecision(choice) {
             if (choice === 'take') {
-                // 将寒冰放入背包
-                const iceItem = 'ice_crystal'; // 假设寒冰的物品ID是ice_crystal
-                if (!gameState.playerInventory.includes(iceItem)) {
-                    gameState.playerInventory.push(iceItem);
-                    
-                    // 更新角色物品
-                    if (!gameState.allCharactersItems[gameState.selectedCharacter]) {
-                        gameState.allCharactersItems[gameState.selectedCharacter] = [];
-                    }
-                    if (!gameState.allCharactersItems[gameState.selectedCharacter].includes(iceItem)) {
-                        gameState.allCharactersItems[gameState.selectedCharacter].push(iceItem);
-                    }
-                }
-                
-                // 保存状态
-                saveGameState();
-                
                 // 跳转到寒冰揭秘页面
                 const revealUrl = `ice-reveal.html?character=${currentCharacter}&day=${gameState.currentDay}&from=decision&choice=${choice}`;
                 window.location.href = revealUrl;

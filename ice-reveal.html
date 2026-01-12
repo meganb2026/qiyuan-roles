@@ -91,33 +91,39 @@
         const iceItems = [
             {
                 excludeCharacter: 'claudius',
+                itemKey: 'half-piece-curtain',
                 itemName: '半块窗帘布',
                 description: '和克劳狄斯的袍子的材质一模一样，上面甚至还有挂窗帘用的钩子。你心生疑惑，难道吾王黄袍加身的时候还有人敢用窗帘布戏弄他？你都能看出来，克劳狄斯一定也能知道。难道说…这“黄袍”的真就是窗帘布？'
             },
             {
                 excludeCharacter: 'chengying',
+                itemKey: 'scratcher',
                 itemName: '一个痒痒挠',
                 description: '谁要用痒痒挠呢？你想起了一个人，不知为何，他那白色小袍子的胳肢窝下开了两个洞，谁看了不想拿痒痒挠挠他呢？'
             },
             {
                 excludeCharacter: 'hefei',
+                itemKey: 'letter',
                 itemName: '一个信封',
                 description: '里面有一张海鲜自助餐券，还有一张贺卡，上面写着“老公，我不要吃牛排，我要吃海鲜。今晚，让我们一起喝醉诶诶诶诶！” 案发后这里被仔细检查过，这个信封应该是昨晚有人不小心掉在这里，又结了霜才变成的冰块。这里谁有老婆还会去自助餐厅？不对，过期日期是几年前…'
             },
             {
                 excludeCharacter: 'wangweiguo',
+                itemKey: 'picture',
                 itemName: '一张照片',
                 description: '照片上赫然是运输队队长王卫国！可是奇怪，他的嘴巴微微张开，他的眉头紧蹙，眼睛却被一块红布遮盖看不清神情。他仰着头露出脖子，像是被什么人挟持了一样？'
             },
             {
                 excludeCharacter: 'lixiang',
+                itemKey: 'one-line-of-code',
                 itemName: '一行代码',
                 description: '令人想不到的是，寒冰里飘出了一行代码：“烫烫烫烫烫烫烫烫烫...”。你沉默了，李想是远古时代的程序员吗怎么栈内存不知道初始化还在用VS Code debug。'
             },
             {
                 excludeCharacter: 'wuzhizhe',
-                itemName: '一瓶可乐',
-                description: '原来是吴智哲没有打扫冰箱。'
+                itemKey: 'coke',
+                itemName: '什么也没有',
+                description: '原来真的是一块寒冰。奥菲莉亚说得对啊，这还真是个谜。'
             }
         ];
 
@@ -136,14 +142,38 @@
             // 获取随机物品
             const selectedItem = getRandomIceItem();
             
+            // 将物品添加到背包
+            if (!gameState.playerInventory.includes(selectedItem.itemKey)) {
+                gameState.playerInventory.push(selectedItem.itemKey);
+                
+                // 确保allCharactersItems对象初始化
+                if (!gameState.allCharactersItems[gameState.selectedCharacter]) {
+                    gameState.allCharactersItems[gameState.selectedCharacter] = [];
+                }
+                
+                // 将物品添加到当前角色的物品列表
+                if (!gameState.allCharactersItems[gameState.selectedCharacter].includes(selectedItem.itemKey)) {
+                    gameState.allCharactersItems[gameState.selectedCharacter].push(selectedItem.itemKey);
+                }
+                
+                // 保存游戏状态
+                saveGameState();
+                
+                // 更新信息面板，以便立即显示新物品
+                updateInfoPanel();
+            }
+            
             // 构建HTML
             const html = `
                 <div class="item-reveal">
                     <div class="item-name">
-                        <h3>你发现了：${selectedItem.itemName}</h3>
+                        <h3>${selectedItem.itemName}</h3>
                     </div>
                     <div class="item-description">
                         <p>${selectedItem.description}</p>
+                    </div>
+                    <div class="item-added-notice" style="margin-top: 15px; padding: 10px; background: #e3f2fd; color: #1976d2; border-radius: 5px; font-size: 0.9em;">
+                        ✨ 物品已更新到你的背包
                     </div>
                 </div>
             `;
