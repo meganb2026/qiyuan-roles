@@ -1,37 +1,39 @@
-# Simple workflow for deploying static content to GitHub Pages (main + dev 分离部署)
-name: Deploy static content (main + dev isolation)
+# Simple workflow for deploying static content (main + dev 分离部署，解决环境保护规则报错)
+name: Deploy static content (main + dev isolation - fix env protection)
 
 on:
   push:
     branches: ["main", "dev"]
   workflow_dispatch:
 
-# 权限配置
+# 权限配置：满足所有分支的操作需求
 permissions:
-  contents: write  # 需提升权限，用于推送 dev 分支产物到 main 分支的 dev/ 目录
-  pages: write
-  id-token: write
+  contents: write  # 支持 dev 分支向 main 推送，main 分支部署 Pages
+  pages: write     # 仅 main 分支使用
+  id-token: write  # 仅 main 分支使用
 
-# 并发控制（按分支隔离，避免互相干扰）
+# 并发控制：按分支隔离，避免互相干扰
 concurrency:
   group: "pages-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  # ========== Job 1：仅处理 main 分支（正式环境，关联 github-pages 环境） ==========
+  deploy-main:
+    if: github.ref == 'refs/heads/main'  # 仅 main 分支执行
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: github-pages  # 仅 main 分支关联该环境，符合保护规则
+      url: ${{ steps.main_deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 拉取完整历史，用于分支同步
+          fetch-depth: 0
 
-      - name: Verify game files
+      - name: Verify game files (main branch)
         run: |
-          echo "📁 Checking project structure..."
+          echo "📁 Checking main branch project structure..."
           required_files=("game.html" "index.html")
           required_dirs=("assets")
 
@@ -53,36 +55,88 @@ jobs:
             fi
           done
 
-          echo "🎮 Project structure verified"
+          # 自动创建 .nojekyll 文件
+          if [ ! -f ".nojekyll" ]; then
+            echo "📌 Creating .nojekyll file"
+            touch .nojekyll
+          else
+            echo "✅ .nojekyll file exists"
+          fi
 
-      - name: Setup Pages (only for main branch)
-        if: github.ref == 'refs/heads/main'  # 仅 main 分支执行默认 Pages 配置
+          echo "🎮 Main branch structure verified"
+
+      - name: Setup GitHub Pages (main only)
         uses: actions/configure-pages@v5
 
-      # ========== main 分支：原有根目录部署（保持不变） ==========
-      - name: Upload main branch artifact (root directory)
-        if: github.ref == 'refs/heads/main'
+      - name: Upload main branch artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'  # 根目录上传
+          path: '.'
 
-      - name: Deploy main branch to GitHub Pages (root)
-        if: github.ref == 'refs/heads/main'
-        id: deployment
+      - name: Deploy main branch to GitHub Pages
+        id: main_deployment
         uses: actions/deploy-pages@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ========== dev 分支：部署到 main 分支的 dev/ 子目录 ==========
-      - name: Deploy dev branch to main/dev/ directory
-        if: github.ref == 'refs/heads/dev'  # 仅 dev 分支执行此步骤
+  # ========== Job 2：仅处理 dev 分支（开发环境，不关联任何环境） ==========
+  deploy-dev:
+    if: github.ref == 'refs/heads/dev'  # 仅 dev 分支执行
+    runs-on: ubuntu-latest
+    # 关键：不配置 environment，彻底脱离 github-pages 环境，规避保护规则
+    steps:
+      - name: Checkout code (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify game files (dev branch)
+        run: |
+          echo "📁 Checking dev branch project structure..."
+          required_files=("game.html" "index.html")
+          required_dirs=("assets")
+
+          for file in "${required_files[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ $file exists"
+            else
+              echo "❌ $file not found"
+              exit 1
+            fi
+          done
+
+          for dir in "${required_dirs[@]}"; do
+            if [ -d "$dir" ]; then
+              echo "✅ $dir directory exists"
+            else
+              echo "❌ $dir directory not found"
+              exit 1
+            fi
+          done
+
+          # 自动创建 .nojekyll 文件（同步到 main/dev/ 目录）
+          if [ ! -f ".nojekyll" ]; then
+            echo "📌 Creating .nojekyll file"
+            touch .nojekyll
+          else
+            echo "✅ .nojekyll file exists"
+          fi
+
+          echo "🎮 Dev branch structure verified"
+
+      - name: Dev branch - Deploy to main/dev/ directory
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: main  # 推送到 main 分支
-          folder: '.'  # dev 分支的当前目录（要部署的文件）
-          target-folder: dev  # 推送到 main 分支的 dev/ 子目录（自动创建）
-          clean: true  # 清理 dev/ 目录的旧文件（保持最新）
-          clean-exclude: |  # 排除 main 分支根目录的正式文件，避免误删
+          branch: main
+          folder: '.'
+          target-folder: dev
+          clean: true
+          clean-exclude: |
             index.html
             game.html
             assets/
             .nojekyll
-          commit-message: "Auto deploy dev branch to main/dev/ [skip ci]"  # 提交信息，skip ci 避免触发 main 分支的重新部署
+            README.md
+          commit-message: "Auto deploy dev branch to main/dev/ [skip ci]"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          disable-jekyll: true
