@@ -41,7 +41,8 @@
             gameStarted: true,
             playerInventory: [],
             allCharactersItems: {},
-            npcs: []
+            npcs: [],
+            exchangeCompleted: false // 添加交换完成标记
         };
 
         // 从localStorage加载游戏状态
@@ -98,7 +99,7 @@
                         <h3>你的物品</h3>
                         <div class="items-grid">
                             ${currentItems.map((item, index) => `
-                                <div class="exchange-item player-item" data-item="${item}" data-index="${index}">
+                                <div class="exchange-item player-item" data-item="${item}" data-index="${index}" ${gameState.exchangeCompleted ? 'style="pointer-events: none; opacity: 0.7;"' : ''}>
                                     ${getItemDisplayName(item)}
                                 </div>
                             `).join('')}
@@ -106,8 +107,8 @@
                     </div>
 
                     <div class="exchange-controls">
-                        <button class="action-btn secondary" onclick="swapItems()">
-                            ⇄ 交换物品
+                        <button class="action-btn secondary" onclick="swapItems()" ${gameState.exchangeCompleted ? 'disabled' : ''} style="${gameState.exchangeCompleted ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                            ${gameState.exchangeCompleted ? '✅ 交换已完成' : '⇄ 交换物品'}
                         </button>
                     </div>
 
@@ -115,7 +116,7 @@
                         <h3>${targetChar.name}的物品</h3>
                         <div class="items-grid">
                             ${targetItems.map((item, index) => `
-                                <div class="exchange-item target-item" data-item="${item}" data-index="${index}">
+                                <div class="exchange-item target-item" data-item="${item}" data-index="${index}" ${gameState.exchangeCompleted ? 'style="pointer-events: none; opacity: 0.7;"' : ''}>
                                     ${getItemDisplayName(item)}
                                 </div>
                             `).join('')}
@@ -157,6 +158,11 @@
 
         // 检查是否可以交换
         function checkSwapReady() {
+            // 如果交换已完成，不执行任何操作
+            if (gameState.exchangeCompleted) {
+                return;
+            }
+            
             const swapBtn = document.querySelector('.exchange-controls .action-btn');
             if (selectedPlayerItem && selectedTargetItem) {
                 swapBtn.style.background = '#28a745';
@@ -186,14 +192,16 @@
                 const newItem = selectedTargetItem;
 
                 // 交换物品
-                [currentItems[playerIndex], targetItems[targetIndex]] =
-                [targetItems[targetIndex], currentItems[playerIndex]];
+                [currentItems[playerIndex], targetItems[targetIndex]] = [targetItems[targetIndex], currentItems[playerIndex]];
 
                 // 更新玩家背包显示
                 gameState.playerInventory = [...currentItems];
 
                 // 记录新获得的物品到游戏状态
                 gameState.newlyAcquiredItem = newItem;
+
+                // 标记交换已完成，只能交换一次
+                gameState.exchangeCompleted = true;
 
                 // 保存状态
                 saveGameState();
@@ -310,6 +318,8 @@
         // 事件绑定
         document.addEventListener('DOMContentLoaded', function() {
             loadGameState();
+            // 页面初始化时，重置交换完成状态，确保每次进入交换页面只能交换一次
+            gameState.exchangeCompleted = false;
             showExchangePage();
 
             // 移动端按钮事件
