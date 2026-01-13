@@ -72,8 +72,8 @@ const itemStories = {
     },
     "scratcher": {
         name: "痒痒挠",
-        description: "谁要用痒痒挠呢？你想起了一个人，不知为何，他那白色小袍子的胳肢窝下开了两个洞，谁看了不想拿痒痒挠挠他呢？",
-        story: "谁要用痒痒挠呢？你想起了一个人，不知为何，他那白色小袍子的胳肢窝下开了两个洞，谁看了不想拿痒痒挠挠他呢？"
+        description: "谁要用痒痒挠呢？你想起了一个人。",
+        story: "不知为何，他那白色小袍子的胳肢窝下开了两个洞，谁看了不想拿痒痒挠挠他呢？"
     },
     "letter": {
         name: "信封",
@@ -87,18 +87,18 @@ const itemStories = {
     },
     "one-line-of-code": {
         name: "一行代码",
-        description: "冰化了，里面飘出了一行代码：“烫烫烫烫烫烫烫烫烫”",
-        story: "冰化了，里面飘出了一行代码：“烫烫烫烫烫烫烫烫烫”"
+        description: "冰化了，里面飘出了一行代码：",
+        story: "“烫烫烫烫烫烫烫烫烫”"
     },
     "primer": {
         name: "隔离霜",
-        description: "隔离霜",
-        story: "隔离霜"
+        description: "玻璃杯里放着一支隔离霜",
+        story: "原来是郑棋元老师2025年全新单曲《悲观隔离》。已全平台上线，期待您的收听。"
     },
     "ice": {
         name: "一块寒冰",
-        description: "一块寒冰",
-        story: "一块寒冰"
+        description: "横看是一块寒冰，竖看是一块寒冰。",
+        story: "你看它像什么？一块寒冰。"
     }
 };
 
