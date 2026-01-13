@@ -72,8 +72,8 @@ const itemStories = {
     },
     "scratcher": {
         name: "痒痒挠",
-        description: "谁要用痒痒挠呢？你想起了一个人。",
-        story: "不知为何，他那白色小袍子的胳肢窝下开了两个洞，谁看了不想拿痒痒挠挠他呢？"
+        description: "一个痒痒挠，看着很趁手的样子。",
+        story: "如果有谁的胳肢窝下有两个洞的话，就更适配了。"
     },
     "letter": {
         name: "信封",
@@ -82,7 +82,7 @@ const itemStories = {
     },
     "picture": {
         name: "老照片",
-        description: "照片上赫然是运输队队长王卫国！",
+        description: "照片上赫然是运输队队长王卫国。",
         story: "奇怪，他的嘴巴微微张开，他的眉头紧蹙，眼睛却被一块红布遮盖看不清神情。他仰着头露出脖子，像是被什么人挟持了一样？"
     },
     "one-line-of-code": {
@@ -92,7 +92,7 @@ const itemStories = {
     },
     "primer": {
         name: "隔离霜",
-        description: "玻璃杯里放着一支隔离霜",
+        description: "玻璃杯里放着一支隔离霜。",
         story: "原来是郑棋元老师2025年全新单曲《悲观隔离》。已全平台上线，期待您的收听。"
     },
     "ice": {
