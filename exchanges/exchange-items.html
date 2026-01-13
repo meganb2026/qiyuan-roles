@@ -217,22 +217,22 @@
             }
         }
 
-        // 完成交换，跳转到物品详情页
+        // 完成交换，跳转到下一章
         function finishExchange() {
             // 保存最终状态
             saveGameState();
 
-            // 获取新获得的物品
-            const newItem = gameState.newlyAcquiredItem;
-            if (newItem) {
-                // 跳转到物品详情页
-                const itemDetailUrl = `../items/item-${encodeURIComponent(newItem)}.html?character=${currentCharacter}&day=${day}&from=exchange`;
-                window.location.href = itemDetailUrl;
-            } else {
-                // 如果没有新物品，直接返回游戏
-                const gameUrl = `../game.html?character=${currentCharacter}&day=${day}&from=exchange`;
-                window.location.href = gameUrl;
-            }
+            // 计算下一章的章节号
+            const currentDay = parseInt(day);
+            const nextDay = currentDay + 1;
+            
+            // 更新游戏状态的章节号
+            gameState.currentDay = nextDay;
+            saveGameState();
+
+            // 跳转到下一章的故事页面
+            const nextChapterUrl = `../day${nextDay}-story.html?character=${currentCharacter}&day=${nextDay}&from=exchange`;
+            window.location.href = nextChapterUrl;
         }
 
         // 更新移动端信息面板

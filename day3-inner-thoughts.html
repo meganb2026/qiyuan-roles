@@ -62,7 +62,7 @@
             }
         }
 
-        // 第二章内心独白内容（与第一章不同）
+        // 第三章内心独白内容（与第一章不同）
         const innerThoughts = {
             "claudius": {
                 title: "克劳狄斯此时的内心独白",
@@ -177,13 +177,13 @@
             updateInfoPanel();
         }
 
-        // 继续到选择交换对象
+        // 继续到第四章故事
         function proceedToGame() {
             // 保存状态
             localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
 
             // 跳转到选择交换对象的页面
-            const selectUrl = `select-exchange-target.html?character=${selectedCharacter}&day=2`;
+            const selectUrl = `select-exchange-target.html?character=${selectedCharacter}&day=3`;
             window.location.href = selectUrl;
         }
 

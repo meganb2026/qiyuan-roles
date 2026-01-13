@@ -317,14 +317,14 @@
 
     // 继续到内心独白
     function proceedToInnerThoughts() {
-        // 更新游戏状态到第二章
-        gameState.currentDay = 2;
+        // 更新游戏状态到第三章
+        gameState.currentDay = 3;
 
         // 保存状态
         localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
 
-        // 跳转到第二章的内心独白页面
-        const innerThoughtsUrl = `day2-inner-thoughts.html?character=${currentCharacter}&day=2&from=story`;
+        // 跳转到第三章的内心独白页面
+        const innerThoughtsUrl = `day3-inner-thoughts.html?character=${currentCharacter}&day=2&from=story`;
         window.location.href = innerThoughtsUrl;
     }
 

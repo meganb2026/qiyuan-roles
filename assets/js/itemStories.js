@@ -90,10 +90,10 @@ const itemStories = {
         description: "冰化了，里面飘出了一行代码：“烫烫烫烫烫烫烫烫烫”",
         story: "冰化了，里面飘出了一行代码：“烫烫烫烫烫烫烫烫烫”"
     },
-    "coke": {
-        name: "一瓶可乐",
-        description: "吴智哲的可乐。",
-        story: "吴智哲的可乐。"
+    "primer": {
+        name: "隔离霜",
+        description: "隔离霜",
+        story: "隔离霜"
     },
     "ice": {
         name: "一块寒冰",
