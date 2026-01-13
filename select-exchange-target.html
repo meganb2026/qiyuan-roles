@@ -45,8 +45,16 @@
 
         // 初始化角色数据
         function initCharacterData() {
-            const char = window.characters[currentCharacter];
-            gameState.playerInventory = [...char.initialItems];
+            // 从localStorage加载游戏状态
+            const savedState = localStorage.getItem('qiyuanGameState');
+            if (savedState) {
+                const parsedState = JSON.parse(savedState);
+                gameState = { ...gameState, ...parsedState };
+            } else {
+                // 如果没有保存的状态，才使用初始物品
+                const char = window.characters[currentCharacter];
+                gameState.playerInventory = [...char.initialItems];
+            }
             updateMobileInfoPanel();
             showExchangeTargetSelection();
         }
