@@ -137,30 +137,32 @@
             return availableItems[randomIndex];
         }
 
+        // 根据itemKey获取物品信息
+        function getItemByKey(itemKey) {
+            return iceItems.find(item => item.itemKey === itemKey);
+        }
+
         // 显示揭秘结果
         function showRevealResult() {
-            // 获取随机物品
-            const selectedItem = getRandomIceItem();
+            // 从URL参数获取物品信息
+            const newItem = urlParams.get('newItem') || '';
             
-            // 将物品添加到背包
-            if (!gameState.playerInventory.includes(selectedItem.itemKey)) {
-                gameState.playerInventory.push(selectedItem.itemKey);
-                
-                // 确保allCharactersItems对象初始化
-                if (!gameState.allCharactersItems[gameState.selectedCharacter]) {
-                    gameState.allCharactersItems[gameState.selectedCharacter] = [];
-                }
-                
-                // 将物品添加到当前角色的物品列表
-                if (!gameState.allCharactersItems[gameState.selectedCharacter].includes(selectedItem.itemKey)) {
-                    gameState.allCharactersItems[gameState.selectedCharacter].push(selectedItem.itemKey);
-                }
-                
-                // 保存游戏状态
-                saveGameState();
-                
-                // 更新信息面板，以便立即显示新物品
-                updateInfoPanel();
+            // 获取物品信息
+            const selectedItem = getItemByKey(newItem);
+            
+            if (!selectedItem) {
+                // 如果没有找到物品，显示默认内容
+                document.getElementById('reveal-result').innerHTML = `
+                    <div class="item-reveal">
+                        <div class="item-name">
+                            <h3>未知物品</h3>
+                        </div>
+                        <div class="item-description">
+                            <p>很遗憾，没有找到该物品的信息。</p>
+                        </div>
+                    </div>
+                `;
+                return;
             }
             
             // 构建HTML
