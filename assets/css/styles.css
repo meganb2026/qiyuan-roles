@@ -1183,7 +1183,6 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 	border-radius: 8px;
 	margin-bottom: 30px;
 	border-left: 4px solid #667eea;
-	font-style: italic;
 }
 
 .narrative-section {
@@ -1335,7 +1334,6 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 
 .scene-description {
 	margin: 0;
-	font-style: italic;
 	color: #555;
 	line-height: 1.6;
 }
