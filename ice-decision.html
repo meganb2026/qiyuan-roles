@@ -192,20 +192,30 @@
         // 处理决策
         function handleDecision(choice) {
             if (choice === 'take') {
-                // 跳转到寒冰揭秘页面
-                const revealUrl = `ice-reveal.html?character=${currentCharacter}&day=${gameState.currentDay}&from=decision&choice=${choice}`;
-                window.location.href = revealUrl;
+                // 将寒冰放入背包
+                const iceItem = 'ice'; // 寒冰的物品ID
+                if (!gameState.playerInventory.includes(iceItem)) {
+                    gameState.playerInventory.push(iceItem);
+                    
+                    // 更新角色物品
+                    if (!gameState.allCharactersItems[gameState.selectedCharacter]) {
+                        gameState.allCharactersItems[gameState.selectedCharacter] = [];
+                    }
+                    if (!gameState.allCharactersItems[gameState.selectedCharacter].includes(iceItem)) {
+                        gameState.allCharactersItems[gameState.selectedCharacter].push(iceItem);
+                    }
+                    
+                    // 保存状态
+                    saveGameState();
+                }
             } else {
-                // 默默走开
-                alert('你选择了默默走开，当作无事发生。');
-                
-                // 保存状态
+                // 默默走开，保存状态
                 saveGameState();
-                
-                // 跳转到最终结果页面
-                const finalResultUrl = `final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&from=decision&choice=${choice}`;
-                window.location.href = finalResultUrl;
             }
+            
+            // 无论选择什么，都直接跳转到第三章
+            const thirdChapterUrl = `day3-story.html?character=${currentCharacter}&day=3&from=decision`;
+            window.location.href = thirdChapterUrl;
         }
 
         // 更新信息面板（支持移动端和电脑端）

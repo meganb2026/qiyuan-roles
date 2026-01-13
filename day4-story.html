@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>奇缘48 - 第二章剧情</title>
+    <title>奇缘48 - 第三章剧情</title>
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
@@ -32,29 +32,22 @@
     <!-- 故事内容区域 -->
     <div id="story-content">
         <div class="page-container">
-            <h2>第二章 - 一块寒冰</h2>
+            <h2>第三章 - 皇宫大殿</h2>
 
             <div class="story-container">
                 <div class="story-header">
                     <div class="day-indicator">
-                        <span class="day-number">第 2 天</span>
-                        <span class="story-title">上海文化广场</span>
+                        <span class="day-number">第 3 章</span>
+                        <span class="story-title">奥菲莉亚的歌声</span>
                     </div>
                 </div>
 
                 <div class="story-content">
                     <div class="scene-description">
-                        <p>18:30</p>
-                    </div>
-
-                    <div class="narrative-section">
-                        <h3>🎭 上海文化广场一楼大厅</h3>
-                        <p>马上就到了第二天，你决定早一点去文广看看情况。很显然，其他人也都这么想</p>
-                        <p>一楼大厅里，奥菲莉亚和她的修女唱诗班正在唱歌。忽然，一个修女晕倒了。</p>
+                        <p>第三章很快到了，你决定早一点去看看情况。很显然，其他人也都这么想。</p>
+                        <p>皇宫大殿里，奥菲莉亚和她的修女唱诗班正在唱歌。忽然，一个修女晕倒了。</p>
                         <p>程婴立即上前查看，探了探气息说，“无大碍，只是老夫暂时身上没有药…”</p>
                     </div>
-
-                </div>
 
                 <div class="story-actions">
                     <button class="action-btn primary large" onclick="proceedToInnerThoughts()">
@@ -221,15 +214,12 @@
 
         // 继续到角色专属对话
         function proceedToInnerThoughts() {
-            // 更新游戏状态到第二章
-            gameState.currentDay = 2;
-
             // 保存状态
             localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
 
             // 跳转到角色专属对话页面
-            const dialogueUrl = `character-dialogue.html?character=${currentCharacter}&day=2&from=story`;
-            window.location.href = dialogueUrl;
+            const characterDialogueUrl = `character-dialogue.html?character=${currentCharacter}&day=${gameState.currentDay}&from=story`;
+            window.location.href = characterDialogueUrl;
         }
 
         // 切换移动端信息面板

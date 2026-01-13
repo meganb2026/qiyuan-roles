@@ -94,6 +94,11 @@ const itemStories = {
         name: "一瓶可乐",
         description: "吴智哲的可乐。",
         story: "吴智哲的可乐。"
+    },
+    "ice": {
+        name: "一块寒冰",
+        description: "一块寒冰",
+        story: "一块寒冰"
     }
 };
 
