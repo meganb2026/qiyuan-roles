@@ -242,7 +242,7 @@ class Game {
         const char = window.characters[this.gameState.selectedCharacter];
         const html = `
             <div class="page-container">
-                <h2>第 ${this.gameState.currentDay} 天</h2>
+                <h2>第 ${this.gameState.currentDay} 章</h2>
 
                 <div class="day-info">
                     <div class="character-status">
@@ -279,7 +279,7 @@ class Game {
     showDayExchange() {
         const html = `
             <div class="page-container">
-                <h2>第 ${this.gameState.currentDay} 天 - 装备交换</h2>
+                <h2>第 ${this.gameState.currentDay} 章 - 装备交换</h2>
 
                 <div class="exchange-info">
                     <p>你可以与其他角色交换一件装备。选择 wisely，这将影响你的最终目标！</p>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>奇缘48 - 第二天剧情</title>
+    <title>奇缘48 - 第二章剧情</title>
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
@@ -32,12 +32,12 @@
     <!-- 故事内容区域 -->
     <div id="story-content">
         <div class="page-container">
-            <h2>第二天 - 上海文化广场</h2>
+            <h2>第二章 - 上海文化广场</h2>
 
             <div class="story-container">
                 <div class="story-header">
                     <div class="day-indicator">
-                        <span class="day-number">第 2 天</span>
+                        <span class="day-number">第 2 章</span>
                         <span class="story-title">何非的戏</span>
                     </div>
                 </div>
@@ -257,7 +257,7 @@
                     </div>
 
                     <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
-                        <strong>第 ${gameState.currentDay} 天</strong>
+                        <strong>第 ${gameState.currentDay} 章</strong>
                     </div>
                 `;
             }
@@ -288,7 +288,7 @@
                     </div>
 
                     <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
-                        <strong>第 ${gameState.currentDay} 天</strong>
+                        <strong>第 ${gameState.currentDay} 章</strong>
                     </div>
                 `;
             }
@@ -317,13 +317,13 @@
 
         // 继续到内心独白
         function proceedToInnerThoughts() {
-            // 更新游戏状态到第二天
+            // 更新游戏状态到第二章
             gameState.currentDay = 2;
 
             // 保存状态
             localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
 
-            // 跳转到第二天的内心独白页面
+            // 跳转到第二章的内心独白页面
             const innerThoughtsUrl = `day2-inner-thoughts.html?character=${currentCharacter}&day=2&from=story`;
             window.location.href = innerThoughtsUrl;
         }
@@ -355,7 +355,7 @@
                         </div>
 
                         <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
-                            <strong>第 ${gameState.currentDay} 天</strong>
+                            <strong>第 ${gameState.currentDay} 章</strong>
                         </div>
                     `;
                     panel.style.display = 'block';
