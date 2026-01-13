@@ -2,16 +2,39 @@
 
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
-    // 添加item-details.js脚本
-    const itemDetailsScript = document.createElement('script');
-    itemDetailsScript.src = 'assets/js/item-details.js';
-    document.head.appendChild(itemDetailsScript);
-
     // 延迟执行，确保其他脚本已加载
     setTimeout(function() {
         convertInventoryItemsToButtons();
     }, 100);
+    
+    // 监听背包按钮点击事件
+    setupBackpackButtonListeners();
 });
+
+// 设置背包按钮监听器
+function setupBackpackButtonListeners() {
+    // 监听移动端背包按钮
+    const mobileBtn = document.getElementById('mobile-info-btn');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', function() {
+            // 延迟执行，确保面板已生成
+            setTimeout(function() {
+                convertInventoryItemsToButtons();
+            }, 50);
+        });
+    }
+    
+    // 监听电脑端背包按钮
+    const desktopBtn = document.getElementById('desktop-info-btn');
+    if (desktopBtn) {
+        desktopBtn.addEventListener('click', function() {
+            // 延迟执行，确保面板已生成
+            setTimeout(function() {
+                convertInventoryItemsToButtons();
+            }, 50);
+        });
+    }
+}
 
 // 将所有背包物品转换为可点击按钮
 function convertInventoryItemsToButtons() {
