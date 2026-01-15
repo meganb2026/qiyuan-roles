@@ -150,7 +150,7 @@ class Game {
 
                     <div style="margin-top: 20px; padding: 15px; background: #f0f2ff; border-radius: 8px; border-left: 4px solid #667eea;">
                         <p style="margin: 0; color: #555; font-size: 14px;">
-                            💡 <strong>提示：</strong>游戏开始后，点击右下角的 📦 按钮可以查看当前背包物品和角色信息。点击物品可以获得详情哦
+                            💡 <strong>提示：</strong>游戏开始后，点击 📦 按钮可以查看当前背包物品和角色信息。点击物品可以获得详情哦
                         </p>
                     </div>
                 </div>

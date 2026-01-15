@@ -18,6 +18,17 @@
     <!-- 遮罩层 -->
     <div id="mobile-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
+    <!-- 电脑端侧边栏 -->
+    <div id="desktop-sidebar" style="display: none; position: fixed; top: 20px; right: 20px; width: 280px; max-height: 80vh; background: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); z-index: 1000; padding: 20px; overflow-y: auto; border: 1px solid #e0e0e0;">
+        <h4 style="margin: 0 0 15px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 8px;">角色信息</h4>
+        <div id="desktop-sidebar-content">
+            <!-- 内容由JavaScript动态填充 -->
+        </div>
+    </div>
+
+    <!-- 电脑端信息按钮 -->
+    <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
+
     <!-- 选择交换对象内容区域 -->
     <div id="exchange-target-content">
         <!-- 内容由JavaScript动态生成 -->
@@ -120,7 +131,7 @@
             window.location.href = dialogUrl;
         }
 
-        // 更新移动端信息面板
+        // 更新信息面板内容（支持移动端和电脑端）
         function updateMobileInfoPanel() {
             const isMobile = window.innerWidth <= 768;
 
@@ -130,11 +141,25 @@
                 mobileBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
             }
 
-            if (!isMobile || !gameState.gameStarted) {
+            // 电脑端按钮显示
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.style.display = (!isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+
+            if (!gameState.gameStarted) {
                 hideMobileInfoPanel();
+                hideDesktopSidebar();
                 return;
             }
 
+            // 更新电脑端侧边栏内容，但不自动显示
+            if (!isMobile) {
+                updateDesktopSidebarContent();
+                return;
+            }
+
+            // 更新移动端面板内容，但不自动显示
             const char = window.characters[gameState.selectedCharacter];
             const panel = document.getElementById('mobile-info-panel');
 
@@ -160,6 +185,67 @@
                         <strong>第 ${gameState.currentDay} 章</strong>
                     </div>
                 `;
+            }
+        }
+
+        // 更新电脑端侧边栏内容
+        function updateDesktopSidebarContent() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            const content = document.getElementById('desktop-sidebar-content');
+
+            if (sidebar && content) {
+                const char = window.characters[gameState.selectedCharacter];
+                content.innerHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <strong>当前角色：</strong><br>
+                        <span style="color: #667eea; font-size: 16px;">${char.name}</span><br>
+                        <small style="color: #666;">${char.title}</small>
+                    </div>
+
+                    <h4 style="margin: 15px 0 10px 0; color: #667eea; font-size: 14px;">📦 背包</h4>
+                    <div id="desktop-inventory">
+                        ${gameState.playerInventory.length === 0 ?
+                            '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
+                            gameState.playerInventory.map(item =>
+                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${getItemDisplayName(item)}</div>`
+                            ).join('')
+                        }
+                    </div>
+
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                        <strong>第 ${gameState.currentDay} 章</strong>
+                    </div>
+                `;
+            }
+        }
+
+        // 显示电脑端侧边栏
+        function showDesktopSidebar() {
+            updateDesktopSidebarContent();
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'block';
+            }
+        }
+
+        // 隐藏电脑端侧边栏
+        function hideDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'none';
+            }
+        }
+
+        // 切换电脑端侧边栏
+        function toggleDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                const isVisible = sidebar.style.display === 'block';
+                if (isVisible) {
+                    sidebar.style.display = 'none';
+                } else {
+                    sidebar.style.display = 'block';
+                }
             }
         }
 
@@ -210,6 +296,12 @@
                 mobileBtn.addEventListener('click', toggleMobileInfoPanel);
             }
 
+            // 电脑端按钮事件
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.addEventListener('click', toggleDesktopSidebar);
+            }
+
             // 遮罩层点击关闭
             document.addEventListener('click', function(e) {
                 if (e.target.id === 'mobile-overlay') {
@@ -221,6 +313,7 @@
             document.addEventListener('keydown', function(e) {
                 if (e.keyCode === 27) {
                     hideMobileInfoPanel();
+                    hideDesktopSidebar();
                 }
             });
         });

@@ -27,7 +27,7 @@
     <div id="mobile-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
     <!-- 电脑端信息按钮 -->
-    <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 999; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
+    <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
 
     <!-- 故事内容区域 -->
     <div id="story-content">
@@ -221,6 +221,27 @@
             }
         }
 
+        // 隐藏电脑端侧边栏
+        function hideDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'none';
+            }
+        }
+
+        // 切换电脑端侧边栏
+        function toggleDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                const isVisible = sidebar.style.display === 'block';
+                if (isVisible) {
+                    sidebar.style.display = 'none';
+                } else {
+                    sidebar.style.display = 'block';
+                }
+            }
+        }
+
         // 继续到角色专属对话
         function proceedToInnerThoughts() {
             // 更新游戏状态到第二章
@@ -282,6 +303,12 @@
                 mobileBtn.addEventListener('click', toggleMobileInfoPanel);
             }
 
+            // 电脑端按钮事件
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.addEventListener('click', toggleDesktopSidebar);
+            }
+
             // 遮罩层点击关闭
             document.addEventListener('click', function(e) {
                 if (e.target.id === 'mobile-overlay') {
@@ -293,6 +320,7 @@
             document.addEventListener('keydown', function(e) {
                 if (e.keyCode === 27) {
                     hideMobileInfoPanel();
+                    hideDesktopSidebar();
                 }
             });
         });

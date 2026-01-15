@@ -10,13 +10,16 @@
     <!-- 移动端信息按钮 -->
     <div id="mobile-info-btn" style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1000; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
 
+    <!-- 桌面端信息按钮 -->
+    <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1000; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
+
     <!-- 移动端信息面板 -->
     <div id="mobile-info-panel" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 250px; max-height: 300px; background: rgba(255, 255, 255, 0.98); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); z-index: 1000; padding: 15px; overflow-y: auto;">
         <!-- 内容由JavaScript动态填充 -->
     </div>
 
     <!-- 电脑端侧边栏 -->
-    <div id="desktop-sidebar" style="display: none; position: fixed; top: 20px; right: 20px; width: 280px; max-height: 80vh; background: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); z-index: 1000; padding: 20px; overflow-y: auto; border: 1px solid #e0e0e0;">
+    <div id="desktop-sidebar" style="display: none; position: fixed; top: 80px; right: 20px; width: 280px; max-height: 80vh; background: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); z-index: 1000; padding: 20px; overflow-y: auto; border: 1px solid #e0e0e0;">
         <h4 style="margin: 0 0 15px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 8px;">角色信息</h4>
         <div id="desktop-sidebar-content">
             <!-- 内容由JavaScript动态填充 -->
@@ -131,47 +134,60 @@
 
             // 控制按钮显示
             const mobileBtn = document.getElementById('mobile-info-btn');
+            const desktopBtn = document.getElementById('desktop-info-btn');
             if (mobileBtn) {
                 mobileBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+            if (desktopBtn) {
+                desktopBtn.style.display = (!isMobile && gameState.gameStarted) ? 'flex' : 'none';
             }
 
             if (!gameState.gameStarted) {
                 hideMobileInfoPanel();
+                hideDesktopSidebar();
                 return;
             }
 
-            // 如果是电脑端，直接显示侧边栏
-            if (!isMobile) {
-                showDesktopSidebar();
-                return;
+            // 屏幕切换时，先关闭所有面板
+            hideMobileInfoPanel();
+            hideDesktopSidebar();
+
+            // 移动端更新面板内容，但不自动显示
+            if (isMobile) {
+                const char = window.characters[gameState.selectedCharacter];
+                const panel = document.getElementById('mobile-info-panel');
+
+                if (panel) {
+                    panel.innerHTML = `
+                        <div class="character-info">
+                            <strong>角色：</strong>
+                            <span>${char.name}</span><br>
+                            <small style="color: #666;">${char.title}</small>
+                        </div>
+
+                        <h4>📦 背包</h4>
+                        <div id="mobile-inventory">
+                            ${gameState.playerInventory.length === 0 ?
+                                '<div style="color: #999; font-style: italic;">背包是空的</div>' :
+                                gameState.playerInventory.map(item =>
+                                    `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
+                                ).join('')
+                            }
+                        </div>
+
+                        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                            <strong>第 ${gameState.currentDay} 章</strong>
+                        </div>
+                    `;
+                }
             }
+        }
 
-            // 移动端显示面板
-            const char = window.characters[gameState.selectedCharacter];
-            const panel = document.getElementById('mobile-info-panel');
-
-            if (panel) {
-                panel.innerHTML = `
-                    <div class="character-info">
-                        <strong>角色：</strong>
-                        <span>${char.name}</span><br>
-                        <small style="color: #666;">${char.title}</small>
-                    </div>
-
-                    <h4>📦 背包</h4>
-                    <div id="mobile-inventory">
-                        ${gameState.playerInventory.length === 0 ?
-                            '<div style="color: #999; font-style: italic;">背包是空的</div>' :
-                            gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
-                            ).join('')
-                        }
-                    </div>
-
-                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
-                        <strong>第 ${gameState.currentDay} 章</strong>
-                    </div>
-                `;
+        // 隐藏电脑端侧边栏
+        function hideDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'none';
             }
         }
 
@@ -219,6 +235,18 @@
             }
         }
 
+        // 切换电脑端侧边栏
+        function toggleDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                if (sidebar.style.display === 'block') {
+                    hideDesktopSidebar();
+                } else {
+                    showDesktopSidebar();
+                }
+            }
+        }
+
         // 继续到交换物品
         function proceedToExchange() {
             // 跳转到装备交换页面
@@ -237,6 +265,12 @@
                 mobileBtn.addEventListener('click', toggleMobileInfoPanel);
             }
 
+            // 桌面端按钮事件
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.addEventListener('click', toggleDesktopSidebar);
+            }
+
             // 遮罩层点击关闭
             document.addEventListener('click', function(e) {
                 if (e.target.id === 'mobile-overlay') {
@@ -248,6 +282,7 @@
             document.addEventListener('keydown', function(e) {
                 if (e.keyCode === 27) {
                     hideMobileInfoPanel();
+                    hideDesktopSidebar();
                 }
             });
         });
