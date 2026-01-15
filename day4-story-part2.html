@@ -44,13 +44,11 @@
 
                 <div class="story-content">
                     <div class="scene-description">
-                        <p>今天发生了好多事，接下来该怎么办呢？</p>
-                        <p>夜深了，你靠在沙发上，对着一背包装备一筹莫展，不知不觉睡着了。</p>
-                        <p>忽然你的窗子开了，溜进来一只灵活的小短腿。原来这是一个星星人。你问它：“你能陪我说说话吗？”它无声地笑了笑，递给你三根火柴。</p>
+                        <p>于是你情不自禁划了第二根火柴。这天是你的八十大寿，你抢到了棋元老师新戏的1排1座。棋元老师风采不减当年，唱功神乎其神、演得出神入化。你正沉浸于他精湛的表演，火柴又熄灭了。</p>
                     </div>
 
                     <div class="story-actions">
-                        <button class="action-btn primary large" onclick="proceedToNextPart()">
+                        <button class="action-btn primary large" onclick="proceedToDecision()">
                             继续
                         </button>
                     </div>
@@ -70,7 +68,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const currentCharacter = urlParams.get('character') || 'claudius';
         const day = urlParams.get('day') || '4';
-        const from = urlParams.get('from') || 'item-detail';
 
         // 游戏状态
         let gameState = {
@@ -215,13 +212,14 @@
             }
         }
 
-        // 继续到下一部分
-        function proceedToNextPart() {
+        // 继续到火柴决策页面
+        function proceedToDecision() {
             // 保存状态
             localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
 
-            // 跳转到第一部分
-            window.location.href = `day4-story-part1.html?character=${currentCharacter}&day=${gameState.currentDay}`;
+            // 跳转到火柴决策页面
+            const matchDecisionUrl = `match-decision.html?character=${currentCharacter}&day=${gameState.currentDay}&from=story`;
+            window.location.href = matchDecisionUrl;
         }
 
         // 切换移动端信息面板
