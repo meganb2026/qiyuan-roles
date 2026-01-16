@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新手导航</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.5rem;
+        }
+
+        .tutorial-content {
+            margin-bottom: 2rem;
+        }
+
+        .tutorial-step {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .tutorial-step p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .tutorial-step .tip {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid rgba(102, 126, 234, 0.8);
+        }
+
+        .tutorial-step .tip p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .package-example {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            border: none;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .desktop-package-example {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            border: none;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inventory-panel {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 280px;
+            max-height: 80vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            display: none;
+        }
+
+        .inventory-panel.open {
+            display: block;
+        }
+
+        .mobile-inventory-panel {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 250px;
+            max-height: 300px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            padding: 15px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .mobile-inventory-panel.open {
+            display: block;
+        }
+
+        .inventory-header {
+            margin: 0 0 15px 0;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+        
+        .inventory-header h3 {
+            margin: 0;
+        }
+
+        .character-info {
+            margin-bottom: 20px;
+        }
+
+        .character-info p {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .inventory-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .inventory-item {
+            padding: 10px;
+            margin: 8px 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #333;
+        }
+
+        .inventory-item:hover {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .item-detail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .item-detail.show {
+            display: flex;
+        }
+
+        .item-detail-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2em;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            color: #333;
+        }
+
+        .item-detail h3 {
+            margin-top: 0;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .item-detail-description {
+            margin: 1.5em 0;
+        }
+
+        .item-detail-description strong {
+            color: #667eea;
+        }
+
+        .item-detail-story {
+            margin: 1.5em 0;
+        }
+
+        .item-detail-story strong {
+            color: #667eea;
+        }
+
+        .item-detail-close {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 1em;
+        }
+
+        .continue-btn {
+            display: none;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+        }
+
+        .continue-btn.show {
+            display: inline-block;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .desktop-package-example {
+                display: none;
+            }
+            
+            .inventory-panel {
+                display: none;
+            }
+            
+            .container {
+                margin: 20px;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .package-example {
+                display: none;
+            }
+            
+            .mobile-inventory-panel {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>新手导航</h1>
+
+        <div class="tutorial-content">
+            <div class="tutorial-step">
+                <p>在这个页面中，你将学习如何使用游戏中的背包系统。</p>
+                <p>请尝试点击屏幕上的 📦 按钮，查看背包内容。</p>
+                <p>点击背包中的具体物品，可以阅读物品的详细信息。</p>
+                <p>背包展开后再次点击屏幕上的 📦 按钮，背包会被关闭。</p>
+            </div>
+        </div>
+
+        <div class="tip">
+            <p>💡 <strong>提示：</strong>游戏开始后，你可以随时点击 📦 按钮查看背包的实时内容。可能会有小惊喜或意外哦</p>
+        </div>
+
+        <button class="continue-btn" onclick="goToGame()">继续游戏</button>
+    </div>
+    
+    <!-- 手机版背包按钮 -->
+    <button class="package-example" onclick="toggleMobileInventory()">📦</button>
+    
+    <!-- 电脑版背包按钮 -->
+    <button class="desktop-package-example" onclick="toggleDesktopInventory()">📦</button>
+    
+    <!-- 电脑版背包面板 -->
+    <div class="inventory-panel" id="desktop-inventory-panel">
+        <div class="inventory-header">
+            <h3>背包</h3>
+        </div>
+        <div class="character-info">
+            <p><strong>角色：</strong></p>
+            <p>你的角色</p>
+            <p>你的职业</p>
+        </div>
+        <div class="inventory-title">物品</div>
+        <div class="inventory-item" onclick="showItemDetail()">物品例子（点击查看详情）</div>
+    </div>
+    
+    <!-- 手机版背包面板 -->
+    <div class="mobile-inventory-panel" id="mobile-inventory-panel">
+        <div class="inventory-header">
+            <h3>背包</h3>
+        </div>
+        <div class="character-info">
+            <p><strong>角色：</strong></p>
+            <p>你的角色</p>
+            <p>你的职业</p>
+        </div>
+        <div class="inventory-title">物品</div>
+        <div class="inventory-item" onclick="showItemDetail()">物品例子（点击查看详情）</div>
+    </div>
+    
+    <!-- 物品详情弹窗 -->
+    <div class="item-detail" id="item-detail">
+        <div class="item-detail-content">
+            <h3>example</h3>
+            <div class="item-detail-description">
+                <strong>描述：</strong>
+                <p>这是一个示例物品，用于新手导航。</p>
+            </div>
+            <div class="item-detail-story">
+                <strong>故事：</strong>
+                <p>请仔细阅读这里的故事，成功的关键可能藏匿其中。关闭物品详情后，再次点击背包图标可关闭背包。</p>
+            </div>
+            <button class="item-detail-close" onclick="hideItemDetail()">关闭</button>
+        </div>
+    </div>
+    
+    <script>
+        // 切换电脑版背包面板
+        function toggleDesktopInventory() {
+            const panel = document.getElementById('desktop-inventory-panel');
+            panel.classList.toggle('open');
+        }
+        
+        // 切换手机版背包面板
+        function toggleMobileInventory() {
+            const panel = document.getElementById('mobile-inventory-panel');
+            panel.classList.toggle('open');
+        }
+        
+        // 显示物品详情
+        function showItemDetail() {
+            const itemDetail = document.getElementById('item-detail');
+            itemDetail.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            // 添加点击事件，点击模态框外部关闭
+            itemDetail.addEventListener('click', function(e) {
+                if (e.target === itemDetail) {
+                    hideItemDetail();
+                }
+            });
+        }
+        
+        // 隐藏物品详情
+        function hideItemDetail() {
+            const itemDetail = document.getElementById('item-detail');
+            itemDetail.classList.remove('show');
+            document.body.style.overflow = '';
+            
+            // 显示继续游戏按钮
+            const continueBtn = document.querySelector('.continue-btn');
+            continueBtn.classList.add('show');
+        }
+        
+        // 跳转到游戏页面
+        function goToGame() {
+            window.location.href = 'game.html';
+        }
+    </script>
+</body>
+</html>

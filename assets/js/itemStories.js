@@ -99,6 +99,11 @@ const itemStories = {
         name: "一块寒冰",
         description: "横看是一块寒冰，竖看是一块寒冰。",
         story: "你看它像什么？一块寒冰。"
+    },
+    "example": {
+        name: "物品例子",
+        description: "这里会显示物品的介绍",
+        story: "这里会显示物品的背景故事。"
     }
 };
 
