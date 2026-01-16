@@ -1377,23 +1377,23 @@ body:has(#game-sidebar:not([style*="display: none"]):not(.collapsed)) .passage {
 }
 
 .visitor-bubble {
-	background: linear-gradient(135deg, #667eea, #764ba2);
+	background: linear-gradient(135deg, #28a745, #20c997);
 	color: white;
 }
 
 .visitor-bubble::before {
 	right: -20px;
-	border-left-color: #667eea;
+	border-left-color: #28a745;
 }
 
 .host-bubble {
-	background: linear-gradient(135deg, #28a745, #20c997);
+	background: linear-gradient(135deg, #667eea, #764ba2);
 	color: white;
 }
 
 .host-bubble::before {
 	left: -20px;
-	border-right-color: #28a745;
+	border-right-color: #667eea;
 }
 
 .dialogue-actions {

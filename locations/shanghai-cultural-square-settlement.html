@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>梦魇对话</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <title>上海文化广场 - 结算</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
     <!-- 移动端信息按钮 -->
@@ -29,111 +29,17 @@
     <!-- 电脑端信息按钮 -->
     <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
 
-    <!-- 对话内容区域 -->
-    <div id="dialogue-content">
-        <div class="page-container">
-            <h2>这时候，梦魇忽然现身说话了。</h2>
-
-            <div class="dialogue-container">
-                <div class="dialogue-section">
-                    <div class="character-portrait host">
-                        <div class="portrait-circle">😈</div>
-                        <div class="character-name">梦魇</div>
-                    </div>
-
-                    <div class="dialogue-bubble host-bubble">
-                        <p>这是美梦还是噩梦？</p>
-                    </div>
-                </div>
-
-                <div class="dialogue-section">
-                    <div class="character-portrait host">
-                        <div class="portrait-circle">😈</div>
-                        <div class="character-name">梦魇</div>
-                    </div>
-
-                    <div class="dialogue-bubble host-bubble">
-                        <p>逗你玩的，但我确实可以给你实现两个愿望。</p>
-                    </div>
-                </div>
-
-                <div class="dialogue-section" id="dialogue-section-2">
-                    <div class="dialogue-bubble visitor-bubble">
-                        <p>真的吗我不信。</p>
-                    </div>
-                    <div class="character-portrait visitor">
-                        <div class="portrait-circle">👤</div>
-                        <div class="character-name" id="player-name">你</div>
-                    </div>
-                </div>
-
-                <div class="dialogue-section">
-                    <div class="character-portrait host">
-                        <div class="portrait-circle">😈</div>
-                        <div class="character-name">梦魇</div>
-                    </div>
-                    <div class="dialogue-bubble host-bubble">
-                        <p>不信算了。</p>
-                    </div>
-                </div>
-
-                <div class="dialogue-section" id="dialogue-section-4">
-                    <div class="dialogue-bubble visitor-bubble">
-                        <p>别别别……但是我要付出什么吗？</p>
-                    </div>
-                    <div class="character-portrait visitor">
-                        <div class="portrait-circle">👤</div>
-                        <div class="character-name">你</div>
-                    </div>
-                </div>
-
-                <div class="dialogue-section">
-                    <div class="character-portrait host">
-                        <div class="portrait-circle">😈</div>
-                        <div class="character-name">梦魇</div>
-                    </div>
-                    <div class="dialogue-bubble host-bubble">
-                        <p>开玩笑，我可是世界上最迷人的大坏蛋！我知道你所求是什么，只要你足够诚心，可以得到梦魇大人的关照。</p>
-                    </div>
-                </div>
-
-                <div class="dialogue-section" id="dialogue-section-6">
-                    <div class="dialogue-bubble visitor-bubble">
-                        <p>能帮我达成我所求的事情吗？</p>
-                    </div>
-                    <div class="character-portrait visitor">
-                        <div class="portrait-circle">👤</div>
-                        <div class="character-name">你</div>
-                    </div>
-                </div>
-
-                <div class="dialogue-section">
-                    <div class="character-portrait host">
-                        <div class="portrait-circle">😈</div>
-                        <div class="character-name">梦魇</div>
-                    </div>
-                    <div class="dialogue-bubble host-bubble">
-                        <p>你猜。</p>
-                    </div>
-                </div>
-
-                <div class="dialogue-actions">
-                    <button class="action-btn primary large" onclick="proceedToChapter5()">
-                        继续
-                    </button>
-                </div>
-            </div>
-        </div>
+    <!-- 地点内容区域 -->
+    <div id="location-content">
+        <!-- 内容由JavaScript动态生成 -->
     </div>
 
-
-
     <!-- 加载脚本 -->
-    <script src="assets/js/characters.js"></script>
-    <script src="assets/js/items.js"></script>
-    <script src="assets/js/itemStories.js"></script>
-    <script src="assets/js/backpack-improvements.js"></script>
-    <script src="assets/js/item-details.js"></script>
+    <script src="../assets/js/characters.js"></script>
+    <script src="../assets/js/items.js"></script>
+    <script src="../assets/js/itemStories.js"></script>
+    <script src="../assets/js/backpack-improvements.js"></script>
+    <script src="../assets/js/item-details.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -148,6 +54,14 @@
             playerInventory: [],
             allCharactersItems: {},
             npcs: []
+        };
+
+        // 地点内容
+        const locationContent = {
+            title: "上海文化广场的结算",
+            thoughts: [
+                "结算页面内容..."
+            ]
         };
 
         // 从localStorage加载游戏状态
@@ -172,6 +86,48 @@
             Object.keys(window.characters).forEach(charId => {
                 gameState.allCharactersItems[charId] = [...window.characters[charId].initialItems];
             });
+        }
+
+        // 显示地点内容
+        function showLocationContent() {
+            const char = window.characters[gameState.selectedCharacter];
+
+            const html = `
+                <div class="page-container">
+                    <div class="inner-thoughts-content">
+                        <div class="character-header">
+                            <div class="character-avatar">${locationContent.title.charAt(0)}</div>
+                            <div class="character-info">
+                                <h3>${locationContent.title}</h3>
+                            </div>
+                        </div>
+
+                        <div class="thoughts-list">
+                            ${locationContent.thoughts.map((thought, index) =>
+                                `<div class="thought-item" style="animation-delay: ${index * 0.5}s">
+                                    <div class="thought-bubble">
+                                        <p>${thought}</p>
+                                    </div>
+                                </div>`
+                            ).join('')}
+                        </div>
+
+                        <div class="thoughts-actions">
+                            <button class="action-btn primary large" onclick="goToNextLocation()">
+                                继续
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('location-content').innerHTML = html;
+        }
+
+        // 前往下一个地点
+        function goToNextLocation() {
+            // 跳转到地图页面
+            window.location.href = `../chapter-5.html?character=${currentCharacter}&day=${day}&from=shanghai-cultural-square`;
         }
 
         // 更新信息面板（支持移动端和电脑端）
@@ -285,32 +241,9 @@
 
         // 显示电脑端侧边栏
         function showDesktopSidebar() {
+            updateDesktopSidebarContent();
             const sidebar = document.getElementById('desktop-sidebar');
-            const content = document.getElementById('desktop-sidebar-content');
-
-            if (sidebar && content) {
-                const char = window.characters[gameState.selectedCharacter];
-                content.innerHTML = `
-                    <div style="margin-bottom: 15px;">
-                        <strong>当前角色：</strong><br>
-                        <span style="color: #667eea; font-size: 16px;">${char.name}</span><br>
-                        <small style="color: #666;">${char.title}</small>
-                    </div>
-
-                    <h4 style="margin: 15px 0 10px 0; color: #667eea; font-size: 14px;">📦 背包</h4>
-                    <div id="desktop-inventory">
-                        ${gameState.playerInventory.length === 0 ?
-                            '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
-                            gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${getItemDisplayName(item)}</div>`
-                            ).join('')
-                        }
-                    </div>
-
-                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
-                        <strong>第 ${gameState.currentDay} 章</strong>
-                    </div>
-                `;
+            if (sidebar) {
                 sidebar.style.display = 'block';
             }
         }
@@ -326,81 +259,6 @@
                 document.body.style.overflow = '';
             }
         }
-
-        // 继续到最终结果
-        function goToFinalResult() {
-            // 跳转到最终结果页面
-            const finalResultUrl = `final-result.html?character=${currentCharacter}&day=${day}&from=match-nightmare`;
-            window.location.href = finalResultUrl;
-        }
-
-        // 更新对话中的角色名称和头像
-        function updatePlayerNameInDialogue() {
-            const char = window.characters[gameState.selectedCharacter];
-            if (char) {
-                // 更新所有对话部分中的角色名称
-                const playerNameElements = document.querySelectorAll('.character-portrait.visitor .character-name');
-                playerNameElements.forEach(element => {
-                    element.textContent = char.name;
-                });
-                
-                // 更新所有对话部分中的角色头像
-                const portraitElements = document.querySelectorAll('.character-portrait.visitor .portrait-circle');
-                portraitElements.forEach(element => {
-                    if (char.icon) {
-                        element.textContent = char.icon;
-                    }
-                });
-            }
-        }
-
-        // 继续到第5章
-        function proceedToChapter5() {
-            // 添加梦魇的地图到玩家背包
-            if (!gameState.playerInventory.includes('map')) {
-                gameState.playerInventory.push('map');
-                // 保存游戏状态
-                localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
-            }
-            
-            // 跳转到第5章页面
-            const chapter5Url = `chapter-5.html?character=${currentCharacter}&day=${gameState.currentDay}&from=nightmare-dialogue`;
-            window.location.href = chapter5Url;
-        }
-
-        // 事件绑定
-        document.addEventListener('DOMContentLoaded', function() {
-            loadGameState();
-            updateInfoPanel();
-            updatePlayerNameInDialogue();
-
-            // 移动端按钮事件
-            const mobileBtn = document.getElementById('mobile-info-btn');
-            if (mobileBtn) {
-                mobileBtn.addEventListener('click', toggleMobileInfoPanel);
-            }
-
-            // 电脑端按钮事件
-            const desktopBtn = document.getElementById('desktop-info-btn');
-            if (desktopBtn) {
-                desktopBtn.addEventListener('click', toggleDesktopSidebar);
-            }
-
-            // 遮罩层点击关闭
-            document.addEventListener('click', function(e) {
-                if (e.target.id === 'mobile-overlay') {
-                    hideMobileInfoPanel();
-                }
-            });
-
-            // ESC键关闭
-            document.addEventListener('keydown', function(e) {
-                if (e.keyCode === 27) {
-                    hideMobileInfoPanel();
-                    hideDesktopSidebar();
-                }
-            });
-        });
 
         // 切换移动端信息面板
         function toggleMobileInfoPanel() {
@@ -438,6 +296,40 @@
                 }
             }
         }
+
+        // 事件绑定
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGameState();
+            updateInfoPanel();
+            showLocationContent();
+
+            // 移动端按钮事件
+            const mobileBtn = document.getElementById('mobile-info-btn');
+            if (mobileBtn) {
+                mobileBtn.addEventListener('click', toggleMobileInfoPanel);
+            }
+
+            // 电脑端按钮事件
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.addEventListener('click', toggleDesktopSidebar);
+            }
+
+            // 遮罩层点击关闭
+            document.addEventListener('click', function(e) {
+                if (e.target.id === 'mobile-overlay') {
+                    hideMobileInfoPanel();
+                }
+            });
+
+            // ESC键关闭
+            document.addEventListener('keydown', function(e) {
+                if (e.keyCode === 27) {
+                    hideMobileInfoPanel();
+                    hideDesktopSidebar();
+                }
+            });
+        });
     </script>
 </body>
 </html>

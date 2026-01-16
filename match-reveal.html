@@ -173,13 +173,13 @@
             document.getElementById('reveal-result').innerHTML = html;
         }
 
-        // 继续到最终结果
+        // 继续到梦魇对话页面
         function proceedToFinalResult() {
             // 保存状态
             saveGameState();
             
-            const finalResultUrl = `final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&from=match-reveal`;
-            window.location.href = finalResultUrl;
+            const nightmareDialogueUrl = `nightmare-dialogue.html?character=${currentCharacter}&day=${gameState.currentDay}&from=match-reveal`;
+            window.location.href = nightmareDialogueUrl;
         }
 
         // 更新信息面板（支持移动端和电脑端）
