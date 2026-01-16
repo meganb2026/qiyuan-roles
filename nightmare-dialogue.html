@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梦魇对话</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', 'SimHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .dialogue {
+            margin: 3rem 0;
+        }
+        
+        .dialogue-item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid rgba(102, 126, 234, 0.8);
+            text-align: left;
+        }
+        
+        .speaker {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .nightmare {
+            color: #ff6b6b;
+        }
+        
+        .player {
+            color: #667eea;
+        }
+        
+        .continue-btn {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>梦魇对话</h1>
+        
+        <div class="dialogue">
+            <div class="dialogue-item">
+                <div class="speaker nightmare">梦魇：逗你玩的，但我确实可以给你实现两个愿望。</div>
+            </div>
+            
+            <div class="dialogue-item">
+                <div class="speaker player">你：真的吗我不信。</div>
+            </div>
+            
+            <div class="dialogue-item">
+                <div class="speaker nightmare">梦魇：不信算了。</div>
+            </div>
+            
+            <div class="dialogue-item">
+                <div class="speaker player">你：别别别……但是我要付出什么吗？</div>
+            </div>
+            
+            <div class="dialogue-item">
+                <div class="speaker nightmare">梦魇：开玩笑，我可是世界上最迷人的大坏蛋！这样吧，我知道你所求是什么，只要你达到一定条件，可以给你一个物品。</div>
+            </div>
+            
+            <div class="dialogue-item">
+                <div class="speaker player">你：这个物品能对我所求的事情起到决定性帮助吗？</div>
+            </div>
+            
+            <div class="dialogue-item">
+                <div class="speaker nightmare">梦魇：你猜。</div>
+            </div>
+        </div>
+        
+        <button class="continue-btn" onclick="goToFinalResult()">继续</button>
+    </div>
+    
+    <script>
+        function goToFinalResult() {
+            // 从URL参数获取信息
+            const urlParams = new URLSearchParams(window.location.search);
+            const character = urlParams.get('character') || 'claudius';
+            const day = urlParams.get('day') || '4';
+            
+            // 跳转到最终结果页面
+            window.location.href = `final-result.html?character=${character}&day=${day}&from=match-nightmare`;
+        }
+    </script>
+</body>
+</html>

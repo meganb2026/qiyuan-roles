@@ -91,8 +91,8 @@
             // 保存状态
             saveGameState();
             
-            const finalResultUrl = `final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&from=match-nightmare`;
-            window.location.href = finalResultUrl;
+            const dialogueUrl = `nightmare-dialogue.html?character=${currentCharacter}&day=${gameState.currentDay}`;
+            window.location.href = dialogueUrl;
         }
 
         // 更新信息面板（支持移动端和电脑端）
