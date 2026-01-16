@@ -56,11 +56,26 @@ class Game {
             });
         }
 
+        // 电脑端信息按钮点击事件
+        const desktopBtn = document.getElementById('desktop-info-btn');
+        if (desktopBtn) {
+            desktopBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // 防止事件冒泡
+                this.toggleDesktopSidebar();
+            });
+        }
+
         // ESC键关闭面板
         document.addEventListener('keydown', (e) => {
             if (e.keyCode === 27) {
                 this.hideMobileInfoPanel();
+                this.hideDesktopSidebar();
             }
+        });
+
+        // 窗口大小改变事件监听
+        window.addEventListener('resize', () => {
+            this.updateInfoPanels();
         });
     }
 
@@ -87,7 +102,7 @@ class Game {
                 this.showGameEnding(data.ending);
                 break;
         }
-        this.updateMobileInfoPanel();
+        this.updateInfoPanels();
     }
 
     // 显示角色选择页面
@@ -120,7 +135,7 @@ class Game {
 
         document.getElementById('game-content').innerHTML = html;
         this.gameState.gameStarted = false;
-        this.updateMobileInfoPanel();
+        this.updateInfoPanels();
     }
 
     // 显示角色详情页面
@@ -494,12 +509,12 @@ class Game {
         this.navigateTo('character-select');
     }
 
-    // 更新移动端信息面板
-    updateMobileInfoPanel() {
+    // 更新所有信息面板（移动端和桌面端）
+    updateInfoPanels() {
         const isMobile = window.innerWidth <= 768;
+        
+        // 移动端面板更新
         const mobileBtn = document.getElementById('mobile-info-btn');
-
-        // 控制按钮显示
         if (mobileBtn) {
             if (isMobile && this.gameState.gameStarted) {
                 mobileBtn.style.display = 'flex';
@@ -508,6 +523,37 @@ class Game {
             }
         }
 
+        // 桌面端面板更新
+        const desktopBtn = document.getElementById('desktop-info-btn');
+        if (desktopBtn) {
+            if (!isMobile && this.gameState.gameStarted) {
+                desktopBtn.style.display = 'flex';
+            } else {
+                desktopBtn.style.display = 'none';
+            }
+        }
+
+        if (!this.gameState.gameStarted) {
+            this.hideMobileInfoPanel();
+            this.hideDesktopSidebar();
+            return;
+        }
+
+        if (isMobile) {
+            // 移动端更新
+            this.updateMobileInfoPanel();
+            this.hideDesktopSidebar();
+        } else {
+            // 桌面端更新
+            this.updateDesktopSidebarContent();
+            this.hideMobileInfoPanel();
+        }
+    }
+
+    // 更新移动端信息面板
+    updateMobileInfoPanel() {
+        const isMobile = window.innerWidth <= 768;
+        
         if (!isMobile || !this.gameState.gameStarted) {
             this.hideMobileInfoPanel();
             return;
@@ -534,6 +580,87 @@ class Game {
                             ).join('')
                         }
                     </div>
+
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                    <strong>第 ${this.gameState.currentDay} 天</strong>
+                </div>
+            `;
+        }
+    }
+
+    // 切换桌面端侧边栏显示/隐藏
+    toggleDesktopSidebar() {
+        const sidebar = document.getElementById('desktop-sidebar');
+        if (sidebar) {
+            if (sidebar.style.display === 'block') {
+                this.hideDesktopSidebar();
+            } else {
+                this.showDesktopSidebar();
+            }
+        }
+    }
+
+    // 显示桌面端侧边栏
+    showDesktopSidebar() {
+        const sidebar = document.getElementById('desktop-sidebar');
+        const content = document.getElementById('desktop-sidebar-content');
+
+        if (sidebar && content && this.gameState.gameStarted) {
+            const char = window.characters[this.gameState.selectedCharacter];
+            content.innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <strong>当前角色：</strong><br>
+                    <span style="color: #667eea; font-size: 16px;">${char.name}</span><br>
+                    <small style="color: #666;">${char.title}</small>
+                </div>
+
+                <h4 style="margin: 15px 0 10px 0; color: #667eea; font-size: 14px;">📦 背包</h4>
+                <div id="desktop-inventory">
+                    ${this.gameState.playerInventory.length === 0 ?
+                        '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
+                        this.gameState.playerInventory.map(item =>
+                            `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${window.getItemDisplayName(item)}</div>`
+                        ).join('')
+                    }
+                </div>
+
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                    <strong>第 ${this.gameState.currentDay} 天</strong>
+                </div>
+            `;
+            sidebar.style.display = 'block';
+        }
+    }
+
+    // 隐藏桌面端侧边栏
+    hideDesktopSidebar() {
+        const sidebar = document.getElementById('desktop-sidebar');
+        if (sidebar) {
+            sidebar.style.display = 'none';
+        }
+    }
+
+    // 更新桌面端侧边栏内容
+    updateDesktopSidebarContent() {
+        const content = document.getElementById('desktop-sidebar-content');
+        if (content && this.gameState.gameStarted) {
+            const char = window.characters[this.gameState.selectedCharacter];
+            content.innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <strong>当前角色：</strong><br>
+                    <span style="color: #667eea; font-size: 16px;">${char.name}</span><br>
+                    <small style="color: #666;">${char.title}</small>
+                </div>
+
+                <h4 style="margin: 15px 0 10px 0; color: #667eea; font-size: 14px;">📦 背包</h4>
+                <div id="desktop-inventory">
+                    ${this.gameState.playerInventory.length === 0 ?
+                        '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
+                        this.gameState.playerInventory.map(item =>
+                            `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${window.getItemDisplayName(item)}</div>`
+                        ).join('')
+                    }
+                </div>
 
                 <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
                     <strong>第 ${this.gameState.currentDay} 天</strong>
