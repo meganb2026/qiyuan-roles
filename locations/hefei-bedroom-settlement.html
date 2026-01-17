@@ -44,7 +44,7 @@
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
         const currentCharacter = urlParams.get('character') || 'claudius';
-        const day = urlParams.get('day') || '4';
+        const day = urlParams.get('day') || '5';
 
         // 游戏状态
         let gameState = {
@@ -126,8 +126,8 @@
 
         // 前往下一个地点
         function goToNextLocation() {
-            // 跳转到地图页面
-            window.location.href = `../chapter-5.html?character=${currentCharacter}&day=${day}&from=hefei-bedroom`;
+            // 跳转到结算页面
+            window.location.href = `../final-result.html?character=${currentCharacter}&day=${day}`;
         }
 
         // 更新信息面板（支持移动端和电脑端）

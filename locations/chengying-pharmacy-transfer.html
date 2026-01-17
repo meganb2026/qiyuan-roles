@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>程婴药店 - 中转</title>
+    <title>程婴药店</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
@@ -44,7 +44,7 @@
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
         const currentCharacter = urlParams.get('character') || 'claudius';
-        const day = urlParams.get('day') || '4';
+        const day = urlParams.get('day') || '5';
 
         // 游戏状态
         let gameState = {
@@ -60,8 +60,7 @@
         const locationContent = {
             title: "程婴药店",
             thoughts: [
-                "程婴药店的中转页面",
-                "你在这里稍作停留，准备前往下一个目的地。"
+                "唱完，你获得了一只手电筒。"
             ]
         };
 
