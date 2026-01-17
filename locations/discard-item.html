@@ -147,6 +147,13 @@
                 return; // 用户取消删除
             }
             
+            // 检查是否删除的是梦魇的地图
+            if (itemToDiscard === 'map') {
+                // 直接跳转到失败的结算页面
+                window.location.href = `../final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&result=failure&reason=lost-map`;
+                return;
+            }
+            
             // 从背包中移除物品
             gameState.playerInventory = gameState.playerInventory.filter(item => item !== itemToDiscard);
             

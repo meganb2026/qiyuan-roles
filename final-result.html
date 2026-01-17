@@ -412,6 +412,26 @@
 
         // 显示最终结果
         function showFinalResult() {
+            // 检查URL参数中的失败原因
+            const result = urlParams.get('result');
+            const reason = urlParams.get('reason');
+            
+            // 如果是删除梦魇地图导致的失败
+            if (result === 'failure' && reason === 'lost-map') {
+                const html = `
+                    <div>
+                        <h1 class="result-title">失败</h1>
+                        <div class="result-message">
+                            <p>失去了地图的你迷路了。</p>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('dynamic-result-content').innerHTML = html;
+                return;
+            }
+            
+            // 正常的成功/失败逻辑
             const isSuccess = checkSuccess();
             const character = currentCharacter;
             const charName = window.characters[character].name;
