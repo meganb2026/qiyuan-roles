@@ -134,11 +134,24 @@
             }
         }
 
-        // 继续到最终结果
+        // 继续到选择目的地页面
         function goToFinalResult() {
-            // 跳转到最终结果页面
-            const finalResultUrl = `final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&from=match-nightmare`;
-            window.location.href = finalResultUrl;
+            // 角色与地点的映射关系
+            const characterLocationMap = {
+                'claudius': 'claudius-bedroom',
+                'chengying': 'chengying-pharmacy',
+                'hefei': 'hefei-bedroom',
+                'lixiang': 'lixiang-study',
+                'wuzhizhe': 'wuzhizhe-livingroom',
+                'wangweiguo': 'wangweiguo-dorm'
+            };
+            
+            // 假设当前角色正在自己家里，使用角色对应的地点作为来源
+            const fromLocation = characterLocationMap[currentCharacter] || 'claudius-bedroom';
+            
+            // 跳转到选择目的地页面
+            const navigationUrl = `locations/common-navigation.html?character=${currentCharacter}&day=${gameState.currentDay}&from=${fromLocation}`;
+            window.location.href = navigationUrl;
         }
 
         // 更新信息面板（支持移动端和电脑端）
@@ -294,11 +307,24 @@
             }
         }
 
-        // 继续到最终结果
+        // 继续到选择目的地页面
         function goToFinalResult() {
-            // 跳转到最终结果页面
-            const finalResultUrl = `final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&from=match-nightmare`;
-            window.location.href = finalResultUrl;
+            // 角色与地点的映射关系
+            const characterLocationMap = {
+                'claudius': 'claudius-bedroom',
+                'chengying': 'chengying-pharmacy',
+                'hefei': 'hefei-bedroom',
+                'lixiang': 'lixiang-study',
+                'wuzhizhe': 'wuzhizhe-livingroom',
+                'wangweiguo': 'wangweiguo-dorm'
+            };
+            
+            // 假设当前角色正在自己家里，使用角色对应的地点作为来源
+            const fromLocation = characterLocationMap[currentCharacter] || 'claudius-bedroom';
+            
+            // 跳转到选择目的地页面
+            const navigationUrl = `locations/common-navigation.html?character=${currentCharacter}&day=${gameState.currentDay}&from=${fromLocation}`;
+            window.location.href = navigationUrl;
         }
 
         // 切换移动端信息面板
