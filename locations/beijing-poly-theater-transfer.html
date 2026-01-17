@@ -60,7 +60,8 @@
         const locationContent = {
             title: "北京保利剧院",
             thoughts: [
-                "中转界面内容..."
+                "你顺利走到检票口。工作人员看了看说：“您好，这个包需要寄存哦。”",
+                "你的时间不多了，只能忍痛丢弃一件物品。你决定："
             ]
         };
 
@@ -126,8 +127,8 @@
 
         // 前往下一个地点
         function goToNextLocation() {
-            // 跳转到公共导航页面
-            window.location.href = `common-navigation.html?character=${currentCharacter}&day=${day}&from=beijing-poly-theater`;
+            // 跳转到丢弃物品页面
+            window.location.href = `discard-item.html?character=${currentCharacter}&day=${day}`;
         }
 
         // 更新信息面板（支持移动端和电脑端）

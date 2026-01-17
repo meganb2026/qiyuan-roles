@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>北京保利剧院</title>
+    <title>丢弃物品</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
@@ -53,17 +53,15 @@
             gameStarted: true,
             playerInventory: [],
             allCharactersItems: {},
-            npcs: []
+            npcs: [],
+            itemDiscarded: false
         };
 
         // 地点内容
         const locationContent = {
-            title: "北京保利剧院",
+            title: "丢弃物品",
             thoughts: [
-                "你走进去，里面正在演一部音乐剧，名叫《赵氏孤儿》。",
-                "台上演员正在表演你。",
-                "他佝偻着背，一如你曾经无数次那样。",
-                "你的瞳孔里倒映着他的影子，一如千百次他身上倒映着你一样。"
+                "你的时间不多了，只能忍痛丢弃一件物品。你决定："
             ]
         };
 
@@ -115,8 +113,21 @@
                             ).join('')}
                         </div>
 
+                        <div class="items-list" style="margin: 30px 0;">
+                            ${gameState.playerInventory.length === 0 ?
+                                '<div style="color: #999; font-style: italic; text-align: center; padding: 20px;">背包是空的</div>' :
+                                gameState.playerInventory.map((item, index) =>
+                                    `<div style="animation-delay: ${0.5 + index * 0.2}s; animation: fadeInUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px);">
+                                        <button class="action-btn secondary" onclick="discardItem('${item}')" style="width: 100%; margin: 8px 0; padding: 12px 15px; font-size: 16px;">
+                                            ${getItemDisplayName(item)}
+                                        </button>
+                                    </div>`
+                                ).join('')
+                            }
+                        </div>
+
                         <div class="thoughts-actions">
-                            <button class="action-btn primary large" onclick="goToNextLocation()">
+                            <button class="action-btn primary large" onclick="goToNextLocation()" id="continue-btn" ${!gameState.itemDiscarded ? 'disabled style="opacity: 0.6; cursor: not-allowed;"' : ''}>
                                 继续
                             </button>
                         </div>
@@ -127,10 +138,33 @@
             document.getElementById('location-content').innerHTML = html;
         }
 
+        // 丢弃物品
+        function discardItem(itemToDiscard) {
+            // 显示确认弹窗
+            const confirmed = confirm(`确定要丢弃 ${getItemDisplayName(itemToDiscard)} 吗？`);
+            
+            if (!confirmed) {
+                return; // 用户取消删除
+            }
+            
+            // 从背包中移除物品
+            gameState.playerInventory = gameState.playerInventory.filter(item => item !== itemToDiscard);
+            
+            // 标记物品已丢弃
+            gameState.itemDiscarded = true;
+            
+            // 保存到localStorage
+            localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
+            
+            // 重新显示内容
+            showLocationContent();
+            updateInfoPanel();
+        }
+
         // 前往下一个地点
         function goToNextLocation() {
-            // 跳转到结算页面
-            window.location.href = `../final-result.html?character=${currentCharacter}&day=${day}`;
+            // 跳转到公共导航页面
+            window.location.href = `common-navigation.html?character=${currentCharacter}&day=${day}&from=beijing-poly-theater`;
         }
 
         // 更新信息面板（支持移动端和电脑端）
@@ -299,6 +333,22 @@
                 }
             }
         }
+
+        // 添加新的动画效果
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
 
         // 事件绑定
         document.addEventListener('DOMContentLoaded', function() {
