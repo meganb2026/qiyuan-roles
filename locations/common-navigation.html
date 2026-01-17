@@ -375,14 +375,31 @@
         `;
         document.head.appendChild(style);
 
+        // 角色与地点的映射关系
+        const characterLocationMap = {
+            'claudius': 'claudius-bedroom',
+            'chengying': 'chengying-pharmacy',
+            'hefei': 'hefei-bedroom',
+            'lixiang': 'lixiang-study',
+            'wuzhizhe': 'wuzhizhe-livingroom',
+            'wangweiguo': 'wangweiguo-dorm'
+        };
+
         // 前往指定地点
         function goToLocation(locationId) {
+            // 检查当前角色是否选择了自己的地点
+            let targetPage = locationId;
+            if (characterLocationMap[currentCharacter] === locationId) {
+                // 如果是自己的地点，跳转到家里页面
+                targetPage = `${currentCharacter}-home`;
+            }
+            
             // 添加页面过渡效果
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
             
             setTimeout(() => {
-                window.location.href = `${locationId}.html?character=${currentCharacter}&day=${day}`;
+                window.location.href = `${targetPage}.html?character=${currentCharacter}&day=${day}`;
             }, 300);
         }
 

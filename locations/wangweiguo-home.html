@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上海文化广场</title>
+    <title>王卫国的家</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
@@ -58,12 +58,9 @@
 
         // 地点内容
         const locationContent = {
-            title: "上海文化广场",
+            title: "王卫国的家",
             thoughts: [
-                "你的脑海里传来熟悉的童声。",
-                "“爸爸，来找我啊”",
-                "“3……2……1……”",
-                "明天也一定会是个好天气。"
+                "打开门，你到家了。"
             ]
         };
 
@@ -129,8 +126,8 @@
 
         // 前往下一个地点
         function goToNextLocation() {
-            // 跳转到结算页面
-            window.location.href = `../final-result.html?character=${currentCharacter}&day=${day}`;
+            // 跳转到对应的地点的选择目的地页面
+            window.location.href = `common-navigation.html?character=${currentCharacter}&day=${day}&from=wangweiguo-dorm`;
         }
 
         // 更新信息面板（支持移动端和电脑端）

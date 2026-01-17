@@ -74,6 +74,13 @@
                 // 初始化默认物品
                 initDefaultItems();
             }
+            
+            // 添加手电筒到背包（如果还没有）
+            if (!gameState.playerInventory.includes('flashlight')) {
+                gameState.playerInventory.push('flashlight');
+                // 保存到localStorage
+                localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
+            }
         }
 
         // 初始化默认物品

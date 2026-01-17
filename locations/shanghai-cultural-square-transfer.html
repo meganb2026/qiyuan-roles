@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上海文化广场 - 中转</title>
+    <title>上海文化广场</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
@@ -58,9 +58,11 @@
 
         // 地点内容
         const locationContent = {
-            title: "上海文化广场的中转界面",
+            title: "上海文化广场",
             thoughts: [
-                "中转界面内容..."
+                "不知道为什么，有一种神秘力量牵引着你，告诉你该回家了。",
+                "你获得了一个锦囊，打开一看：",
+                "下班不积极，思想有问题。"
             ]
         };
 
@@ -126,8 +128,8 @@
 
         // 前往下一个地点
         function goToNextLocation() {
-            // 跳转到公共导航页面
-            window.location.href = `common-navigation.html?character=${currentCharacter}&day=${day}&from=shanghai-cultural-square`;
+            // 跳转到当前角色对应的家里页面
+            window.location.href = `${currentCharacter}-home.html?character=${currentCharacter}&day=${day}`;
         }
 
         // 更新信息面板（支持移动端和电脑端）
