@@ -26,6 +26,29 @@
     <!-- 遮罩层 -->
     <div id="mobile-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
+    <!-- 地图面板 -->
+    <div id="map-panel" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; max-width: 800px; height: 80vh; max-height: 600px; background: rgba(255, 255, 255, 0.95); border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); z-index: 1001; padding: 20px; overflow: hidden;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin: 0; color: #667eea;">立方体地图</h3>
+            <button onclick="toggleMapPanel()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+        </div>
+        <div id="cube-map" style="width: 100%; height: 80%; display: flex; align-items: center; justify-content: center; perspective: 1000px;">
+            <!-- 立方体地图将通过JavaScript生成 -->
+        </div>
+        <div style="margin-top: 20px; text-align: center; font-size: 14px; color: #666;">
+            <p>点击拖动可以旋转地图看到全貌</p>
+        </div>
+    </div>
+
+    <!-- 地图遮罩层 -->
+    <div id="map-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+
+    <!-- 移动端地图按钮 -->
+    <div id="mobile-map-btn" style="position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1000; cursor: pointer; display: flex; align-items: center; justify-content: center;">🗺️</div>
+
+    <!-- 电脑端地图按钮 -->
+    <div id="desktop-map-btn" style="position: fixed; top: 90px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">🗺️</div>
+
     <!-- 电脑端信息按钮 -->
     <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
 
@@ -40,6 +63,7 @@
     <script src="../assets/js/itemStories.js"></script>
     <script src="../assets/js/backpack-improvements.js"></script>
     <script src="../assets/js/item-details.js"></script>
+    <script src="../assets/js/map.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -60,7 +84,7 @@
         const locationContent = {
             title: "吴智哲的客厅",
             thoughts: [
-                "TODO: 克劳狄斯跳转到结算前的文字"
+                "世间真心最难得，你叹了一口气。"
             ]
         };
 
@@ -140,10 +164,22 @@
                 mobileBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
             }
 
+            // 移动端地图按钮显示
+            const mobileMapBtn = document.getElementById('mobile-map-btn');
+            if (mobileMapBtn) {
+                mobileMapBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+
             // 电脑端按钮显示
             const desktopBtn = document.getElementById('desktop-info-btn');
             if (desktopBtn) {
                 desktopBtn.style.display = (!isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+
+            // 电脑端地图按钮显示
+            const desktopMapBtn = document.getElementById('desktop-map-btn');
+            if (desktopMapBtn) {
+                desktopMapBtn.style.display = (!isMobile && gameState.gameStarted) ? 'flex' : 'none';
             }
 
             if (!gameState.gameStarted) {
@@ -315,10 +351,25 @@
                 desktopBtn.addEventListener('click', toggleDesktopSidebar);
             }
 
+            // 移动端地图按钮事件
+            const mobileMapBtn = document.getElementById('mobile-map-btn');
+            if (mobileMapBtn) {
+                mobileMapBtn.addEventListener('click', toggleMapPanel);
+            }
+
+            // 电脑端地图按钮事件
+            const desktopMapBtn = document.getElementById('desktop-map-btn');
+            if (desktopMapBtn) {
+                desktopMapBtn.addEventListener('click', toggleMapPanel);
+            }
+
             // 遮罩层点击关闭
             document.addEventListener('click', function(e) {
                 if (e.target.id === 'mobile-overlay') {
                     hideMobileInfoPanel();
+                }
+                if (e.target.id === 'map-overlay') {
+                    toggleMapPanel();
                 }
             });
 
@@ -327,6 +378,7 @@
                 if (e.keyCode === 27) {
                     hideMobileInfoPanel();
                     hideDesktopSidebar();
+                    toggleMapPanel();
                 }
             });
         });

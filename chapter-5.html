@@ -10,6 +10,9 @@
     <!-- 移动端信息按钮 -->
     <div id="mobile-info-btn" style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1000; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
 
+    <!-- 移动端地图按钮 -->
+    <div id="mobile-map-btn" style="position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1000; cursor: pointer; display: flex; align-items: center; justify-content: center;">🗺️</div>
+
     <!-- 移动端信息面板 -->
     <div id="mobile-info-panel" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 250px; max-height: 300px; background: rgba(255, 255, 255, 0.98); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); z-index: 1000; padding: 15px; overflow-y: auto;">
         <!-- 内容由JavaScript动态填充 -->
@@ -26,8 +29,28 @@
     <!-- 遮罩层 -->
     <div id="mobile-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
+    <!-- 地图面板 -->
+    <div id="map-panel" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; max-width: 800px; height: 80vh; max-height: 600px; background: rgba(255, 255, 255, 0.95); border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); z-index: 1001; padding: 20px; overflow: hidden;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin: 0; color: #667eea;">立方体地图</h3>
+            <button onclick="toggleMapPanel()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+        </div>
+        <div id="cube-map" style="width: 100%; height: 80%; display: flex; align-items: center; justify-content: center; perspective: 1000px;">
+            <!-- 立方体地图将通过JavaScript生成 -->
+        </div>
+        <div style="margin-top: 20px; text-align: center; font-size: 14px; color: #666;">
+            <p>点击拖动可以旋转地图看到全貌</p>
+        </div>
+    </div>
+
+    <!-- 地图遮罩层 -->
+    <div id="map-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+
     <!-- 电脑端信息按钮 -->
     <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
+
+    <!-- 电脑端地图按钮 -->
+    <div id="desktop-map-btn" style="position: fixed; top: 90px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">🗺️</div>
 
     <!-- 第5章内容 -->
     <div id="chapter-5-content">
@@ -85,17 +108,27 @@
                         <div class="character-name" id="player-name-5">你</div>
                     </div>
                     <div class="dialogue-bubble visitor-bubble">
-                        <p>但上面没有字，我怎么知道上面都有什么呢？</p>
+                        <p>那我要怎么看到这些地点的对应关系？</p>
                     </div>
                 </div>
 
                 <div class="dialogue-section">
                     <div class="dialogue-bubble host-bubble">
-                        <p>地图上的字和奇缘2023一样只有聪明人才能看见。怎么你看不到吗？那你走着试试就知道了。</p>
+                        <p>看到屏幕上的🗺️图标了吗？点击它就能看到。如果你看到的标识被遮挡了，可以拖动立方体让它旋转。当然其实看看没用，你走起来就熟悉了。</p>
                     </div>
                     <div class="character-portrait host">
                         <div class="portrait-circle">😈</div>
                         <div class="character-name">梦魇</div>
+                    </div>
+                </div>
+
+                <div class="dialogue-section">
+                    <div class="character-portrait visitor">
+                        <div class="portrait-circle">👤</div>
+                        <div class="character-name" id="player-name-5">你</div>
+                    </div>
+                    <div class="dialogue-bubble visitor-bubble">
+                        <p>行吧，那我走着试试。</p>
                     </div>
                 </div>
 
@@ -114,6 +147,7 @@
     <script src="assets/js/itemStories.js"></script>
     <script src="assets/js/backpack-improvements.js"></script>
     <script src="assets/js/item-details.js"></script>
+    <script src="assets/js/map.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -204,10 +238,22 @@
                 mobileBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
             }
 
+            // 移动端地图按钮显示
+            const mobileMapBtn = document.getElementById('mobile-map-btn');
+            if (mobileMapBtn) {
+                mobileMapBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+
             // 电脑端按钮显示
             const desktopBtn = document.getElementById('desktop-info-btn');
             if (desktopBtn) {
                 desktopBtn.style.display = (!isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+
+            // 电脑端地图按钮显示
+            const desktopMapBtn = document.getElementById('desktop-map-btn');
+            if (desktopMapBtn) {
+                desktopMapBtn.style.display = (!isMobile && gameState.gameStarted) ? 'flex' : 'none';
             }
 
             if (!gameState.gameStarted) {
@@ -404,6 +450,8 @@
             }
         }
 
+        // 地图功能已移至外部文件 map.js
+
         // 事件绑定
         document.addEventListener('DOMContentLoaded', function() {
             loadGameState();
@@ -416,16 +464,31 @@
                 mobileBtn.addEventListener('click', toggleMobileInfoPanel);
             }
 
+            // 移动端地图按钮事件
+            const mobileMapBtn = document.getElementById('mobile-map-btn');
+            if (mobileMapBtn) {
+                mobileMapBtn.addEventListener('click', toggleMapPanel);
+            }
+
             // 电脑端按钮事件
             const desktopBtn = document.getElementById('desktop-info-btn');
             if (desktopBtn) {
                 desktopBtn.addEventListener('click', toggleDesktopSidebar);
             }
 
+            // 电脑端地图按钮事件
+            const desktopMapBtn = document.getElementById('desktop-map-btn');
+            if (desktopMapBtn) {
+                desktopMapBtn.addEventListener('click', toggleMapPanel);
+            }
+
             // 遮罩层点击关闭
             document.addEventListener('click', function(e) {
                 if (e.target.id === 'mobile-overlay') {
                     hideMobileInfoPanel();
+                }
+                if (e.target.id === 'map-overlay') {
+                    toggleMapPanel();
                 }
             });
 
@@ -434,6 +497,7 @@
                 if (e.keyCode === 27) {
                     hideMobileInfoPanel();
                     hideDesktopSidebar();
+                    toggleMapPanel();
                 }
             });
         });
