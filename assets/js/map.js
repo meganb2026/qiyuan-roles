@@ -100,6 +100,14 @@ function generateCubeMap() {
     let rotationX = 0;
     let rotationY = 0;
     
+    // 更新标识的朝向，使其始终面对观众
+    function updateLocationOrientation() {
+        locationElements.forEach(element => {
+            // 应用与立方体相反的旋转，使得标识始终面对观众
+            element.style.transform += ` rotateX(${-rotationX}deg) rotateY(${-rotationY}deg)`;
+        });
+    }
+    
     cubeContainer.addEventListener('mousedown', function(e) {
         isDragging = true;
         previousMousePosition = { x: e.clientX, y: e.clientY };
@@ -116,6 +124,20 @@ function generateCubeMap() {
         
         // 应用旋转
         cubeContainer.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+        
+        // 重置标识的transform，然后重新应用位置和朝向
+        locationElements.forEach(element => {
+            // 保存原始位置信息
+            const originalTransform = element.dataset.originalTransform || element.style.transform;
+            element.dataset.originalTransform = originalTransform;
+            
+            // 重新应用位置和朝向
+            // 关键：使用CSS的backface-visibility和正确的旋转顺序
+            // 先应用位置，然后应用与立方体相反的旋转，确保标识始终面向观众
+            element.style.transform = `${originalTransform} rotateY(${-rotationY}deg) rotateX(${-rotationX}deg)`;
+            element.style.backfaceVisibility = 'hidden';
+            element.style.transformStyle = 'preserve-3d';
+        });
         
         previousMousePosition = { x: e.clientX, y: e.clientY };
     });
@@ -146,6 +168,20 @@ function generateCubeMap() {
         
         // 应用旋转
         cubeContainer.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+        
+        // 重置标识的transform，然后重新应用位置和朝向
+        locationElements.forEach(element => {
+            // 保存原始位置信息
+            const originalTransform = element.dataset.originalTransform || element.style.transform;
+            element.dataset.originalTransform = originalTransform;
+            
+            // 重新应用位置和朝向
+            // 关键：使用CSS的backface-visibility和正确的旋转顺序
+            // 先应用位置，然后应用与立方体相反的旋转，确保标识始终面向观众
+            element.style.transform = `${originalTransform} rotateY(${-rotationY}deg) rotateX(${-rotationX}deg)`;
+            element.style.backfaceVisibility = 'hidden';
+            element.style.transformStyle = 'preserve-3d';
+        });
         
         previousMousePosition = { 
             x: e.touches[0].clientX, 
@@ -229,7 +265,9 @@ function generateCubeMap() {
             y += 65;
         }
         
-        locationElement.style.transform = `translateX(${x}px) translateY(${y}px) translateZ(${z}px)`;
+        const transformValue = `translateX(${x}px) translateY(${y}px) translateZ(${z}px)`;
+        locationElement.style.transform = transformValue;
+        locationElement.dataset.originalTransform = transformValue; // 保存原始位置信息
         locationElements.push(locationElement);
     });
     
