@@ -209,15 +209,25 @@ function generateCubeMap() {
         const scale = cubeSize / 2; // 立方体半径
         let x = vertex.x * scale;
         let y = vertex.y * scale;
-        const z = vertex.z * scale;
+        let z = vertex.z * scale;
         
-        // 计算标记的宽度和高度（近似值）
-        const markerWidth = 40;
-        const markerHeight = 40;
-        
-        // 调整标记位置，使其位于顶点附近且不重叠
-        x = vertex.x * scale;
-        y = vertex.y * scale;
+        // 为不同地点的标识添加位置偏移
+        if (vertex.loc === 'bottom-east' || vertex.loc === 'bottom-north') {
+            // 吴智哲客厅/王卫国宿舍
+            x += 65;
+            y += 5;
+        } else if (vertex.loc === 'bottom-south' || vertex.loc === 'bottom-west') {
+            //何非/北保
+            x += 5;
+            y += 5;
+        } else if (vertex.loc === 'top-east' || vertex.loc === 'top-north') {
+            // 程婴药铺 / 李想书房
+            x += 65;
+            y += 65;
+        } else if (vertex.loc === 'top-south' || vertex.loc === 'top-west') {
+            // 上海文化广场 / 克劳狄斯寝宫
+            y += 65;
+        }
         
         locationElement.style.transform = `translateX(${x}px) translateY(${y}px) translateZ(${z}px)`;
         locationElements.push(locationElement);
