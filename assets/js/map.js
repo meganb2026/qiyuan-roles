@@ -248,21 +248,44 @@ function generateCubeMap() {
         let z = vertex.z * scale;
         
         // 为不同地点的标识添加位置偏移
-        if (vertex.loc === 'bottom-east' || vertex.loc === 'bottom-north') {
-            // 吴智哲客厅/王卫国宿舍
+        if (vertex.loc === 'bottom-east') {
+            // 吴智哲客厅
             x += 65;
             y += 5;
-        } else if (vertex.loc === 'bottom-south' || vertex.loc === 'bottom-west') {
-            //何非/北保
+            z += 25;
+        } else if (vertex.loc === 'bottom-north') {
+           // 王卫国宿舍
+           x += 65;
+           y += 5;
+           z -= 25;
+        }else if (vertex.loc === 'bottom-south') {
+            //何非
             x += 5;
             y += 5;
-        } else if (vertex.loc === 'top-east' || vertex.loc === 'top-north') {
-            // 程婴药铺 / 李想书房
+            z += 25;
+        } else if (vertex.loc === 'bottom-west') {
+            //北保
+            x += 5;
+            y += 5;
+            z -= 25;
+        } else if (vertex.loc === 'top-east') {
+            // 程婴药铺
             x += 65;
             y += 65;
-        } else if (vertex.loc === 'top-south' || vertex.loc === 'top-west') {
-            // 上海文化广场 / 克劳狄斯寝宫
+            z += 25;
+        } else if (vertex.loc === 'top-north') {
+            // 李想书房
+            x += 65;
             y += 65;
+            z -= 25;
+        } else if (vertex.loc === 'top-south') {
+            // 上海文化广场
+            y += 65;
+            z += 25;
+        } else if (vertex.loc === 'top-west') {
+            // 克劳狄斯寝宫
+            y += 65;
+            z -= 25;
         }
         
         const transformValue = `translateX(${x}px) translateY(${y}px) translateZ(${z}px)`;
