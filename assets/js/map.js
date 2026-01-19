@@ -169,6 +169,7 @@ function generateCubeMap() {
     
     cubeFaces.forEach(face => {
         const faceElement = document.createElement('div');
+        faceElement.id = face.id;
         faceElement.style.width = `${cubeSize}px`;
         faceElement.style.height = `${cubeSize}px`;
         faceElement.style.position = 'absolute';
