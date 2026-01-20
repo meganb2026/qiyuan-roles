@@ -364,8 +364,11 @@
         
         // 继续按钮点击事件
         continueBtn.addEventListener('click', function() {
-            // 跳转到结算页面
-            window.location.href = 'settlement.html';
+            // 从URL参数获取角色信息
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentCharacter = urlParams.get('character') || 'claudius';
+            // 跳转到结算页面，并传递from=dice参数
+            window.location.href = `settlement.html?character=${currentCharacter}&from=dice`;
         });
         
         // 初始化骰子

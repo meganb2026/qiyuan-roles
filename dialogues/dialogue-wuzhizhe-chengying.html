@@ -15,8 +15,11 @@
         <!-- 内容由JavaScript动态填充 -->
     </div>
 
+    <!-- 电脑端信息按钮 -->
+    <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
+
     <!-- 电脑端侧边栏 -->
-    <div id="desktop-sidebar" style="display: none; position: fixed; top: 20px; right: 20px; width: 280px; max-height: 80vh; background: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); z-index: 1000; padding: 20px; overflow-y: auto; border: 1px solid #e0e0e0;">
+    <div id="desktop-sidebar" style="display: none; position: fixed; top: 90px; right: 20px; width: 280px; max-height: 80vh; background: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); z-index: 1000; padding: 20px; overflow-y: auto; border: 1px solid #e0e0e0;">
         <h4 style="margin: 0 0 15px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 8px;">角色信息</h4>
         <div id="desktop-sidebar-content">
             <!-- 内容由JavaScript动态填充 -->
@@ -157,14 +160,21 @@
                 mobileBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
             }
 
+            // 电脑端按钮显示
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.style.display = (!isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+
             if (!gameState.gameStarted) {
                 hideMobileInfoPanel();
+                hideDesktopSidebar();
                 return;
             }
 
-            // 如果是电脑端，直接显示侧边栏
+            // 更新电脑端侧边栏内容，但不自动显示
             if (!isMobile) {
-                showDesktopSidebar();
+                updateDesktopSidebarContent();
                 return;
             }
 
@@ -197,8 +207,29 @@
             }
         }
 
-        // 显示电脑端侧边栏
-        function showDesktopSidebar() {
+        // 隐藏电脑端侧边栏
+        function hideDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'none';
+            }
+        }
+
+        // 切换电脑端侧边栏
+        function toggleDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                const isVisible = sidebar.style.display === 'block';
+                if (isVisible) {
+                    sidebar.style.display = 'none';
+                } else {
+                    showDesktopSidebar();
+                }
+            }
+        }
+
+        // 更新电脑端侧边栏内容
+        function updateDesktopSidebarContent() {
             const sidebar = document.getElementById('desktop-sidebar');
             const content = document.getElementById('desktop-sidebar-content');
 
@@ -225,6 +256,14 @@
                         <strong>第 ${gameState.currentDay} 章</strong>
                     </div>
                 `;
+            }
+        }
+
+        // 显示电脑端侧边栏
+        function showDesktopSidebar() {
+            updateDesktopSidebarContent();
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
                 sidebar.style.display = 'block';
             }
         }
@@ -259,6 +298,12 @@
                 mobileBtn.addEventListener('click', toggleMobileInfoPanel);
             }
 
+            // 电脑端按钮事件
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.addEventListener('click', toggleDesktopSidebar);
+            }
+
             // 遮罩层点击关闭
             document.addEventListener('click', function(e) {
                 if (e.target.id === 'mobile-overlay') {
@@ -270,6 +315,7 @@
             document.addEventListener('keydown', function(e) {
                 if (e.keyCode === 27) {
                     hideMobileInfoPanel();
+                    hideDesktopSidebar();
                 }
             });
         });

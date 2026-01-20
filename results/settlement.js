@@ -24,7 +24,15 @@ function startSettlement() {
 }
 
 // 计算结算结果
-function calculateSettlementResult(currentCharacter = 'claudius') {
+function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
+    // 检查是否是从骰子页面跳转过来的
+    if (from === 'dice') {
+        return {
+            title: '你失败了',
+            content: '敢把命运交给骰子，你才是真的何非。'
+        };
+    }
+    
     // 从localStorage获取游戏状态
     const savedState = localStorage.getItem('qiyuanGameState');
     if (!savedState) {

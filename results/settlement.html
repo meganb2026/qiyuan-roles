@@ -276,10 +276,11 @@
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
         const currentCharacter = urlParams.get('character') || 'claudius';
+        const from = urlParams.get('from') || '';
 
         // 页面加载时计算并显示结算结果
         document.addEventListener('DOMContentLoaded', function() {
-            const result = calculateSettlementResult(currentCharacter);
+            const result = calculateSettlementResult(currentCharacter, from);
             
             // 更新页面内容
             const html = `
