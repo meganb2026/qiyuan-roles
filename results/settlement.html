@@ -16,6 +16,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow-x: hidden;
         }
         
         .page-container {
@@ -28,6 +29,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             text-align: center;
             box-sizing: border-box;
+            margin: 2rem auto;
         }
         
         h2 {
@@ -49,14 +51,14 @@
             background-clip: text;
         }
         
-        .result-message {
+        .result-content {
             font-size: 1.1rem;
             margin: 1.5rem 0;
             opacity: 0.9;
             line-height: 1.6;
         }
         
-        /* 响应式设计：适配手机屏幕 */
+        /* 响应式设计：适配平板和大屏手机 */
         @media (max-width: 768px) {
             h2 {
                 font-size: 2rem;
@@ -66,7 +68,7 @@
                 font-size: 2.5rem;
             }
             
-            .result-message {
+            .result-content {
                 font-size: 1rem;
                 padding: 0 0.5rem;
             }
@@ -74,11 +76,23 @@
             .page-container {
                 padding: 1rem;
                 width: 98%;
+                margin: 1rem auto;
             }
             
             .action-btn {
                 padding: 0.8rem 1.5rem;
                 font-size: 1rem;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .action-btn {
+                width: 80%;
+                margin: 0.5rem 0;
             }
         }
         
@@ -92,8 +106,135 @@
                 font-size: 2.2rem;
             }
             
-            .result-message {
+            .result-content {
                 font-size: 0.95rem;
+                padding: 0 0.3rem;
+            }
+            
+            .page-container {
+                padding: 0.9rem;
+                margin: 0.5rem auto;
+            }
+            
+            .action-btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+                width: 85%;
+            }
+        }
+        
+        /* 适配超小屏手机 */
+        @media (max-width: 360px) {
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .result-title {
+                font-size: 1.8rem;
+            }
+            
+            .result-content {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                padding: 0 0.2rem;
+            }
+            
+            .page-container {
+                padding: 0.8rem;
+                margin: 0.3rem auto;
+                width: 99%;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .action-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                width: 90%;
+                margin: 0.3rem 0;
+            }
+            
+            .contributors-title {
+                font-size: 1.5rem;
+            }
+            
+            .contributor-name {
+                font-size: 0.9rem;
+            }
+            
+            .contributor-role {
+                font-size: 0.8rem;
+            }
+            
+            .contributor-contribution {
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* 适配极小屏手机 */
+        @media (max-width: 320px) {
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .result-title {
+                font-size: 1.6rem;
+            }
+            
+            .result-content {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+            
+            .page-container {
+                padding: 0.7rem;
+            }
+            
+            .action-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+                width: 95%;
+            }
+            
+            .contributors-title {
+                font-size: 1.3rem;
+            }
+            
+            .modal-content {
+                margin: 40% auto;
+                padding: 0.9rem;
+                width: 90%;
+            }
+            
+            .page-container p {
+                font-size: 0.75rem;
+                margin-top: 1rem;
+            }
+        }
+        
+        /* 为版权信息添加响应式设计 */
+        @media (max-width: 768px) {
+            .page-container p {
+                font-size: 0.8rem;
+                margin-top: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .page-container p {
+                font-size: 0.75rem;
+                margin-top: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .page-container p {
+                font-size: 0.7rem;
+                margin-top: 1rem;
             }
         }
         
@@ -145,7 +286,7 @@
         
         .modal-content {
             background-color: rgba(26, 26, 46, 0.95);
-            margin: 8% auto;
+            margin: 15% auto;
             padding: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
             width: 85%;
@@ -156,6 +297,28 @@
             position: relative;
         }
         
+        /* 响应式设计：适配手机屏幕 */
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 25% auto;
+            }
+        }
+        
+        /* 适配小屏手机 */
+        @media (max-width: 480px) {
+            .modal-content {
+                margin: 30% auto;
+                padding: 1.2rem;
+            }
+        }
+        
+        /* 适配超小屏手机 */
+        @media (max-width: 360px) {
+            .modal-content {
+                margin: 35% auto;
+                padding: 1rem;
+            }
+        }
         .modal-close {
             color: #aaa;
             float: right;
@@ -185,7 +348,7 @@
         
         .contributor-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1rem;
             margin: 1.5rem 0;
         }
@@ -195,8 +358,6 @@
             padding: 0.8rem;
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            word-break: break-word;
-            white-space: normal;
         }
         
         .contributor-name {
@@ -286,7 +447,7 @@
             const html = `
                 <div>
                     <h1 class="result-title">${result.title}</h1>
-                    <div class="result-message">
+                    <div class="result-content">
                         ${result.content.split('\n').map(line => `<p>${line}</p>`).join('')}
                     </div>
                 </div>
