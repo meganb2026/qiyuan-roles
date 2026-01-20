@@ -160,6 +160,7 @@
     <script src="assets/js/itemStories.js"></script>
     <script src="assets/js/backpack-improvements.js"></script>
     <script src="assets/js/item-details.js"></script>
+    <script src="assets/js/game.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -198,6 +199,11 @@
                 const iceItem = 'ice'; // 寒冰的物品ID
                 if (!gameState.playerInventory.includes(iceItem)) {
                     gameState.playerInventory.push(iceItem);
+                    
+                    // 记录发现的物品
+                    if (window.recordDiscoveredItem) {
+                        window.recordDiscoveredItem(iceItem);
+                    }
                     
                     // 更新角色物品
                     if (!gameState.allCharactersItems[gameState.selectedCharacter]) {

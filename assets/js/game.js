@@ -30,6 +30,10 @@ class Game {
             this.gameState.selectedCharacter = character;
             const char = window.characters[character];
             this.gameState.playerInventory = [...char.initialItems];
+            // 记录初始物品
+            if (window.recordMultipleDiscoveredItems) {
+                window.recordMultipleDiscoveredItems(char.initialItems);
+            }
             this.gameState.gameStarted = true;
             this.showDayStart();
         } else {
@@ -178,11 +182,15 @@ class Game {
         const char = window.characters[characterId];
 
         // 初始化玩家装备
-        this.gameState.playerInventory = [...char.initialItems];
+    this.gameState.playerInventory = [...char.initialItems];
+    // 记录初始物品
+    if (window.recordMultipleDiscoveredItems) {
+        window.recordMultipleDiscoveredItems(char.initialItems);
+    }
 
-        // 初始化所有角色的装备
-        this.gameState.allCharactersItems = {};
-        this.gameState.allCharactersItems[characterId] = [...char.initialItems];
+    // 初始化所有角色的装备
+    this.gameState.allCharactersItems = {};
+    this.gameState.allCharactersItems[characterId] = [...char.initialItems];
 
         // 创建NPC列表
         this.gameState.npcs = [];
@@ -403,6 +411,11 @@ class Game {
             // 交换物品
             this.gameState.playerInventory[playerIndex] = npcItem;
             npc.items[npcIndex] = playerItem;
+
+            // 记录新获得的物品
+            if (window.recordDiscoveredItem) {
+                window.recordDiscoveredItem(npcItem);
+            }
 
             // 记录交换历史
             this.gameState.exchangeHistory.push({
@@ -702,4 +715,60 @@ class Game {
 }
 
 // 初始化游戏
-const game = new Game();
+    const game = new Game();
+    
+    // 持久化物品发现记录系统
+    function initDiscoveredItemsSystem() {
+        // 检查是否存在发现物品记录，如果不存在则创建
+        if (!localStorage.getItem('qiyuanDiscoveredItems')) {
+            localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify([]));
+        }
+    }
+    
+    // 记录发现的物品
+    function recordDiscoveredItem(itemKey) {
+        // 获取当前发现物品列表
+        const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+        
+        // 检查物品是否已经被记录
+        if (!discoveredItems.includes(itemKey)) {
+            // 添加到发现列表
+            discoveredItems.push(itemKey);
+            // 保存回localStorage
+            localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify(discoveredItems));
+        }
+    }
+    
+    // 记录多个发现的物品
+    function recordMultipleDiscoveredItems(itemKeys) {
+        // 获取当前发现物品列表
+        const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+        let hasNewItems = false;
+        
+        // 检查每个物品是否已经被记录
+        itemKeys.forEach(itemKey => {
+            if (!discoveredItems.includes(itemKey)) {
+                // 添加到发现列表
+                discoveredItems.push(itemKey);
+                hasNewItems = true;
+            }
+        });
+        
+        // 如果有新物品，保存回localStorage
+        if (hasNewItems) {
+            localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify(discoveredItems));
+        }
+    }
+    
+    // 获取所有发现的物品
+    function getDiscoveredItems() {
+        return JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+    }
+    
+    // 初始化物品发现系统
+    initDiscoveredItemsSystem();
+    
+    // 添加到全局对象
+    window.recordDiscoveredItem = recordDiscoveredItem;
+    window.recordMultipleDiscoveredItems = recordMultipleDiscoveredItems;
+    window.getDiscoveredItems = getDiscoveredItems;

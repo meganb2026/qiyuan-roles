@@ -157,6 +157,7 @@
     <script src="assets/js/itemStories.js"></script>
     <script src="assets/js/backpack-improvements.js"></script>
     <script src="assets/js/item-details.js"></script>
+    <script src="assets/js/game.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -289,6 +290,11 @@
                 // 3. 将新物品添加到背包
                 if (!gameState.playerInventory.includes(randomItem.itemKey)) {
                     gameState.playerInventory.push(randomItem.itemKey);
+                    
+                    // 记录发现的物品
+                    if (window.recordDiscoveredItem) {
+                        window.recordDiscoveredItem(randomItem.itemKey);
+                    }
                     
                     // 将物品添加到当前角色的物品列表
                     if (!gameState.allCharactersItems[gameState.selectedCharacter]) {

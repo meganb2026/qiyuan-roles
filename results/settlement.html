@@ -286,11 +286,13 @@
         
         .modal-content {
             background-color: rgba(26, 26, 46, 0.95);
-            margin: 15% auto;
+            margin: 10% auto;
             padding: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
             width: 85%;
             max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
             border-radius: 20px;
             text-align: center;
             color: white;
@@ -300,23 +302,26 @@
         /* 响应式设计：适配手机屏幕 */
         @media (max-width: 768px) {
             .modal-content {
-                margin: 25% auto;
+                margin: 15% auto;
+                max-height: 75vh;
             }
         }
         
         /* 适配小屏手机 */
         @media (max-width: 480px) {
             .modal-content {
-                margin: 30% auto;
+                margin: 20% auto;
                 padding: 1.2rem;
+                max-height: 70vh;
             }
         }
         
         /* 适配超小屏手机 */
         @media (max-width: 360px) {
             .modal-content {
-                margin: 35% auto;
+                margin: 25% auto;
                 padding: 1rem;
+                max-height: 65vh;
             }
         }
         .modal-close {
@@ -397,6 +402,9 @@
                     <button class="action-btn" id="contributors-btn">
                         查看贡献者
                     </button>
+                    <button class="action-btn" id="encyclopedia-btn">
+                        查看图鉴
+                    </button>
                 </div>
                 
                 <p style="margin-top: 2rem; opacity: 0.7; font-size: 0.9rem;">© 2026 躺平阿麦. All rights reserved.</p>
@@ -427,6 +435,86 @@
         </div>
     </div>
     
+    <!-- 图鉴模态框 -->
+    <div id="encyclopediaModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeEncyclopedia()">&times;</span>
+            <h2 class="contributors-title">你的收集</h2>
+            
+            <!-- 物品栏 -->
+            <div style="margin: 1.5rem 0;">
+                <h3 style="font-size: 1.3rem; margin-bottom: 1rem;">物品栏</h3>
+                <div id="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.8rem;"></div>
+            </div>
+            
+            <!-- 结局栏 -->
+            <div style="margin: 1.5rem 0;">
+                <h3 style="font-size: 1.3rem; margin-bottom: 1rem;">结局栏</h3>
+                <div id="endings-grid" style="padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 10px;">
+                    <p>结局栏内容将在后续更新中添加</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        /* 物品格子样式 */
+        .item-cell {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        
+        .item-cell:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .item-cell.discovered {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+        
+        .item-cell.unknown {
+            color: #888;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            #items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 0.6rem;
+            }
+            
+            .item-cell {
+                padding: 0.6rem;
+                min-height: 70px;
+                font-size: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 0.5rem;
+            }
+            
+            .item-cell {
+                padding: 0.5rem;
+                min-height: 60px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+    
     <script src="../assets/js/characters.js"></script>
     <script src="../assets/js/items.js"></script>
     <script src="../assets/js/itemStories.js"></script>
@@ -456,16 +544,20 @@
             document.getElementById('dynamic-result-content').innerHTML = html;
             
             // 添加按钮事件
-            document.getElementById('restart-btn').addEventListener('click', function() {
-                // 重置游戏状态
-                localStorage.removeItem('qiyuanGameState');
-                // 跳转到首页
-                window.location.href = '../index.html';
-            });
-            
-            document.getElementById('contributors-btn').addEventListener('click', function() {
-                showContributors();
-            });
+        document.getElementById('restart-btn').addEventListener('click', function() {
+            // 重置游戏状态
+            localStorage.removeItem('qiyuanGameState');
+            // 跳转到首页
+            window.location.href = '../index.html';
+        });
+        
+        document.getElementById('contributors-btn').addEventListener('click', function() {
+            showContributors();
+        });
+        
+        document.getElementById('encyclopedia-btn').addEventListener('click', function() {
+            showEncyclopedia();
+        });
         });
         
         // 显示贡献者模态框
@@ -480,11 +572,71 @@
             modal.style.display = 'none';
         }
         
+        // 显示图鉴模态框
+        function showEncyclopedia() {
+            const modal = document.getElementById('encyclopediaModal');
+            modal.style.display = 'block';
+            generateItemsGrid();
+        }
+        
+        // 关闭图鉴模态框
+        function closeEncyclopedia() {
+            const modal = document.getElementById('encyclopediaModal');
+            modal.style.display = 'none';
+        }
+        
+        // 生成物品栏网格
+        function generateItemsGrid() {
+            const itemsGrid = document.getElementById('items-grid');
+            itemsGrid.innerHTML = '';
+            
+            // 获取持久化的发现物品列表
+            const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+            
+            // 获取所有物品列表
+            const allItems = Object.values(window.itemStories || {});
+            const itemKeys = Object.keys(window.itemStories || {});
+            
+            // 为每个物品创建一个格子
+            allItems.forEach(item => {
+                const itemCell = document.createElement('div');
+                itemCell.className = 'item-cell';
+                
+                // 查找当前物品对应的英文键名
+                let itemKey = '';
+                for (const key of itemKeys) {
+                    if (window.itemStories[key].name === item.name) {
+                        itemKey = key;
+                        break;
+                    }
+                }
+                
+                // 检查物品是否已经被发现
+                const isDiscovered = discoveredItems.includes(itemKey);
+                
+                if (isDiscovered) {
+                    itemCell.className += ' discovered';
+                    itemCell.textContent = item.name;
+                } else {
+                    itemCell.className += ' unknown';
+                    itemCell.textContent = '?';
+                }
+                
+                itemsGrid.appendChild(itemCell);
+            });
+        }
+        
         // 点击模态框外部关闭模态框
         window.onclick = function(event) {
-            const modal = document.getElementById('contributorsModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
+            const contributorsModal = document.getElementById('contributorsModal');
+            const encyclopediaModal = document.getElementById('encyclopediaModal');
+            
+            if (event.target === contributorsModal) {
+                contributorsModal.style.display = 'none';
+            }
+            
+            if (event.target === encyclopediaModal) {
+                encyclopediaModal.style.display = 'none';
             }
         }
     </script>
