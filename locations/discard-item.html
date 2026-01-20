@@ -89,16 +89,15 @@
             ]
         };
 
-        // 从localStorage加载游戏状态
+        // 初始化游戏状态（每次访问页面都重置）
         function loadGameState() {
-            const savedState = localStorage.getItem('qiyuanGameState');
-            if (savedState) {
-                const parsedState = JSON.parse(savedState);
-                gameState = { ...gameState, ...parsedState };
-            } else {
-                // 初始化默认物品
-                initDefaultItems();
-            }
+            // 每次访问页面都重置状态，不从localStorage加载
+            // 但保持其他初始化逻辑
+            initDefaultItems();
+            // 重置物品丢弃标记
+            gameState.itemDiscarded = false;
+            // 确保页面加载时完全重置，不读取localStorage
+            // 这样每次访问页面时，继续按钮都会是禁用状态
         }
 
         // 初始化默认物品

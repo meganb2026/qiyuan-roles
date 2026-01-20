@@ -64,6 +64,7 @@
     <script src="../assets/js/backpack-improvements.js"></script>
     <script src="../assets/js/item-details.js"></script>
     <script src="../assets/js/map.js"></script>
+    <script src="../results/settlement.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -151,8 +152,8 @@
 
         // 前往下一个地点
         function goToNextLocation() {
-            // 跳转到结算页面
-            window.location.href = `../final-result.html?character=${currentCharacter}&day=${day}`;
+            // 使用新的结算系统
+            startSettlement();
         }
 
         // 更新信息面板（支持移动端和电脑端）

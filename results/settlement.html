@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇缘48 - 最终结果</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-container {
+            max-width: 800px;
+            width: 95%;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .result-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 1.5rem 0;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .result-message {
+            font-size: 1.1rem;
+            margin: 1.5rem 0;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        /* 响应式设计：适配手机屏幕 */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .result-title {
+                font-size: 2.5rem;
+            }
+            
+            .result-message {
+                font-size: 1rem;
+                padding: 0 0.5rem;
+            }
+            
+            .page-container {
+                padding: 1rem;
+                width: 98%;
+            }
+            
+            .action-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+        
+        /* 适配小屏手机 */
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .result-title {
+                font-size: 2.2rem;
+            }
+            
+            .result-message {
+                font-size: 0.95rem;
+            }
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            margin: 0.5rem;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .action-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* 贡献者模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: rgba(26, 26, 46, 0.95);
+            margin: 8% auto;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 85%;
+            max-width: 500px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 0.8rem;
+            right: 1.2rem;
+        }
+        
+        .modal-close:hover,
+        .modal-close:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .contributors-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .contributor-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .contributor-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            word-break: break-word;
+            white-space: normal;
+        }
+        
+        .contributor-name {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+        }
+        
+        .contributor-role {
+            color: #ccc;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+        
+        .contributor-contribution {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <!-- 最终结果内容区域 -->
+    <div>
+        <div class="page-container">
+            <h2>最终结果</h2>
+
+            <div class="result-container">
+                <div id="dynamic-result-content">
+                    <!-- 内容由JavaScript动态填充 -->
+                </div>
+
+                <div class="result-actions">
+                    <button class="action-btn" id="restart-btn">
+                        重新开始
+                    </button>
+                    <button class="action-btn" id="contributors-btn">
+                        查看贡献者
+                    </button>
+                </div>
+                
+                <p style="margin-top: 2rem; opacity: 0.7; font-size: 0.9rem;">© 2026 躺平阿麦. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 贡献者模态框 -->
+    <div id="contributorsModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeContributors()">&times;</span>
+            <h2 class="contributors-title">贡献者名单</h2>
+            <p>感谢所有为本游戏做出贡献的朋友们！</p>
+            <div class="contributor-list">
+                <div class="contributor-card">
+                    <div class="contributor-name">游戏设计与开发</div>
+                    <div class="contributor-role">躺平阿麦</div>
+                </div>
+                <div class="contributor-card">
+                    <div class="contributor-name">创意支持</div>
+                    <div class="contributor-role">木、勤蛋宝、早期饮料罐、月明见鹿、鹅、比比多味猫</div>
+                </div>
+                <div class="contributor-card">
+                    <div class="contributor-name">以下朋友在制作过程中亦有贡献</div>
+                    <div class="contributor-role">滋啦滋啦呱、獾、食人鱼、綠、七月、切片菇、生生、同星辰奔赴大海</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../assets/js/characters.js"></script>
+    <script src="../assets/js/items.js"></script>
+    <script src="../assets/js/itemStories.js"></script>
+    <script src="../assets/js/backpack-improvements.js"></script>
+    <script src="../assets/js/item-details.js"></script>
+    <script src="settlement.js"></script>
+    <script>
+        // 从URL参数获取信息
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCharacter = urlParams.get('character') || 'claudius';
+
+        // 页面加载时计算并显示结算结果
+        document.addEventListener('DOMContentLoaded', function() {
+            const result = calculateSettlementResult(currentCharacter);
+            
+            // 更新页面内容
+            const html = `
+                <div>
+                    <h1 class="result-title">${result.title}</h1>
+                    <div class="result-message">
+                        ${result.content.split('\n').map(line => `<p>${line}</p>`).join('')}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('dynamic-result-content').innerHTML = html;
+            
+            // 添加按钮事件
+            document.getElementById('restart-btn').addEventListener('click', function() {
+                // 重置游戏状态
+                localStorage.removeItem('qiyuanGameState');
+                // 跳转到首页
+                window.location.href = '../index.html';
+            });
+            
+            document.getElementById('contributors-btn').addEventListener('click', function() {
+                showContributors();
+            });
+        });
+        
+        // 显示贡献者模态框
+        function showContributors() {
+            const modal = document.getElementById('contributorsModal');
+            modal.style.display = 'block';
+        }
+        
+        // 关闭贡献者模态框
+        function closeContributors() {
+            const modal = document.getElementById('contributorsModal');
+            modal.style.display = 'none';
+        }
+        
+        // 点击模态框外部关闭模态框
+        window.onclick = function(event) {
+            const modal = document.getElementById('contributorsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
