@@ -52,7 +52,7 @@
         }
         
         .result-content {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             margin: 1.5rem 0;
             opacity: 0.9;
             line-height: 1.6;
@@ -69,7 +69,7 @@
             }
             
             .result-content {
-                font-size: 1rem;
+                font-size: 0.8rem;
                 padding: 0 0.5rem;
             }
             
@@ -80,19 +80,19 @@
             }
             
             .action-btn {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
             }
             
             .result-actions {
                 flex-direction: column;
                 align-items: center;
-                gap: 10px;
+                gap: 6px;
             }
             
             .action-btn {
-                width: 80%;
-                margin: 0.5rem 0;
+                width: 85%;
+                margin: 0.2rem 0;
             }
         }
         
@@ -107,7 +107,7 @@
             }
             
             .result-content {
-                font-size: 0.95rem;
+                font-size: 0.75rem;
                 padding: 0 0.3rem;
             }
             
@@ -117,9 +117,14 @@
             }
             
             .action-btn {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.9rem;
-                width: 85%;
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                width: 90%;
+                margin: 0.2rem 0;
+            }
+            
+            .result-actions {
+                gap: 5px;
             }
         }
         
@@ -134,7 +139,7 @@
             }
             
             .result-content {
-                font-size: 0.9rem;
+                font-size: 0.7rem;
                 line-height: 1.5;
                 padding: 0 0.2rem;
             }
@@ -148,14 +153,14 @@
             .result-actions {
                 flex-direction: column;
                 align-items: center;
-                gap: 8px;
+                gap: 4px;
             }
             
             .action-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.85rem;
-                width: 90%;
-                margin: 0.3rem 0;
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+                width: 95%;
+                margin: 0.15rem 0;
             }
             
             .contributors-title {
@@ -186,7 +191,7 @@
             }
             
             .result-content {
-                font-size: 0.85rem;
+                font-size: 0.75rem;
                 line-height: 1.4;
             }
             
@@ -195,9 +200,14 @@
             }
             
             .action-btn {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.8rem;
-                width: 95%;
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+                width: 98%;
+                margin: 0.1rem 0;
+            }
+            
+            .result-actions {
+                gap: 3px;
             }
             
             .contributors-title {
@@ -238,28 +248,35 @@
             }
         }
         
+        @media (max-width: 320px) {
+            .page-container p {
+                font-size: 0.75rem;
+                margin-top: 1rem;
+            }
+        }
+        
         .result-actions {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
-            margin-top: 3rem;
+            margin-top: 2rem;
             flex-wrap: wrap;
         }
         
         .action-btn {
             display: inline-block;
-            padding: 1rem 2rem;
+            padding: 0.9rem 1.8rem;
             background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             border: none;
-            margin: 0.5rem;
+            margin: 0.3rem;
         }
         
         .action-btn:hover {
@@ -444,7 +461,7 @@
             <!-- 物品栏 -->
             <div style="margin: 1.5rem 0;">
                 <h3 style="font-size: 1.3rem; margin-bottom: 1rem;">物品栏</h3>
-                <div id="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.8rem;"></div>
+                <div id="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.6rem;"></div>
             </div>
             
             <!-- 结局栏 -->
@@ -462,10 +479,10 @@
         .item-cell {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 0.8rem;
+            border-radius: 6px;
+            padding: 0.6rem;
             text-align: center;
-            min-height: 80px;
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -490,27 +507,25 @@
         /* 响应式调整 */
         @media (max-width: 768px) {
             #items-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                gap: 0.6rem;
-            }
-            
-            .item-cell {
-                padding: 0.6rem;
-                min-height: 70px;
-                font-size: 0.75rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            #items-grid {
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
                 gap: 0.5rem;
             }
             
             .item-cell {
+                padding: 0.6rem;
+                min-height: 70px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 0.4rem;
+            }
+            
+            .item-cell {
                 padding: 0.5rem;
                 min-height: 60px;
-                font-size: 0.7rem;
             }
         }
     </style>

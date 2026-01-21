@@ -214,6 +214,11 @@
                 // 记录新获得的物品到游戏状态
                 gameState.newlyAcquiredItem = newItem;
 
+                // 记录新获得的物品到图鉴
+                if (window.recordDiscoveredItem) {
+                    window.recordDiscoveredItem(newItem);
+                }
+
                 // 标记交换已完成，只能交换一次
                 gameState.exchangeCompleted = true;
 

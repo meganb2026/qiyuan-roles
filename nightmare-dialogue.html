@@ -134,6 +134,7 @@
     <script src="assets/js/itemStories.js"></script>
     <script src="assets/js/backpack-improvements.js"></script>
     <script src="assets/js/item-details.js"></script>
+    <script src="assets/js/game.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -359,6 +360,12 @@
             // 添加梦魇的地图到玩家背包
             if (!gameState.playerInventory.includes('map')) {
                 gameState.playerInventory.push('map');
+                
+                // 记录梦魇地图到图鉴
+                if (window.recordDiscoveredItem) {
+                    window.recordDiscoveredItem('map');
+                }
+                
                 // 保存游戏状态
                 localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
             }

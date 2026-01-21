@@ -64,6 +64,7 @@
     <script src="../assets/js/backpack-improvements.js"></script>
     <script src="../assets/js/item-details.js"></script>
     <script src="../assets/js/map.js"></script>
+    <script src="../assets/js/game.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -102,6 +103,12 @@
             // 添加手电筒到背包（如果还没有）
             if (!gameState.playerInventory.includes('flashlight')) {
                 gameState.playerInventory.push('flashlight');
+                
+                // 记录手电筒到图鉴
+                if (window.recordDiscoveredItem) {
+                    window.recordDiscoveredItem('flashlight');
+                }
+                
                 // 保存到localStorage
                 localStorage.setItem('qiyuanGameState', JSON.stringify(gameState));
             }
