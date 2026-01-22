@@ -15,14 +15,30 @@ function startSettlement() {
     // 检查背包里是否有骰子
     if (gameState.playerInventory && gameState.playerInventory.includes('dice')) {
         // 跳转到骰子决定页面
-        // 使用绝对路径，确保从任何页面调用都能正确解析
-        window.location.href = '/results/dice-decision.html?character=' + currentCharacter;
+        // 使用相对路径，确保从任何页面调用都能正确解析
+        // 检查当前路径是否已经在results目录下
+        const currentPath = window.location.pathname;
+        if (currentPath.includes('/results/')) {
+            // 已经在results目录下，直接使用文件名
+            window.location.href = 'dice-decision.html?character=' + currentCharacter;
+        } else {
+            // 不在results目录下，使用完整路径
+            window.location.href = 'results/dice-decision.html?character=' + currentCharacter;
+        }
         return;
     }
     
     // 直接跳转到结算页面
-    // 使用绝对路径，确保从任何页面调用都能正确解析
-    window.location.href = '/results/settlement.html?character=' + currentCharacter;
+    // 使用相对路径，确保从任何页面调用都能正确解析
+    // 检查当前路径是否已经在results目录下
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('/results/')) {
+        // 已经在results目录下，直接使用文件名
+        window.location.href = 'settlement.html?character=' + currentCharacter;
+    } else {
+        // 不在results目录下，使用完整路径
+        window.location.href = 'results/settlement.html?character=' + currentCharacter;
+    }
 }
 
 // 计算结算结果
@@ -56,6 +72,31 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
     // 使用游戏状态中的角色，而不是传入的参数
     const actualCharacter = gameState.selectedCharacter || currentCharacter;
     const inventory = gameState.playerInventory || [];
+    
+    // 新的结算条件
+    // 1. 非Claudius角色，同时拥有crown和curtain-cloth
+    if (actualCharacter !== 'claudius' && inventory.includes('crown') && inventory.includes('curtain-cloth')) {
+        return {
+            title: '你登基了',
+            content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。'
+        };
+    }
+    
+    // 2. 非Claudius角色，拥有痒痒挠
+    if (actualCharacter !== 'claudius' && inventory.includes('痒痒挠')) {
+        return {
+            title: '你成功了',
+            content: '大家都没有找到凶手，克劳狄斯听说了勃然大怒。你看了看痒痒挠，决定得挠人处且挠人。你挠了挠他，他笑了。'
+        };
+    }
+    
+    // 3. Claudius或何非，拥有隔离霜
+    if ((actualCharacter === 'claudius' || actualCharacter === 'hefei') && inventory.includes('隔离霜')) {
+        return {
+            title: '你成功了',
+            content: '你把隔离霜涂在脸上，它假白。你被洗白了。'
+        };
+    }
     
     // 生成个性化消息和标题
     const result = generatePersonalizedMessage(actualCharacter, inventory);
@@ -98,15 +139,15 @@ function generatePersonalizedMessage(character, inventory) {
     // 根据角色和背包内容生成个性化消息
     switch (character) {
         case "claudius":
-            if (inventory.includes("mentor-notes")) {
-                return {
-                    title: '你成功了',
-                    content: '你找到了篡位的证据，原来藏在吴智哲老师的手稿里。你偷偷销毁了它，至于那个傻小子，呵。'
-                };
-            } else if (inventory.includes("clothes")) {
+            if (inventory.includes("clothes")) {
                 return {
                     title: '你成功了',
                     content: '一定有什么不符合常理的。等等，李想那小子不是每天穿风衣吗，为什么有这么多羽绒服？原来他是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。'
+                };
+            } else if (inventory.includes("mentor-notes")) {
+                return {
+                    title: '你成功了',
+                    content: '你找到了篡位的证据，原来藏在吴智哲老师的手稿里。你偷偷销毁了它，至于那个傻小子，呵。'
                 };
             } else {
                 return {
@@ -115,12 +156,7 @@ function generatePersonalizedMessage(character, inventory) {
                 };
             }
         case "chengying":
-             if (inventory.includes("crown") && inventory.includes("curtain-cloth")) {
-                return {
-                    title: '你登基了',
-                    content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。'
-                };
-            } else if (inventory.includes("diving-equipment")) {
+             if (inventory.includes("diving-equipment")) {
                 return {
                     title: '你成功了',
                     content: '你不顾寒冷，穿着潜水服跳进下水道找到了克劳狄斯谋反的证据。下水道虽窄，你的义举犹如一人渡过了七条大河。'
@@ -146,6 +182,11 @@ function generatePersonalizedMessage(character, inventory) {
                 return {
                     title: '你成功了',
                     content: '通关令牌这东西没什么用啊…不过对有些人来讲是有用的。你把令牌卖给王卫国，让他的施工队可以继续施工不受案情影响，拿到的钱还清了赌债。'
+                };
+            } else if (inventory.includes("flashlight")) {
+                return {
+                  title: '你失败了',
+                  content: '大家都没有头绪。克劳狄斯问，你不是要让他眼前一亮吗？你打开了手电筒。'
                 };
             } else if (inventory.includes("crown")) {
                 return {
@@ -230,8 +271,16 @@ function handleMapDiscard() {
     const currentCharacter = gameState.selectedCharacter || 'claudius';
     
     // 跳转到结算页面，并传递失败原因
-    // 使用绝对路径，确保从任何页面调用都能正确解析
-    window.location.href = '/results/settlement.html?character=' + currentCharacter + '&from=map-discard';
+    // 使用相对路径，确保从任何页面调用都能正确解析
+    // 检查当前路径是否已经在results目录下
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('/results/')) {
+        // 已经在results目录下，直接使用文件名
+        window.location.href = 'settlement.html?character=' + currentCharacter + '&from=map-discard';
+    } else {
+        // 不在results目录下，使用完整路径
+        window.location.href = 'results/settlement.html?character=' + currentCharacter + '&from=map-discard';
+    }
 }
 
 // 为了兼容性，添加到全局对象
