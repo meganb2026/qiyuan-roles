@@ -101,6 +101,9 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
     // 生成个性化消息和标题
     const result = generatePersonalizedMessage(actualCharacter, inventory);
     
+    // 记录发现的结局
+    recordDiscoveredEnding(actualCharacter, inventory, result, from);
+    
     return result;
 }
 
@@ -283,9 +286,117 @@ function handleMapDiscard() {
     }
 }
 
+// 记录发现的结局
+function recordDiscoveredEnding(character, inventory, result, from) {
+    // 获取当前的发现结局列表
+    const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+    let endingId = '';
+    
+    // 根据不同的情况确定结局ID
+    if (from === 'map-discard') {
+        // 丢弃地图的失败结局
+        endingId = 'general-failure-map';
+    } else if (from === 'dice') {
+        // 摇骰子的失败结局
+        endingId = 'general-failure-dice';
+    } else if (result.title === '你登基了') {
+        // 登基结局（彩蛋）
+        endingId = 'easter-egg-ascend';
+    } else if (result.title === '你成功了' && result.content.includes('你看了看痒痒挠')) {
+        // 痒痒挠成功结局（通用）
+        endingId = 'general-success-scratcher';
+    } else if (result.title === '你成功了' && result.content.includes('你把隔离霜涂在脸上')) {
+        // 隔离霜成功结局（通用）
+        endingId = 'general-success-primer';
+    } else {
+        // 根据角色和背包物品确定结局ID
+        switch (character) {
+            case 'claudius':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('clothes')) {
+                        endingId = 'claudius-success-clothes';
+                    } else if (inventory.includes('mentor-notes')) {
+                        endingId = 'claudius-success-notes';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'claudius-failure';
+                }
+                break;
+            case 'chengying':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('diving-equipment')) {
+                        endingId = 'chengying-success-diving';
+                    } else if (inventory.includes('mentor-notes')) {
+                        endingId = 'chengying-success-notes';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'chengying-failure';
+                }
+                break;
+            case 'hefei':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('weekly-report')) {
+                        endingId = 'hefei-success-report';
+                    } else if (inventory.includes('pearl-pass')) {
+                        endingId = 'hefei-success-pass';
+                    }
+                } else if (result.title === '你失败了') {
+                    if (inventory.includes('flashlight')) {
+                        endingId = 'hefei-failure-flashlight';
+                    } else if (inventory.includes('crown')) {
+                        endingId = 'hefei-failure-crown';
+                    } else {
+                        endingId = 'hefei-failure';
+                    }
+                }
+                break;
+            case 'lixiang':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('sleeping-pill')) {
+                        endingId = 'lixiang-success-pill';
+                    } else if (inventory.includes('weekly-report')) {
+                        endingId = 'lixiang-success-report';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'lixiang-failure';
+                }
+                break;
+            case 'wangweiguo':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('pearl-pass')) {
+                        endingId = 'wangweiguo-success-pass';
+                    } else if (inventory.includes('underground-system-blueprint')) {
+                        endingId = 'wangweiguo-success-blueprint';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'wangweiguo-failure';
+                }
+                break;
+            case 'wuzhizhe':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('chinese-herbs')) {
+                        endingId = 'wuzhizhe-success-herbs';
+                    } else if (inventory.includes('underground-system-blueprint')) {
+                        endingId = 'wuzhizhe-success-blueprint';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'wuzhizhe-failure';
+                }
+                break;
+        }
+    }
+    
+    // 如果确定了结局ID且尚未记录，则添加到列表中
+    if (endingId && !discoveredEndings.includes(endingId)) {
+        discoveredEndings.push(endingId);
+        localStorage.setItem('qiyuanDiscoveredEndings', JSON.stringify(discoveredEndings));
+    }
+}
+
 // 为了兼容性，添加到全局对象
 if (typeof window !== 'undefined') {
     window.startSettlement = startSettlement;
     window.calculateSettlementResult = calculateSettlementResult;
     window.handleMapDiscard = handleMapDiscard;
+    window.recordDiscoveredEnding = recordDiscoveredEnding;
 }

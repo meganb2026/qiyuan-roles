@@ -481,7 +481,62 @@
             <div style="margin: 1.5rem 0;">
                 <h3 style="font-size: 1.3rem; margin-bottom: 1rem;">结局栏</h3>
                 <div id="endings-grid" style="padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 10px;">
-                    <p>结局栏内容将在后续更新中添加</p>
+                    <!-- 克劳狄斯结局 -->
+                    <div class="ending-section">
+                        <div class="ending-title">克劳狄斯</div>
+                        <div class="ending-buttons" id="claudius-endings"></div>
+                    </div>
+                    
+                    <!-- 程婴结局 -->
+                    <div class="ending-section">
+                        <div class="ending-title">程婴</div>
+                        <div class="ending-buttons" id="chengying-endings"></div>
+                    </div>
+                    
+                    <!-- 何非结局 -->
+                    <div class="ending-section">
+                        <div class="ending-title">何非</div>
+                        <div class="ending-buttons" id="hefei-endings"></div>
+                    </div>
+                    
+                    <!-- 李想结局 -->
+                    <div class="ending-section">
+                        <div class="ending-title">李想</div>
+                        <div class="ending-buttons" id="lixiang-endings"></div>
+                    </div>
+                    
+                    <!-- 王卫国结局 -->
+                    <div class="ending-section">
+                        <div class="ending-title">王卫国</div>
+                        <div class="ending-buttons" id="wangweiguo-endings"></div>
+                    </div>
+                    
+                    <!-- 吴智哲结局 -->
+                    <div class="ending-section">
+                        <div class="ending-title">吴智哲</div>
+                        <div class="ending-buttons" id="wuzhizhe-endings"></div>
+                    </div>
+                    
+                    <!-- 通用结局 -->
+                    <div class="ending-section">
+                        <div class="ending-title">通用结局</div>
+                        <div class="ending-buttons" id="general-endings"></div>
+                    </div>
+                    
+                    <!-- 彩蛋结局 -->
+                    <div class="ending-section">
+                        <div class="ending-title">彩蛋</div>
+                        <div class="ending-buttons" id="easter-egg-endings"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 结局详情模态框 -->
+            <div id="endingDetailModal" class="ending-detail-modal">
+                <div class="ending-detail-content">
+                    <span class="ending-detail-close" onclick="closeEndingDetail()">&times;</span>
+                    <h2 class="ending-detail-title" id="endingDetailTitle"></h2>
+                    <div class="ending-detail-content-text" id="endingDetailContent"></div>
                 </div>
             </div>
         </div>
@@ -528,6 +583,25 @@
                 padding: 0.6rem;
                 min-height: 70px;
             }
+            
+            .ending-section {
+                margin-bottom: 1.5rem;
+            }
+            
+            .ending-title {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .ending-buttons {
+                gap: 0.3rem;
+            }
+            
+            .ending-btn {
+                min-width: 50px;
+                height: 50px;
+                font-size: 1rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -540,6 +614,133 @@
                 padding: 0.5rem;
                 min-height: 60px;
             }
+            
+            .ending-section {
+                margin-bottom: 1.2rem;
+            }
+            
+            .ending-title {
+                font-size: 0.9rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            .ending-btn {
+                min-width: 45px;
+                height: 45px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* 结局按钮样式 */
+        .ending-section {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .ending-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        
+        .ending-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .ending-btn {
+            min-width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #888;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .ending-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .ending-btn.discovered {
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+        
+        .ending-btn.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        .ending-btn.failure {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        
+        .ending-btn.ascend {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        
+        /* 结局详情模态框 */
+        .ending-detail-modal {
+            display: none;
+            position: fixed;
+            z-index: 1002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+        
+        .ending-detail-content {
+            background-color: rgba(26, 26, 46, 0.95);
+            margin: 15% auto;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 80%;
+            max-width: 400px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .ending-detail-close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+        }
+        
+        .ending-detail-close:hover {
+            color: white;
+        }
+        
+        .ending-detail-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        .ending-detail-content-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
         }
     </style>
     
@@ -605,6 +806,7 @@
             const modal = document.getElementById('encyclopediaModal');
             modal.style.display = 'block';
             generateItemsGrid();
+            generateEndingsGrid();
         }
         
         // 关闭图鉴模态框
@@ -652,6 +854,133 @@
                 
                 itemsGrid.appendChild(itemCell);
             });
+        }
+        
+        // 生成结局栏内容
+        function generateEndingsGrid() {
+            // 获取持久化的发现结局列表
+            const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+            
+            // 定义所有结局
+            const allEndings = {
+                // 克劳狄斯结局
+                claudius: [
+                    { id: 'claudius-success-clothes', type: 'success', title: '你成功了', content: '一定有什么不符合常理的。等等，李想那小子不是每天穿风衣吗，为什么有这么多羽绒服？原来他是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。' },
+                    { id: 'claudius-success-notes', type: 'success', title: '你成功了', content: '你找到了篡位的证据，原来藏在吴智哲老师的手稿里。你偷偷销毁了它，至于那个傻小子，呵。' },
+                    { id: 'claudius-failure', type: 'failure', title: '你失败了', content: '你当年篡位的证据被发现并公之于众。天下皆惊竟有人为了皇位弄死自己的兄长，你被愤怒的人们处死。' }
+                ],
+                
+                // 程婴结局
+                chengying: [
+                    { id: 'chengying-success-diving', type: 'success', title: '你成功了', content: '你不顾寒冷，穿着潜水服跳进下水道找到了克劳狄斯谋反的证据。下水道虽窄，你的义举犹如一人渡过了七条大河。' },
+                    { id: 'chengying-success-notes', type: 'success', title: '你成功了', content: '你仔细辨认吴智哲老师的手稿，猜到了藏匿秘密的地方，并告诉了吴智哲。吴智哲无谓，不怕冬天的下水道有多冷，跳下去找到了克劳狄斯谋反的证据。' },
+                    { id: 'chengying-failure', type: 'failure', title: '你失败了', content: '你没有找到克劳狄斯谋反的证据。众人也没有找到凶杀案的真凶。' }
+                ],
+                
+                // 何非结局
+                hefei: [
+                    { id: 'hefei-success-report', type: 'success', title: '你成功了', content: '你在周报中敏锐地发现材料运输数量减少的问题，编造了一个故事，说是李想的设计有问题王卫国他们替他遮掩了，成功嫁祸李想和王卫国。克劳狄斯因此给你了一笔钱。' },
+                    { id: 'hefei-success-pass', type: 'success', title: '你成功了', content: '通关令牌这东西没什么用啊…不过对有些人来讲是有用的。你把令牌卖给王卫国，让他的施工队可以继续施工不受案情影响，拿到的钱还清了赌债。' },
+                    { id: 'hefei-failure-flashlight', type: 'failure', title: '你失败了', content: '大家都没有头绪。克劳狄斯问，你不是要让他眼前一亮吗？你打开了手电筒。' },
+                    { id: 'hefei-failure-crown', type: 'failure', title: '你失败了', content: '你没有凑够钱，把目光移向了手上的珍珠想要卖了换钱。可恶克劳狄斯竟然给珍珠下毒，你被毒死了。' },
+                    { id: 'hefei-failure', type: 'failure', title: '你失败了', content: '你没有凑够钱。加之所有人都没有找到元凶，克劳狄斯大怒觉得你耍他，把你处死了。' }
+                ],
+                
+                // 李想结局
+                lixiang: [
+                    { id: 'lixiang-success-pill', type: 'success', title: '你成功了', content: '你拿着安眠药去找了程婴，他告诉你前一夜皇宫上天降暴雨。这恰好证明下水道系统排水很好所以第二天没有看到水。至于尸体，不是淹死的，说明和下水道设计无关。' },
+                    { id: 'lixiang-success-report', type: 'success', title: '你成功了', content: '王卫国的周报里记录了每周的工作。上面记录了下水道在发大水时快速排水。至于尸体，不是淹死的，说明和下水道设计无关。' },
+                    { id: 'lixiang-failure', type: 'failure', title: '你失败了', content: '时间到了，你没能证明下水道设计没有问题。何非编造了一个故事，让克劳狄斯把你处死了。' }
+                ],
+                
+                // 王卫国结局
+                wangweiguo: [
+                    { id: 'wangweiguo-success-pass', type: 'success', title: '你成功了', content: '你拿着通关令牌让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。' },
+                    { id: 'wangweiguo-success-blueprint', type: 'success', title: '你成功了', content: '你拿着下水道图纸让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。' },
+                    { id: 'wangweiguo-failure', type: 'failure', title: '你失败了', content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，说你报告尸体是因为心虚，让克劳狄斯把你处死了。' }
+                ],
+                
+                // 吴智哲结局
+                wuzhizhe: [
+                    { id: 'wuzhizhe-success-herbs', type: 'success', title: '你成功了', content: '你吃了人参，大补。于是凭着一腔孤勇跳下了水，摸到一个机关，上面的图案和导师手记上的一模一样。原来这里有一个暗室，里面藏着克劳狄斯当年为了皇位谋杀了自己的哥哥的证物。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。' },
+                    { id: 'wuzhizhe-success-blueprint', type: 'success', title: '你成功了', content: '你认真读了下水道的设计图纸，和建筑设计图一比对，发现了一个暗室。在里面找到一个证物，赫然写着克劳狄斯当年为了皇位谋杀了自己的哥哥。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。' },
+                    { id: 'wuzhizhe-failure', type: 'failure', title: '你失败了', content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，让克劳狄斯把你处死了。' }
+                ],
+                
+                // 通用结局
+                general: [
+                    { id: 'general-failure-map', type: 'failure', title: '你失败了', content: '失去了地图的你迷路了。' },
+                    { id: 'general-failure-dice', type: 'failure', title: '你失败了', content: '敢把命运交给骰子，你才是真的何非。' },
+                    { id: 'general-success-scratcher', type: 'success', title: '你成功了', content: '大家都没有找到凶手，克劳狄斯听说了勃然大怒。你看了看痒痒挠，决定得挠人处且挠人。你挠了挠他，他笑了。' },
+                    { id: 'general-success-primer', type: 'success', title: '你成功了', content: '你把隔离霜涂在脸上，它假白。你被洗白了。' }
+                ],
+                
+                // 彩蛋结局
+                'easter-egg': [
+                    { id: 'easter-egg-ascend', type: 'ascend', title: '你登基了', content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。' }
+                ]
+            };
+            
+            // 为每个角色生成结局按钮
+            Object.keys(allEndings).forEach(character => {
+                const container = document.getElementById(`${character}-endings`);
+                if (container) {
+                    container.innerHTML = '';
+                    allEndings[character].forEach(ending => {
+                        const button = document.createElement('div');
+                        button.className = 'ending-btn';
+                        
+                        // 检查结局是否已经被发现
+                        const isDiscovered = discoveredEndings.includes(ending.id);
+                        if (isDiscovered) {
+                            button.className += ` discovered ${ending.type}`;
+                            // 根据结局类型显示不同的图标
+                            if (ending.type === 'success') {
+                                button.textContent = '✓';
+                            } else if (ending.type === 'failure') {
+                                button.textContent = '✗';
+                            } else if (ending.type === 'ascend') {
+                                button.textContent = '👑';
+                            }
+                        } else {
+                            button.textContent = '?';
+                        }
+                        
+                        // 添加点击事件，显示结局详情
+                        button.addEventListener('click', () => {
+                            showEndingDetail(ending);
+                        });
+                        
+                        container.appendChild(button);
+                    });
+                }
+            });
+        }
+        
+        // 显示结局详情
+        function showEndingDetail(ending) {
+            const modal = document.getElementById('endingDetailModal');
+            const titleElement = document.getElementById('endingDetailTitle');
+            const contentElement = document.getElementById('endingDetailContent');
+            
+            titleElement.textContent = ending.title;
+            contentElement.textContent = ending.content;
+            modal.style.display = 'block';
+        }
+        
+        // 关闭结局详情
+        function closeEndingDetail() {
+            const modal = document.getElementById('endingDetailModal');
+            modal.style.display = 'none';
+        }
+        
+        // 记录发现的结局
+        function recordDiscoveredEnding(endingId) {
+            const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+            if (!discoveredEndings.includes(endingId)) {
+                discoveredEndings.push(endingId);
+                localStorage.setItem('qiyuanDiscoveredEndings', JSON.stringify(discoveredEndings));
+            }
         }
         
         // 点击模态框外部关闭模态框
