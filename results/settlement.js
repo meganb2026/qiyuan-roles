@@ -74,24 +74,24 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
     const inventory = gameState.playerInventory || [];
     
     // 新的结算条件
-    // 1. 非Claudius角色，同时拥有crown和curtain-cloth
-    if (actualCharacter !== 'claudius' && inventory.includes('crown') && inventory.includes('curtain-cloth')) {
+    // 1. 非Claudius角色，同时拥有crown和half-piece-curtain
+    if (actualCharacter !== 'claudius' && inventory.includes('crown') && inventory.includes('half-piece-curtain')) {
         return {
             title: '你登基了',
             content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。'
         };
     }
     
-    // 2. 非Claudius角色，拥有痒痒挠
-    if (actualCharacter !== 'claudius' && inventory.includes('痒痒挠')) {
+    // 2. 非Claudius角色，拥有scratcher
+    if (actualCharacter !== 'claudius' && inventory.includes('scratcher')) {
         return {
             title: '你成功了',
             content: '大家都没有找到凶手，克劳狄斯听说了勃然大怒。你看了看痒痒挠，决定得挠人处且挠人。你挠了挠他，他笑了。'
         };
     }
     
-    // 3. Claudius或何非，拥有隔离霜
-    if ((actualCharacter === 'claudius' || actualCharacter === 'hefei') && inventory.includes('隔离霜')) {
+    // 3. Claudius或何非，拥有primer
+    if ((actualCharacter === 'claudius' || actualCharacter === 'hefei') && inventory.includes('primer')) {
         return {
             title: '你成功了',
             content: '你把隔离霜涂在脸上，它假白。你被洗白了。'
