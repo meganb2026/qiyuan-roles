@@ -45,18 +45,22 @@ function startSettlement() {
 function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
     // 检查是否是从骰子页面跳转过来的
     if (from === 'dice') {
-        return {
+        const result = {
             title: '你失败了',
             content: '敢把命运交给骰子，你才是真的何非。'
         };
+        recordDiscoveredEnding(currentCharacter, [], result, from);
+        return result;
     }
     
     // 检查是否是丢弃地图导致的失败
     if (from === 'map-discard') {
-        return {
+        const result = {
             title: '你失败了',
             content: '失去了地图的你迷路了。'
         };
+        recordDiscoveredEnding(currentCharacter, [], result, from);
+        return result;
     }
     
     // 从localStorage获取游戏状态
@@ -74,32 +78,29 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
     const inventory = gameState.playerInventory || [];
     
     // 新的结算条件
+    let result;
     // 1. 非Claudius角色，同时拥有crown和half-piece-curtain
     if (actualCharacter !== 'claudius' && inventory.includes('crown') && inventory.includes('half-piece-curtain')) {
-        return {
+        result = {
             title: '你登基了',
             content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。'
         };
-    }
-    
-    // 2. 非Claudius角色，拥有scratcher
-    if (actualCharacter !== 'claudius' && inventory.includes('scratcher')) {
-        return {
+    } else if (actualCharacter !== 'claudius' && inventory.includes('scratcher')) {
+        // 2. 非Claudius角色，拥有scratcher
+        result = {
             title: '你成功了',
             content: '大家都没有找到凶手，克劳狄斯听说了勃然大怒。你看了看痒痒挠，决定得挠人处且挠人。你挠了挠他，他笑了。'
         };
-    }
-    
-    // 3. Claudius或何非，拥有primer
-    if ((actualCharacter === 'claudius' || actualCharacter === 'hefei') && inventory.includes('primer')) {
-        return {
+    } else if ((actualCharacter === 'claudius' || actualCharacter === 'hefei') && inventory.includes('primer')) {
+        // 3. Claudius或何非，拥有primer
+        result = {
             title: '你成功了',
             content: '你把隔离霜涂在脸上，它假白。你被洗白了。'
         };
+    } else {
+        // 生成个性化消息和标题
+        result = generatePersonalizedMessage(actualCharacter, inventory);
     }
-    
-    // 生成个性化消息和标题
-    const result = generatePersonalizedMessage(actualCharacter, inventory);
     
     // 记录发现的结局
     recordDiscoveredEnding(actualCharacter, inventory, result, from);
@@ -288,8 +289,16 @@ function handleMapDiscard() {
 
 // 记录发现的结局
 function recordDiscoveredEnding(character, inventory, result, from) {
+    console.log('=== 开始记录结局 ===');
+    console.log('角色:', character);
+    console.log('背包物品:', inventory);
+    console.log('结局:', result);
+    console.log('来源:', from);
+    
     // 获取当前的发现结局列表
     const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+    console.log('当前已发现的结局:', discoveredEndings);
+    
     let endingId = '';
     
     // 根据不同的情况确定结局ID
@@ -383,14 +392,30 @@ function recordDiscoveredEnding(character, inventory, result, from) {
                     endingId = 'wuzhizhe-failure';
                 }
                 break;
+            default:
+                // 处理其他角色的结局
+                if (result.title === '你失败了') {
+                    endingId = character + '-failure';
+                }
+                break;
         }
     }
     
+    console.log('生成的结局ID:', endingId);
+    
     // 如果确定了结局ID且尚未记录，则添加到列表中
     if (endingId && !discoveredEndings.includes(endingId)) {
+        console.log('添加结局ID到localStorage:', endingId);
         discoveredEndings.push(endingId);
         localStorage.setItem('qiyuanDiscoveredEndings', JSON.stringify(discoveredEndings));
+        console.log('更新后的已发现结局:', discoveredEndings);
+    } else if (!endingId) {
+        console.log('未生成结局ID');
+    } else {
+        console.log('结局ID已存在，跳过');
     }
+    
+    console.log('=== 结局记录完成 ===');
 }
 
 // 为了兼容性，添加到全局对象

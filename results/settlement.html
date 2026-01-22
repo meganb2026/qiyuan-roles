@@ -858,8 +858,10 @@
         
         // 生成结局栏内容
         function generateEndingsGrid() {
-            // 获取持久化的发现结局列表
+            console.log('=== 开始生成结局栏 ===');
+            // 强制从localStorage获取最新的发现结局列表
             const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+            console.log('从localStorage获取的已发现结局:', discoveredEndings);
             
             // 定义所有结局
             const allEndings = {
@@ -922,16 +924,20 @@
             };
             
             // 为每个角色生成结局按钮
+            console.log('开始生成结局按钮');
             Object.keys(allEndings).forEach(character => {
                 const container = document.getElementById(`${character}-endings`);
                 if (container) {
+                    console.log('处理角色:', character);
                     container.innerHTML = '';
                     allEndings[character].forEach(ending => {
+                        console.log('处理结局:', ending.id);
                         const button = document.createElement('div');
                         button.className = 'ending-btn';
                         
                         // 检查结局是否已经被发现
                         const isDiscovered = discoveredEndings.includes(ending.id);
+                        console.log('结局是否被发现:', ending.id, isDiscovered);
                         if (isDiscovered) {
                             button.className += ` discovered ${ending.type}`;
                             // 根据结局类型显示不同的图标
@@ -942,19 +948,25 @@
                             } else if (ending.type === 'ascend') {
                                 button.textContent = '👑';
                             }
+                            
+                            // 添加点击事件，显示结局详情
+                            button.addEventListener('click', () => {
+                                showEndingDetail(ending);
+                            });
                         } else {
                             button.textContent = '?';
+                            // 未被发现的结局按钮不可点击
+                            button.style.cursor = 'not-allowed';
+                            button.style.opacity = '0.5';
                         }
-                        
-                        // 添加点击事件，显示结局详情
-                        button.addEventListener('click', () => {
-                            showEndingDetail(ending);
-                        });
                         
                         container.appendChild(button);
                     });
+                } else {
+                    console.log('未找到容器:', `${character}-endings`);
                 }
             });
+            console.log('=== 结局栏生成完成 ===');
         }
         
         // 显示结局详情
@@ -974,14 +986,14 @@
             modal.style.display = 'none';
         }
         
-        // 记录发现的结局
-        function recordDiscoveredEnding(endingId) {
-            const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
-            if (!discoveredEndings.includes(endingId)) {
-                discoveredEndings.push(endingId);
-                localStorage.setItem('qiyuanDiscoveredEndings', JSON.stringify(discoveredEndings));
-            }
-        }
+        // 记录发现的结局 - 这个函数已被settlement.js中的函数替代
+        // function recordDiscoveredEnding(endingId) {
+        //     const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+        //     if (!discoveredEndings.includes(endingId)) {
+        //         discoveredEndings.push(endingId);
+        //         localStorage.setItem('qiyuanDiscoveredEndings', JSON.stringify(discoveredEndings));
+        //     }
+        // }
         
         // 点击模态框外部关闭模态框
         window.onclick = function(event) {
@@ -995,6 +1007,14 @@
             if (event.target === encyclopediaModal) {
                 encyclopediaModal.style.display = 'none';
             }
+        }
+        
+        // 清除localStorage中的结局数据（用于调试）
+        function clearEndings() {
+            localStorage.removeItem('qiyuanDiscoveredEndings');
+            console.log('已清除localStorage中的结局数据');
+            // 重新生成结局栏
+            generateEndingsGrid();
         }
     </script>
 </body>
