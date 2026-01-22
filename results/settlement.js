@@ -33,6 +33,14 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
         };
     }
     
+    // 检查是否是丢弃地图导致的失败
+    if (from === 'map-discard') {
+        return {
+            title: '你失败了',
+            content: '失去了地图的你迷路了。'
+        };
+    }
+    
     // 从localStorage获取游戏状态
     const savedState = localStorage.getItem('qiyuanGameState');
     if (!savedState) {
@@ -207,8 +215,25 @@ function generatePersonalizedMessage(character, inventory) {
     }
 }
 
+// 处理丢弃地图的失败情况
+function handleMapDiscard() {
+    // 从localStorage获取游戏状态
+    const savedState = localStorage.getItem('qiyuanGameState');
+    if (!savedState) {
+        console.error('游戏状态不存在');
+        return;
+    }
+    
+    const gameState = JSON.parse(savedState);
+    const currentCharacter = gameState.selectedCharacter || 'claudius';
+    
+    // 跳转到结算页面，并传递失败原因
+    window.location.href = '../results/settlement.html?character=' + currentCharacter + '&from=map-discard';
+}
+
 // 为了兼容性，添加到全局对象
 if (typeof window !== 'undefined') {
     window.startSettlement = startSettlement;
     window.calculateSettlementResult = calculateSettlementResult;
+    window.handleMapDiscard = handleMapDiscard;
 }

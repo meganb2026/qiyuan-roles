@@ -64,6 +64,7 @@
     <script src="../assets/js/backpack-improvements.js"></script>
     <script src="../assets/js/item-details.js"></script>
     <script src="../assets/js/map.js"></script>
+    <script src="../results/settlement.js"></script>
     <script>
         // 从URL参数获取信息
         const urlParams = new URLSearchParams(window.location.search);
@@ -175,8 +176,13 @@
             
             // 检查是否删除的是梦魇的地图
             if (itemToDiscard === 'map') {
-                // 直接跳转到失败的结算页面
-                window.location.href = `../final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&result=failure&reason=lost-map`;
+                // 调用公共方法处理丢弃地图的失败情况
+                if (window.handleMapDiscard) {
+                    window.handleMapDiscard();
+                } else {
+                    // 后备方案：直接跳转到失败的结算页面
+                    window.location.href = `../final-result.html?character=${currentCharacter}&day=${gameState.currentDay}&result=failure&reason=lost-map`;
+                }
                 return;
             }
             
