@@ -14,13 +14,15 @@ function startSettlement() {
     
     // 检查背包里是否有骰子
     if (gameState.playerInventory && gameState.playerInventory.includes('dice')) {
-        // 跳转到骰子界面
-        window.location.href = '../results/dice.html?character=' + currentCharacter;
+        // 跳转到骰子决定页面
+        // 使用绝对路径，确保从任何页面调用都能正确解析
+        window.location.href = '/results/dice-decision.html?character=' + currentCharacter;
         return;
     }
     
     // 直接跳转到结算页面
-    window.location.href = '../results/settlement.html?character=' + currentCharacter;
+    // 使用绝对路径，确保从任何页面调用都能正确解析
+    window.location.href = '/results/settlement.html?character=' + currentCharacter;
 }
 
 // 计算结算结果
@@ -228,7 +230,8 @@ function handleMapDiscard() {
     const currentCharacter = gameState.selectedCharacter || 'claudius';
     
     // 跳转到结算页面，并传递失败原因
-    window.location.href = '../results/settlement.html?character=' + currentCharacter + '&from=map-discard';
+    // 使用绝对路径，确保从任何页面调用都能正确解析
+    window.location.href = '/results/settlement.html?character=' + currentCharacter + '&from=map-discard';
 }
 
 // 为了兼容性，添加到全局对象

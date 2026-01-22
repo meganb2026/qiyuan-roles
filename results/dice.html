@@ -368,7 +368,8 @@
             const urlParams = new URLSearchParams(window.location.search);
             const currentCharacter = urlParams.get('character') || 'claudius';
             // 跳转到结算页面，并传递from=dice参数
-            window.location.href = `settlement.html?character=${currentCharacter}&from=dice`;
+            // 使用绝对路径，确保从任何页面调用都能正确解析
+            window.location.href = `/results/settlement.html?character=${currentCharacter}&from=dice`;
         });
         
         // 初始化骰子
