@@ -29,27 +29,18 @@ function getRelativePathTo(targetPath) {
     // 获取当前页面的完整URL
     const currentUrl = window.location.href;
     
+    // 确保targetPath不包含重复的results/前缀
+    const cleanTargetPath = targetPath.replace(/^results\//, '');
+    
     // 如果是file://协议，使用基于当前文件位置的相对路径
     if (currentUrl.startsWith('file://')) {
         const currentPath = window.location.pathname;
         if (currentPath.includes('/results/')) {
-            // 如果当前页面在results目录下，直接返回目标文件名（去掉results/前缀）
-            return targetPath.replace('results/', '');
-        } else if (currentPath.includes('/locations/')) {
-            // 如果当前页面在locations目录下，返回../results/目标文件名
-            return '../' + targetPath;
-        } else if (currentPath.includes('/exchanges/')) {
-            // 如果当前页面在exchanges目录下，返回../results/目标文件名
-            return '../' + targetPath;
-        } else if (currentPath.includes('/items/')) {
-            // 如果当前页面在items目录下，返回../results/目标文件名
-            return '../' + targetPath;
-        } else if (currentPath.includes('/dialogues/')) {
-            // 如果当前页面在dialogues目录下，返回../results/目标文件名
-            return '../' + targetPath;
+            // 如果当前页面在results目录下，直接返回目标文件名
+            return cleanTargetPath;
         } else {
-            // 否则，假设当前页面在项目根目录下，直接返回results/目标文件名
-            return targetPath;
+            // 否则，返回../results/目标文件名
+            return '../results/' + cleanTargetPath;
         }
     }
     
@@ -68,8 +59,8 @@ function getRelativePathTo(targetPath) {
         
         // 如果找到了settlement.js脚本的位置，使用它来构建目标路径
         if (resultsDirPath) {
-            // 构建完整的目标URL
-            const targetUrl = new URL(targetPath, resultsDirPath);
+            // 构建完整的目标URL（只使用cleanTargetPath，不包含results/前缀）
+            const targetUrl = new URL(cleanTargetPath, resultsDirPath);
             // 返回从当前页面到目标URL的相对路径
             return new URL(targetUrl, currentUrl).pathname;
         }
@@ -77,23 +68,23 @@ function getRelativePathTo(targetPath) {
         // 否则，使用基于当前页面路径的相对路径
         const currentPath = window.location.pathname;
         if (currentPath.includes('/results/')) {
-            // 如果当前页面在results目录下，直接返回目标文件名（去掉results/前缀）
-            return targetPath.replace('results/', '');
+            // 如果当前页面在results目录下，直接返回目标文件名
+            return cleanTargetPath;
         } else {
             // 否则，返回../results/目标文件名或results/目标文件名，取决于当前页面的深度
             const pathSegments = currentPath.split('/').filter(segment => segment);
             if (pathSegments.length > 0) {
                 // 如果当前页面在子目录下，使用../results/目标文件名
-                return '../' + targetPath;
+                return '../results/' + cleanTargetPath;
             } else {
                 // 否则，直接使用results/目标文件名
-                return targetPath;
+                return 'results/' + cleanTargetPath;
             }
         }
     } catch (error) {
         console.error('路径计算错误:', error);
         // 出错时返回一个安全的默认路径
-        return targetPath;
+        return 'results/' + cleanTargetPath;
     }
 }
 
