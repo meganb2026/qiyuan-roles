@@ -3,7 +3,7 @@ const characters = {
 	"claudius": {
 		name: "克劳狄斯",
 		title: "国王",
-		publicDescription: "老国王哈姆雷特的弟弟，他登基后娶了嫂嫂，当前最畅销的民间画本主人公",
+		publicDescription: "老国王哈姆雷特的弟弟，他登基后娶了嫂嫂，当前最畅销的民间话本主人公",
 		description: "你是丹麦王克劳狄斯，这王位本是你哥哥的。一场阴谋让他命丧黄泉。这深宫里，藏着你的秘密，那是你最深的恐惧。",
 		initialItems: ["crown", "pearl-pass", "money"],
 		goal: "取到证据，或找到当前持有证据的人并毒死",

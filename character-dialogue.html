@@ -5,6 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>奇缘48 - 角色专属对话</title>
     <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        /* 角色对话页面特定样式 */
+        .character-dialogue {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .dialogue-content {
+            margin: 30px 0;
+        }
+        
+        .dialogue-line {
+            margin: 20px 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .dialogue-line .dialogue-bubble {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+        
+        /* 角色头像样式 */
+        .character-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .character-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+        
+        .character-info h3 {
+            margin: 0;
+            color: #667eea;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .character-dialogue {
+                padding: 10px;
+            }
+            
+            .dialogue-content {
+                margin: 20px 0;
+            }
+            
+            .dialogue-line {
+                margin: 15px 0;
+            }
+            
+            .dialogue-line .dialogue-bubble {
+                padding: 15px;
+                margin: 0 auto;
+                width: 80%;
+            }
+            
+            .character-header {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+            
+            .character-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                margin-right: 15px;
+            }
+            
+            .character-info h3 {
+                font-size: 18px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- 移动端信息按钮 -->
