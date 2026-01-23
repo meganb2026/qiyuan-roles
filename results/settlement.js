@@ -15,45 +15,85 @@ function startSettlement() {
     // 检查背包里是否有骰子
     if (gameState.playerInventory && gameState.playerInventory.includes('dice')) {
         // 跳转到骰子决定页面
-        // 使用相对路径，确保从任何页面调用都能正确解析
-        // 检查当前脚本的路径，确定正确的相对路径
-        const scriptPath = document.currentScript ? document.currentScript.src : '';
-        const isInResultsDir = scriptPath.includes('/results/');
-        
-        if (isInResultsDir) {
-            // 脚本在results目录下，直接使用文件名
-            window.location.href = 'dice-decision.html?character=' + currentCharacter;
-        } else {
-            // 脚本不在results目录下，使用相对于项目根目录的路径
-            // 检查当前页面是否在子目录中
-            const currentPath = window.location.pathname;
-            const pathSegments = currentPath.split('/').filter(segment => segment);
-            // 计算目录层级，不包括文件名
-            const directorySegments = pathSegments.slice(0, -1);
-            const upLevels = directorySegments.length > 0 ? '../'.repeat(directorySegments.length) : '';
-            window.location.href = upLevels + 'results/dice-decision.html?character=' + currentCharacter;
-        }
+        // 使用更简单可靠的路径计算方法
+        window.location.href = getRelativePathTo('results/dice-decision.html') + '?character=' + currentCharacter;
         return;
     }
     
     // 直接跳转到结算页面
-    // 使用相对路径，确保从任何页面调用都能正确解析
-    // 检查当前脚本的路径，确定正确的相对路径
-    const scriptPath = document.currentScript ? document.currentScript.src : '';
-    const isInResultsDir = scriptPath.includes('/results/');
+    window.location.href = getRelativePathTo('results/settlement.html') + '?character=' + currentCharacter;
+}
+
+// 辅助函数：获取从当前页面到目标路径的相对路径
+function getRelativePathTo(targetPath) {
+    // 获取当前页面的完整URL
+    const currentUrl = window.location.href;
     
-    if (isInResultsDir) {
-        // 脚本在results目录下，直接使用文件名
-        window.location.href = 'settlement.html?character=' + currentCharacter;
-    } else {
-        // 脚本不在results目录下，使用相对于项目根目录的路径
-        // 检查当前页面是否在子目录中
+    // 如果是file://协议，使用基于当前文件位置的相对路径
+    if (currentUrl.startsWith('file://')) {
         const currentPath = window.location.pathname;
-        const pathSegments = currentPath.split('/').filter(segment => segment);
-        // 计算目录层级，不包括文件名
-        const directorySegments = pathSegments.slice(0, -1);
-        const upLevels = directorySegments.length > 0 ? '../'.repeat(directorySegments.length) : '';
-        window.location.href = upLevels + 'results/settlement.html?character=' + currentCharacter;
+        if (currentPath.includes('/results/')) {
+            // 如果当前页面在results目录下，直接返回目标文件名（去掉results/前缀）
+            return targetPath.replace('results/', '');
+        } else if (currentPath.includes('/locations/')) {
+            // 如果当前页面在locations目录下，返回../results/目标文件名
+            return '../' + targetPath;
+        } else if (currentPath.includes('/exchanges/')) {
+            // 如果当前页面在exchanges目录下，返回../results/目标文件名
+            return '../' + targetPath;
+        } else if (currentPath.includes('/items/')) {
+            // 如果当前页面在items目录下，返回../results/目标文件名
+            return '../' + targetPath;
+        } else if (currentPath.includes('/dialogues/')) {
+            // 如果当前页面在dialogues目录下，返回../results/目标文件名
+            return '../' + targetPath;
+        } else {
+            // 否则，假设当前页面在项目根目录下，直接返回results/目标文件名
+            return targetPath;
+        }
+    }
+    
+    // 对于HTTP协议，使用更可靠的路径计算方法
+    try {
+        // 获取当前脚本的位置，确定results目录的位置
+        let resultsDirPath = '';
+        const scripts = document.getElementsByTagName('script');
+        for (let i = 0; i < scripts.length; i++) {
+            const scriptSrc = scripts[i].src;
+            if (scriptSrc.includes('settlement.js')) {
+                resultsDirPath = scriptSrc.substring(0, scriptSrc.lastIndexOf('/') + 1);
+                break;
+            }
+        }
+        
+        // 如果找到了settlement.js脚本的位置，使用它来构建目标路径
+        if (resultsDirPath) {
+            // 构建完整的目标URL
+            const targetUrl = new URL(targetPath, resultsDirPath);
+            // 返回从当前页面到目标URL的相对路径
+            return new URL(targetUrl, currentUrl).pathname;
+        }
+        
+        // 否则，使用基于当前页面路径的相对路径
+        const currentPath = window.location.pathname;
+        if (currentPath.includes('/results/')) {
+            // 如果当前页面在results目录下，直接返回目标文件名（去掉results/前缀）
+            return targetPath.replace('results/', '');
+        } else {
+            // 否则，返回../results/目标文件名或results/目标文件名，取决于当前页面的深度
+            const pathSegments = currentPath.split('/').filter(segment => segment);
+            if (pathSegments.length > 0) {
+                // 如果当前页面在子目录下，使用../results/目标文件名
+                return '../' + targetPath;
+            } else {
+                // 否则，直接使用results/目标文件名
+                return targetPath;
+            }
+        }
+    } catch (error) {
+        console.error('路径计算错误:', error);
+        // 出错时返回一个安全的默认路径
+        return targetPath;
     }
 }
 
@@ -291,51 +331,8 @@ function handleMapDiscard() {
     const currentCharacter = gameState.selectedCharacter || 'claudius';
     
     // 跳转到结算页面，并传递失败原因
-    // 使用更可靠的路径计算方法
-    const currentUrl = window.location.href;
-    const currentPath = window.location.pathname;
-    const isHttpProtocol = currentUrl.startsWith('http://') || currentUrl.startsWith('https://');
-    
-    if (isHttpProtocol) {
-        // 如果是HTTP协议，使用相对路径
-        // 检查当前页面是否在results目录下
-        const isInResultsDir = currentUrl.includes('/results/');
-        
-        if (isInResultsDir) {
-            // 脚本在results目录下，直接使用文件名
-            window.location.href = 'settlement.html?character=' + currentCharacter + '&from=map-discard';
-        } else {
-            // 脚本不在results目录下，使用相对于项目根目录的路径
-            // 检查当前页面的路径，确定正确的相对路径
-            // 查找项目根目录的位置
-            const pathParts = currentPath.split('/');
-            const projectRootIndex = pathParts.findIndex(part => part === 'qiyuan-roles');
-            
-            if (projectRootIndex !== -1) {
-                // 从项目根目录开始计算路径
-                const relativePathFromRoot = pathParts.slice(projectRootIndex + 1).join('/');
-                const directoryDepth = relativePathFromRoot.split('/').filter(Boolean).length;
-                const upLevels = '../'.repeat(directoryDepth);
-                window.location.href = upLevels + 'results/settlement.html?character=' + currentCharacter + '&from=map-discard';
-            } else {
-                // 如果找不到项目根目录，使用绝对路径
-                window.location.href = '/results/settlement.html?character=' + currentCharacter + '&from=map-discard';
-            }
-        }
-    } else {
-        // 如果是file://协议，使用基于当前文件位置的相对路径
-        // 检查当前文件是否在locations目录下
-        if (currentPath.includes('/locations/')) {
-            // 从locations目录到项目根目录需要向上一级
-            window.location.href = '../results/settlement.html?character=' + currentCharacter + '&from=map-discard';
-        } else if (currentPath.includes('/results/')) {
-            // 已经在results目录下
-            window.location.href = 'settlement.html?character=' + currentCharacter + '&from=map-discard';
-        } else {
-            // 在项目根目录
-            window.location.href = 'results/settlement.html?character=' + currentCharacter + '&from=map-discard';
-        }
-    }
+    // 使用统一可靠的路径计算方法
+    window.location.href = getRelativePathTo('results/settlement.html') + '?character=' + currentCharacter + '&from=map-discard';
 }
 
 // 记录发现的结局
