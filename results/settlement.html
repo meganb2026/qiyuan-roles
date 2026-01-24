@@ -755,6 +755,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const currentCharacter = urlParams.get('character') || 'claudius';
         const from = urlParams.get('from') || '';
+        const endingId = urlParams.get('endingId') || '';
 
         // 页面加载时计算并显示结算结果
         document.addEventListener('DOMContentLoaded', function() {

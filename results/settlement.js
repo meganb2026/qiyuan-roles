@@ -43,7 +43,11 @@ function calculateEndingAndRedirect(currentCharacter, from = '') {
     
     // 获取结局ID
     let endingId = '';
-    if (from === 'map-discard') {
+    // 检查背包中是否有one-line-of-code，触发公共结局
+    const inventory = gameState.playerInventory || [];
+    if (inventory.includes('one-line-of-code')) {
+        endingId = 'general-failure-code';
+    } else if (from === 'map-discard') {
         endingId = 'general-failure-map';
     } else if (from === 'dice') {
         endingId = 'general-failure-dice';
@@ -220,6 +224,137 @@ function getRelativePathTo(targetPath) {
 
 // 计算结算结果
 function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
+    // 从URL参数获取endingId
+    const urlParams = new URLSearchParams(window.location.search);
+    const endingId = urlParams.get('endingId') || '';
+    
+    // 如果有endingId参数，直接使用对应的结局内容
+    if (endingId) {
+        // 结局内容映射
+        const endingContents = {
+            'general-failure-code': {
+                title: '你失败了',
+                content: '你达成了: 404 not found'
+            },
+            'general-failure-map': {
+                title: '你失败了',
+                content: '失去了地图的你迷路了。'
+            },
+            'general-failure-dice': {
+                title: '你失败了',
+                content: '敢把命运交给骰子，你才是真的何非。'
+            },
+            'general-success-scratcher': {
+                title: '你成功了',
+                content: '大家都没有找到凶手，克劳狄斯听说了勃然大怒。你看了看痒痒挠，决定得挠人处且挠人。你挠了挠他，他笑了。'
+            },
+            'general-success-primer': {
+                title: '你成功了',
+                content: '你把隔离霜涂在脸上，它假白。你被洗白了。'
+            },
+            'easter-egg-ascend': {
+                title: '你登基了',
+                content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。'
+            },
+            // 角色特定结局
+            'claudius-success-clothes': {
+                title: '你成功了',
+                content: '一定有什么不符合常理的。等等，李想那小子不是每天穿风衣吗，为什么有这么多羽绒服？原来他是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。'
+            },
+            'claudius-success-notes': {
+                title: '你成功了',
+                content: '你找到了篡位的证据，原来藏在吴智哲老师的手稿里。你偷偷销毁了它，至于那个傻小子，呵。'
+            },
+            'claudius-failure': {
+                title: '你失败了',
+                content: '你当年篡位的证据被发现并公之于众。天下皆惊竟有人为了皇位弄死自己的兄长，你被愤怒的人们处死。'
+            },
+            'chengying-success-diving': {
+                title: '你成功了',
+                content: '你不顾寒冷，穿着潜水服跳进下水道找到了克劳狄斯谋反的证据。下水道虽窄，你的义举犹如一人渡过了七条大河。'
+            },
+            'chengying-success-notes': {
+                title: '你成功了',
+                content: '你仔细辨认吴智哲老师的手稿，猜到了藏匿秘密的地方，并告诉了吴智哲。吴智哲无谓，不怕冬天的下水道有多冷，跳下去找到了克劳狄斯谋反的证据。'
+            },
+            'chengying-failure': {
+                title: '你失败了',
+                content: '你没有找到克劳狄斯谋反的证据。众人也没有找到凶杀案的真凶。'
+            },
+            'hefei-success-report': {
+                title: '你成功了',
+                content: '你在周报中敏锐地发现材料运输数量减少的问题，编造了一个故事，说是李想的设计有问题王卫国他们替他遮掩了，成功嫁祸李想和王卫国。克劳狄斯因此给你了一笔钱。'
+            },
+            'hefei-success-pass': {
+                title: '你成功了',
+                content: '通关令牌这东西没什么用啊…不过对有些人来讲是有用的。你把令牌卖给王卫国，让他的施工队可以继续施工不受案情影响，拿到的钱还清了赌债。'
+            },
+            'hefei-failure-flashlight': {
+                title: '你失败了',
+                content: '大家都没有头绪。克劳狄斯问，你不是要让他眼前一亮吗？你打开了手电筒。'
+            },
+            'hefei-failure-crown': {
+                title: '你失败了',
+                content: '你没有凑够钱，把目光移向了手上的珍珠想要卖了换钱。可恶克劳狄斯竟然给珍珠下毒，你被毒死了。'
+            },
+            'hefei-failure': {
+                title: '你失败了',
+                content: '你没有凑够钱。加之所有人都没有找到元凶，克劳狄斯大怒觉得你耍他，把你处死了。'
+            },
+            'lixiang-success-pill': {
+                title: '你成功了',
+                content: '你拿着安眠药去找了程婴，他告诉你前一夜皇宫上天降暴雨。这恰好证明下水道系统排水很好所以第二天没有看到水。至于尸体，不是淹死的，说明和下水道设计无关。'
+            },
+            'lixiang-success-report': {
+                title: '你成功了',
+                content: '王卫国的周报里记录了每周的工作。上面记录了下水道在发大水时快速排水。至于尸体，不是淹死的，说明和下水道设计无关。'
+            },
+            'lixiang-failure': {
+                title: '你失败了',
+                content: '时间到了，你没能证明下水道设计没有问题。何非编造了一个故事，让克劳狄斯把你处死了。'
+            },
+            'wangweiguo-success-pass': {
+                title: '你成功了',
+                content: '你拿着通关令牌让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。'
+            },
+            'wangweiguo-success-blueprint': {
+                title: '你成功了',
+                content: '你拿着下水道图纸让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。'
+            },
+            'wangweiguo-failure': {
+                title: '你失败了',
+                content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，说你报告尸体是因为心虚，让克劳狄斯把你处死了。'
+            },
+            'wuzhizhe-success-herbs': {
+                title: '你成功了',
+                content: '你吃了人参，大补。于是凭着一腔孤勇跳下了水，摸到一个机关，上面的图案和导师手记上的一模一样。原来这里有一个暗室，里面藏着克劳狄斯当年为了皇位谋杀了自己的哥哥的证物。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。'
+            },
+            'wuzhizhe-success-blueprint': {
+                title: '你成功了',
+                content: '你认真读了下水道的设计图纸，和建筑设计图一比对，发现了一个暗室。在里面找到一个证物，赫然写着克劳狄斯当年为了皇位谋杀了自己的哥哥。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。'
+            },
+            'wuzhizhe-failure': {
+                title: '你失败了',
+                content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，让克劳狄斯把你处死了。'
+            }
+        };
+        
+        // 如果找到了对应的结局，直接返回
+        if (endingContents[endingId]) {
+            const result = endingContents[endingId];
+            // 记录发现的结局
+            const savedState = localStorage.getItem('qiyuanGameState');
+            const gameState = savedState ? JSON.parse(savedState) : {
+                selectedCharacter: currentCharacter,
+                playerInventory: [],
+                allCharactersItems: {},
+                npcs: []
+            };
+            recordDiscoveredEnding(currentCharacter, gameState.playerInventory || [], result, from);
+            return result;
+        }
+    }
+    
     // 检查是否是从骰子页面跳转过来的
     if (from === 'dice') {
         const result = {
@@ -256,11 +391,17 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
     
     // 新的结算条件
     let result;
-    // 1. 非Claudius角色，同时拥有crown和half-piece-curtain
-    if (actualCharacter !== 'claudius' && inventory.includes('crown') && inventory.includes('half-piece-curtain')) {
+    // 0. 公共结局：任何角色，拥有one-line-of-code
+    if (inventory.includes('one-line-of-code')) {
+        result = {
+            title: '你失败了',
+            content: '你达成了: 404 not found'
+        };
+    } else if (actualCharacter !== 'claudius' && inventory.includes('crown') && inventory.includes('half-piece-curtain')) {
+        // 1. 非Claudius角色，同时拥有crown和half-piece-curtain
         result = {
             title: '你登基了',
-            content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。'
+            content: '既然黄袍是窗帘布，这个世界是个草台班子嘛。看着手上的权杖，你福至心灵。。'
         };
     } else if (actualCharacter !== 'claudius' && inventory.includes('scratcher')) {
         // 2. 非Claudius角色，拥有scratcher
@@ -272,7 +413,7 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
         // 3. Claudius或何非，拥有primer
         result = {
             title: '你成功了',
-            content: '你把隔离霜涂在脸上，它假白。你被洗白了。'
+            content: '隔离霜假白。你被洗白了。'
         };
     } else {
         // 生成个性化消息和标题
@@ -323,85 +464,85 @@ function generatePersonalizedMessage(character, inventory) {
             if (inventory.includes("clothes")) {
                 return {
                     title: '你成功了',
-                    content: '一定有什么不符合常理的。等等，李想那小子不是每天穿风衣吗，为什么有这么多羽绒服？原来他是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。'
+                    content: '原来李想是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。'
                 };
             } else if (inventory.includes("mentor-notes")) {
                 return {
                     title: '你成功了',
-                    content: '你找到了篡位的证据，原来藏在吴智哲老师的手稿里。你偷偷销毁了它，至于那个傻小子，呵。'
+                    content: '你顺着手记找到了篡位的证据，并且偷偷销毁了它。至于吴智哲那个傻小子，呵。'
                 };
             } else {
                 return {
                     title: '你失败了',
-                    content: '你当年篡位的证据被发现并公之于众。天下皆惊竟有人为了皇位弄死自己的兄长，你被愤怒的人们处死。'
+                    content: '没想到你没能等到凶杀案的线索，程婴联合吴智哲却发现了你当年篡位的证据并公之于众。天下皆惊竟有人为了皇位弄死自己的兄长，你被愤怒的人们处死了。'
                 };
             }
         case "chengying":
              if (inventory.includes("diving-equipment")) {
                 return {
                     title: '你成功了',
-                    content: '你不顾寒冷，穿着潜水服跳进下水道找到了克劳狄斯谋反的证据。下水道虽窄，你的义举犹如一人渡过了七条大河。'
+                    content: '没想到克劳狄斯谋反的证据还真的在下水道的控制室后的暗室里。下水道虽窄，你的义举犹如一人渡过了七条大河。'
                 };
             } else if (inventory.includes("mentor-notes")) {
                 return {
                     title: '你成功了',
-                    content: '你仔细辨认吴智哲老师的手稿，猜到了藏匿秘密的地方，并告诉了吴智哲。吴智哲无谓，不怕冬天的下水道有多冷，跳下去找到了克劳狄斯谋反的证据。'
+                    content: '你找到吴智哲，把知道的一切告诉了他。吴智哲无谓，不怕冬天的下水道有多冷，跳下去找到了克劳狄斯谋反的证据。'
                 };
             } else {
                 return {
                     title: '你失败了',
-                    content: '你没有找到克劳狄斯谋反的证据。众人也没有找到凶杀案的真凶。'
+                    content: '很不幸，你没有找到克劳狄斯谋反的证据。众人也没有找到凶杀案的真凶。'
                 };
             }
         case "hefei":
             if (inventory.includes("weekly-report")) {
                 return {
                     title: '你成功了',
-                    content: '你在周报中敏锐地发现材料运输数量减少的问题，编造了一个故事，说是李想的设计有问题王卫国他们替他遮掩了，成功嫁祸李想和王卫国。克劳狄斯因此给你了一笔钱。'
+                    content: '你编造了一个故事，说是李想的设计有问题王卫国他们替他遮掩了，成功嫁祸李想和王卫国。克劳狄斯因此给你了一笔钱。'
                 };
             } else if (inventory.includes("pearl-pass")) {
                 return {
                     title: '你成功了',
-                    content: '通关令牌这东西没什么用啊…不过对有些人来讲是有用的。你把令牌卖给王卫国，让他的施工队可以继续施工不受案情影响，拿到的钱还清了赌债。'
+                    content: '王卫国的团队不是卡住无法施工了吗？现在肯定很需要通关令牌。你把它卖给王卫国，让施工队可以继续施工不受案情影响。他给了你一大笔，你还清了赌债。'
                 };
             } else if (inventory.includes("flashlight")) {
                 return {
                   title: '你失败了',
-                  content: '大家都没有头绪。克劳狄斯问，你不是要让他眼前一亮吗？你打开了手电筒。'
+                  content: '很不幸大家都没有头绪。克劳狄斯问，你不是要让他眼前一亮吗？你打开了手电筒。'
                 };
             } else if (inventory.includes("crown")) {
                 return {
                     title: '你失败了',
-                    content: '你没有凑够钱，把目光移向了手上的珍珠想要卖了换钱。可恶克劳狄斯竟然给珍珠下毒，你被毒死了。'
+                    content: '可恶克劳狄斯竟然给珍珠下毒，你被毒死了。'
                 };
             } else {
                 return {
                     title: '你失败了',
-                    content: '你没有凑够钱。加之所有人都没有找到元凶，克劳狄斯大怒觉得你耍他，把你处死了。'
+                    content: '很不幸所有人都没有找到元凶，克劳狄斯大怒觉得你耍他，把你处死了。'
                 };
             }
         case "lixiang":
             if (inventory.includes("sleeping-pill")) {
                 return {
                     title: '你成功了',
-                    content: '你拿着安眠药去找了程婴，他告诉你前一夜皇宫上天降暴雨。这恰好证明下水道系统排水很好所以第二天没有看到水。至于尸体，不是淹死的，说明和下水道设计无关。'
+                    content: '你找到王宫的里的侍卫证实了当晚下暴雨的事实，这恰好证明下水道系统排水很好所以第二天没有看到水。至于尸体，不是淹死的，说明和下水道设计无关。'
                 };
             } else if (inventory.includes("weekly-report")) {
                 return {
                     title: '你成功了',
-                    content: '王卫国的周报里记录了每周的工作。上面记录了下水道在发大水时快速排水。至于尸体，不是淹死的，说明和下水道设计无关。'
+                    content: '你拿着王卫国的周报证明了自己的工作。至于尸体，不是淹死的，说明和下水道设计无关。'
                 };
             } else {
                 return {
                     title: '你失败了',
-                    content: '时间到了，你没能证明下水道设计没有问题。何非编造了一个故事，让克劳狄斯把你处死了。'
+                    content: '大家都没有找到证据。何非为了证明自己昨天的戏是有意义的，编造了一个故事，说下水道设计不合理导致里面常年有蛇，死者是被吓死的，让克劳狄斯把你处死了。'
                 };
             }
         case "wangweiguo":
             if (inventory.includes("pearl-pass")) {
                 return {
                     title: '你成功了',
-                    content: '你拿着通关令牌让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。'
+                    content: '队友们拿着你给的通关令牌，果然可以继续施工了！你们成功完工，回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。'
                 };
             } else if (inventory.includes("underground-system-blueprint")) {
                 return {
@@ -470,7 +611,10 @@ function recordDiscoveredEnding(character, inventory, result, from) {
     let endingId = '';
     
     // 根据不同的情况确定结局ID
-    if (from === 'map-discard') {
+    if (inventory.includes('one-line-of-code')) {
+        // 公共结局：拥有one-line-of-code
+        endingId = 'general-failure-code';
+    } else if (from === 'map-discard') {
         // 丢弃地图的失败结局
         endingId = 'general-failure-map';
     } else if (from === 'dice') {

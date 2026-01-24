@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>结局过渡</title>
+    <title>钟声响起</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
@@ -82,6 +82,11 @@
         
         // 结局内容映射
         const endingContents = {
+            'general-failure-code': {
+                title: '你失败了',
+                content: '你达成了: 404 not found',
+                specialContent: '你打开包，万万没想到，那行代码真的烫烫烫烫烫，它给你的包烫了一个洞，所有东西都漏出去了。'
+            },
             'claudius-success-clothes': {
                 title: '你成功了',
                 content: '原来李想是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。',
@@ -160,7 +165,7 @@
             'wangweiguo-success-blueprint': {
                 title: '你成功了',
                 content: '你拿着下水道图纸让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。',
-                specialContent: '你看了看背包里的东西，下水道图纸'
+                specialContent: '你看了看背包里的东西，下水道图纸上赫然有一条用于维修的的小路！'
             },
             'wangweiguo-failure': {
                 title: '你失败了',
@@ -226,7 +231,7 @@
         
         // 跳转到结算页面
         function goToSettlement() {
-            window.location.href = `settlement.html?character=${currentCharacter}`;
+            window.location.href = `settlement.html?character=${currentCharacter}&endingId=${endingId}`;
         }
         
         // 更新信息面板（支持移动端和电脑端）
