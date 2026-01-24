@@ -39,8 +39,21 @@ function getRelativePathTo(targetPath) {
             // 如果当前页面在results目录下，直接返回目标文件名
             return cleanTargetPath;
         } else {
-            // 否则，返回../results/目标文件名
-            return '../results/' + cleanTargetPath;
+            // 检查当前文件是否位于特定子目录中
+            // 如果位于locations、exchanges、items、dialogues等目录中，返回../results/cleanTargetPath
+            // 否则，直接返回results/cleanTargetPath
+            const isInSubdirectory = currentPath.includes('/locations/') || 
+                                   currentPath.includes('/exchanges/') || 
+                                   currentPath.includes('/items/') || 
+                                   currentPath.includes('/dialogues/');
+            
+            if (isInSubdirectory) {
+                // 如果在子目录中，返回../results/cleanTargetPath
+                return '../results/' + cleanTargetPath;
+            } else {
+                // 否则，直接返回results/cleanTargetPath
+                return 'results/' + cleanTargetPath;
+            }
         }
     }
     
