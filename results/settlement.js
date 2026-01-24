@@ -350,7 +350,16 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
                 allCharactersItems: {},
                 npcs: []
             };
-            recordDiscoveredEnding(currentCharacter, gameState.playerInventory || [], result, from);
+            
+            // 直接使用endingId作为结局ID，不调用recordDiscoveredEnding函数重新计算
+            // 从localStorage获取当前的发现结局列表
+            const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+            // 如果结局ID不在列表中，添加进去
+            if (!discoveredEndings.includes(endingId)) {
+                discoveredEndings.push(endingId);
+                localStorage.setItem('qiyuanDiscoveredEndings', JSON.stringify(discoveredEndings));
+            }
+            
             return result;
         }
     }
