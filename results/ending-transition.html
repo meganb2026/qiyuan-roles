@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>结局过渡</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- 移动端信息按钮 -->
+    <div id="mobile-info-btn" style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1000; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
+
+    <!-- 移动端信息面板 -->
+    <div id="mobile-info-panel" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 250px; max-height: 300px; background: rgba(255, 255, 255, 0.98); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); z-index: 1000; padding: 15px; overflow-y: auto;">
+        <!-- 内容由JavaScript动态填充 -->
+    </div>
+
+    <!-- 电脑端侧边栏 -->
+    <div id="desktop-sidebar" style="display: none; position: fixed; top: 80px; right: 20px; width: 280px; max-height: 80vh; background: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); z-index: 1000; padding: 20px; overflow-y: auto; border: 1px solid #e0e0e0;">
+        <h4 style="margin: 0 0 15px 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 8px;">角色信息</h4>
+        <div id="desktop-sidebar-content">
+            <!-- 内容由JavaScript动态填充 -->
+        </div>
+    </div>
+
+    <!-- 遮罩层 -->
+    <div id="mobile-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+    <!-- 电脑端信息按钮 -->
+    <div id="desktop-info-btn" style="position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #667eea; color: white; border: none; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1001; cursor: pointer; display: flex; align-items: center; justify-content: center;">📦</div>
+
+    <!-- 结局过渡内容 -->
+    <div id="ending-transition-content">
+        <div class="page-container">
+            <h2>第6章 - 钟声响起</h2>
+
+            <div class="story-container">
+                <div class="story-header">
+                    <div class="day-indicator">
+                        <span class="day-number">第 3 天</span>
+                        <span class="story-title">最终时刻</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialogue-container">
+                <div class="dialogue-scene">
+                    <p id="ending-content-text">结局内容将在这里显示</p>
+                </div>
+
+                <div class="dialogue-actions">
+                    <button class="action-btn primary large" onclick="goToSettlement()">
+                        继续
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="../assets/js/characters.js"></script>
+    <script src="../assets/js/items.js"></script>
+    <script src="../assets/js/itemStories.js"></script>
+    <script src="../assets/js/backpack-improvements.js"></script>
+    <script src="../assets/js/item-details.js"></script>
+    <script>
+        // 从URL参数获取信息
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCharacter = urlParams.get('character') || 'claudius';
+        const endingId = urlParams.get('endingId') || '';
+        
+        // 从localStorage获取游戏状态
+        const savedState = localStorage.getItem('qiyuanGameState');
+        const gameState = savedState ? JSON.parse(savedState) : {
+            selectedCharacter: currentCharacter,
+            currentDay: 5,
+            gameStarted: true,
+            playerInventory: [],
+            allCharactersItems: {},
+            npcs: []
+        };
+        
+        // 结局内容映射
+        const endingContents = {
+            'claudius-success-clothes': {
+                title: '你成功了',
+                content: '原来李想是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。',
+                specialContent: '一定有什么不符合常理的。等等，李想那小子不是每天穿风衣吗，为什么有这么多羽绒服？'
+            },
+            'claudius-success-notes': {
+                title: '你成功了',
+                content: '你顺着手记找到了篡位的证据，并且偷偷销毁了它。至于吴智哲那个傻小子，呵。',
+                specialContent: '老建筑学家一辈子有很多研究，要不先看一下手记里有什么。不对，这个记号怎么和你的纹身这么相似？'
+            },
+            'claudius-failure': {
+                title: '你失败了',
+                content: '没想到你没能等到凶杀案的线索，程婴联合吴智哲却发现了你当年篡位的证据并公之于众。天下皆惊竟有人为了皇位弄死自己的兄长，你被愤怒的人们处死了。',
+                specialContent: '背包里好像没有什么指向你当年谋反的证据。你站起来，四处死一样寂静没有回声。天堂在沉默，你如何祷告。'
+            },
+            'chengying-success-diving': {
+                title: '你成功了',
+                content: '没想到克劳狄斯谋反的证据还真的在下水道的控制室后的暗室里。下水道虽窄，你的义举犹如一人渡过了七条大河。',
+                specialContent: '你看着背包，没看到什么直接证据，打算死马当活马医了。于是你不顾寒冷，穿着潜水服跳进下水道。'
+            },
+            'chengying-success-notes': {
+                title: '你成功了',
+                content: '你找到吴智哲，把知道的一切告诉了他。吴智哲无谓，不怕冬天的下水道有多冷，跳下去找到了克劳狄斯谋反的证据。',
+                specialContent: '你仔细辨认吴智哲老师的手稿，看到了那个水流的标记。这个标记好像在哪里见过？对了，这是克劳狄斯的纹身，你为他把脉时看到过。这说明这个标记的地方应该就是有和克劳狄斯的秘密有关！'
+            },
+            'chengying-failure': {
+                title: '你失败了',
+                content: '很不幸，你没有找到克劳狄斯谋反的证据。众人也没有找到凶杀案的真凶。',
+                specialContent: '手上的这些东西好像不能证明克劳狄斯谋反。要不先看看大家对凶杀案有没有眉目吧。'
+            },
+            'hefei-success-report': {
+                title: '你成功了',
+                content: '你编造了一个故事，说是李想的设计有问题王卫国他们替他遮掩了，成功嫁祸李想和王卫国。克劳狄斯因此给你了一笔钱。',
+                specialContent: '你看着周报，敏锐地发现上面的考勤记录有请假。运输车次因此也减少了。车的容量是一定的，运输次数少了不正说明材料运输数量减少了吗？'
+            },
+            'hefei-success-pass': {
+                title: '你成功了',
+                content: '王卫国的团队不是卡住无法施工了吗？现在肯定很需要通关令牌。你把它卖给王卫国，让施工队可以继续施工不受案情影响。他给了你一大笔，你还清了赌债。',
+                specialContent: '背包里的东西好像没什么用啊…死脑子快想啊，你可是堂堂江湖百晓生。对了，通关令牌！这可是去任何地方的万能通行证！你的脑子里有了一个主意。'
+            },
+            'hefei-failure-flashlight': {
+                title: '你失败了',
+                content: '很不幸大家都没有头绪。克劳狄斯问，你不是要让他眼前一亮吗？你打开了手电筒。',
+                specialContent: '背包里的东西好像没啥用啊，要不先拿着去加克劳狄斯见招拆招吧，万一其他人找到线索了呢？'
+            },
+            'hefei-failure-crown': {
+                title: '你失败了',
+                content: '可恶克劳狄斯竟然给珍珠下毒，你被毒死了。',
+                specialContent: '不光凶杀案没有眉目，赌债要到期了。不管了，你决定先还上赌债。什么东西值钱呢？你把目光移向了权杖上的珍珠，这么大肯定很值钱吧。这玩意儿没有工具可真难抠下来啊，你急得上嘴咬它。'
+            },
+            'hefei-failure': {
+                title: '你失败了',
+                content: '很不幸所有人都没有找到元凶，克劳狄斯大怒觉得你耍他，把你处死了。',
+                specialContent: '你看着背包里的东西，价值的钱不够换赌债的。你愁眉苦脸地盘算应该怎么办，凶杀案也抛在一边了。'
+            },
+            'lixiang-success-pill': {
+                title: '你成功了',
+                content: '你找到王宫的里的侍卫证实了当晚下暴雨的事实，这恰好证明下水道系统排水很好所以第二天没有看到水。至于尸体，不是淹死的，说明和下水道设计无关。',
+                specialContent: '等等，安眠药。你拿着安眠药去找了程婴，告诉他你已经知道了他的秘密，让他给你一些信息作交换。他确实不知道凶手是谁，但是事发前一夜没睡，知道当时皇宫上天降暴雨，而第二天克劳狄斯召集你们的时候地面是干的。'
+            },
+            'lixiang-success-report': {
+                title: '你成功了',
+                content: '你拿着王卫国的周报证明了自己的工作。至于尸体，不是淹死的，说明和下水道设计无关。',
+                specialContent: '王卫国的周报里记录了每周的工作。上面记录了有一天午后大暴雨，下午上班的时候水已经排干了没有积水。那太好不过了，这说明下水道系统的功能是完善的！'
+            },
+            'lixiang-failure': {
+                title: '你失败了',
+                content: '大家都没有找到证据。何非为了证明自己昨天的戏是有意义的，编造了一个故事，说下水道设计不合理导致里面常年有蛇，死者是被吓死的，让克劳狄斯把你处死了。',
+                specialContent: '你看了看，手上的证据好像不足啊...其他人手上的证据有什么可以反推你的工作的吗？'
+            },
+            'wangweiguo-success-pass': {
+                title: '你成功了',
+                content: '队友们拿着你给的通关令牌，果然可以继续施工了！你们成功完工，回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。',
+                specialContent: '这是什么？通关令牌！你试探着拿着通关令牌走过被拦起来的区域，侍卫们没有阻拦。太好了，这是不是意味着工程队可以拿着这个令牌也通过被拦起来的必经之路。'
+            },
+            'wangweiguo-success-blueprint': {
+                title: '你成功了',
+                content: '你拿着下水道图纸让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。',
+                specialContent: '你看了看背包里的东西，下水道图纸'
+            },
+            'wangweiguo-failure': {
+                title: '你失败了',
+                content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，说你报告尸体是因为心虚，让克劳狄斯把你处死了。',
+                specialContent: '完了，好像没有什么可以指向凶杀案或者让施工运输队继续工作的东西呢。那只能寄希望于其他人能找到证据了。'
+            },
+            'wuzhizhe-success-herbs': {
+                title: '你成功了',
+                content: '你吃了人参，大补。于是凭着一腔孤勇跳下了水，摸到一个机关，上面的图案和导师手记上的一模一样。原来这里有一个暗室，里面藏着克劳狄斯当年为了皇位谋杀了自己的哥哥的证物。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。',
+                specialContent: '这人参可是御医给的...程婴这老头，虽然都说是他当年告发的公孙杵臼，医术还是有两把刷子的。既然不知道怎么办，要不先尝尝这人参吧。'
+            },
+            'wuzhizhe-success-blueprint': {
+                title: '你成功了',
+                content: '你认真读了下水道的设计图纸，和建筑设计图一比对，发现了一个暗室。在里面找到一个证物，赫然写着克劳狄斯当年为了皇位谋杀了自己的哥哥。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。',
+                specialContent: '你认真读了下水道的设计图纸，和建筑设计图一比对，发现了一个暗室。'
+            },
+            'wuzhizhe-failure': {
+                title: '你失败了',
+                content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，让克劳狄斯把你处死了。',
+                specialContent: '完了，好像没有什么可以指向凶杀案或者可以解释导师手记上的东西呢。不知道其他人的进展如何了。'
+            },
+            'general-failure-map': {
+                title: '你失败了',
+                content: '失去了地图的你迷路了。',
+                specialContent: '没了地图的你失去了方向。'
+            },
+            'general-failure-dice': {
+                title: '你失败了',
+                content: '敢把命运交给骰子，你才是真的何非。',
+                specialContent: '敢把命运交给骰子，你才是真的何非。'
+            },
+            'general-success-scratcher': {
+                title: '你成功了',
+                content: '大家都没有找到凶手，克劳狄斯听说了勃然大怒。你看了看痒痒挠，决定得挠人处且挠人。你挠了挠他，他笑了。',
+                specialContent: '看看背包...这时来搞笑的吧？算了到时候随机应变吧。'
+            },
+            'general-success-primer': {
+                title: '你成功了',
+                content: '隔离霜假白。你被洗白了。',
+                specialContent: '隔离霜有什么用呢？不管了，能用的都用一用吧，就像考试哪怕不知道答案也得填满啊。你把隔离霜涂在了脸上。'
+            },
+            'easter-egg-ascend': {
+                title: '你登基了',
+                content: '既然黄袍是窗帘布，这个世界是个草台班子嘛。看着手上的权杖，你福至心灵。',
+                specialContent: '半块窗帘...总觉得好可疑。你查了半块窗帘布的出处，万万没想到克劳狄斯穿的“黄袍”竟真是窗帘布。'
+            }
+        };
+        
+        // 初始化页面
+        function initPage() {
+            // 获取当前结局的内容
+            let contentText = '';
+            if (endingId && endingContents[endingId]) {
+                contentText = endingContents[endingId].specialContent;
+            } else {
+                // 如果没有结局ID，或者结局ID不存在，使用默认内容
+                contentText = '结局内容加载中...';
+            }
+            
+            // 更新页面内容
+            document.getElementById('ending-content-text').textContent = contentText;
+        }
+        
+        // 跳转到结算页面
+        function goToSettlement() {
+            window.location.href = `settlement.html?character=${currentCharacter}`;
+        }
+        
+        // 更新信息面板（支持移动端和电脑端）
+        function updateInfoPanel() {
+            const isMobile = window.innerWidth <= 768;
+            
+            // 控制按钮显示
+            const mobileBtn = document.getElementById('mobile-info-btn');
+            if (mobileBtn) {
+                mobileBtn.style.display = (isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+            
+            // 电脑端按钮显示
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.style.display = (!isMobile && gameState.gameStarted) ? 'flex' : 'none';
+            }
+            
+            if (!gameState.gameStarted) {
+                hideMobileInfoPanel();
+                return;
+            }
+            
+            // 更新电脑端侧边栏内容，但不自动显示
+            if (!isMobile) {
+                updateDesktopSidebarContent();
+                return;
+            }
+            
+            // 移动端显示面板
+            const char = window.characters[gameState.selectedCharacter];
+            const panel = document.getElementById('mobile-info-panel');
+            
+            if (panel) {
+                panel.innerHTML = `
+                    <div class="character-info">
+                        <strong>角色：</strong>
+                        <span>${char.name}</span><br>
+                        <small style="color: #666;">${char.title}</small>
+                    </div>
+                    
+                    <h4>📦 背包</h4>
+                    <div id="mobile-inventory">
+                        ${gameState.playerInventory.length === 0 ?
+                            '<div style="color: #999; font-style: italic;">背包是空的</div>' :
+                            gameState.playerInventory.map(item =>
+                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
+                            ).join('')
+                        }
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                        <strong>第 ${gameState.currentDay} 章</strong>
+                    </div>
+                `;
+            }
+        }
+        
+        // 更新电脑端侧边栏内容
+        function updateDesktopSidebarContent() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            const content = document.getElementById('desktop-sidebar-content');
+            
+            if (sidebar && content) {
+                const char = window.characters[gameState.selectedCharacter];
+                content.innerHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <strong>当前角色：</strong><br>
+                        <span style="color: #667eea; font-size: 16px;">${char.name}</span><br>
+                        <small style="color: #666;">${char.title}</small>
+                    </div>
+                    
+                    <h4 style="margin: 15px 0 10px 0; color: #667eea; font-size: 14px;">📦 背包</h4>
+                    <div id="desktop-inventory">
+                        ${gameState.playerInventory.length === 0 ?
+                            '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
+                            gameState.playerInventory.map(item =>
+                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${getItemDisplayName(item)}</div>`
+                            ).join('')
+                        }
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                        <strong>第 ${gameState.currentDay} 章</strong>
+                    </div>
+                `;
+            }
+        }
+        
+        // 隐藏电脑端侧边栏
+        function hideDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'none';
+            }
+        }
+        
+        // 切换电脑端侧边栏
+        function toggleDesktopSidebar() {
+            const sidebar = document.getElementById('desktop-sidebar');
+            if (sidebar) {
+                const isVisible = sidebar.style.display === 'block';
+                if (isVisible) {
+                    sidebar.style.display = 'none';
+                } else {
+                    sidebar.style.display = 'block';
+                }
+            }
+        }
+        
+        // 隐藏移动端信息面板
+        function hideMobileInfoPanel() {
+            const panel = document.getElementById('mobile-info-panel');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            if (panel && overlay) {
+                panel.style.display = 'none';
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // 切换移动端信息面板
+        function toggleMobileInfoPanel() {
+            const panel = document.getElementById('mobile-info-panel');
+            if (panel) {
+                const isVisible = panel.style.display === 'block';
+                if (isVisible) {
+                    hideMobileInfoPanel();
+                } else {
+                    const char = window.characters[gameState.selectedCharacter];
+                    panel.innerHTML = `
+                        <div class="character-info">
+                            <strong>角色：</strong>
+                            <span>${char.name}</span><br>
+                            <small style="color: #666;">${char.title}</small>
+                        </div>
+                        
+                        <h4>📦 背包</h4>
+                        <div id="mobile-inventory">
+                            ${gameState.playerInventory.length === 0 ?
+                                '<div style="color: #999; font-style: italic;">背包是空的</div>' :
+                                gameState.playerInventory.map(item =>
+                                    `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
+                                ).join('')
+                            }
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                            <strong>第 ${gameState.currentDay} 章</strong>
+                        </div>
+                    `;
+                    panel.style.display = 'block';
+                    document.getElementById('mobile-overlay').style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        }
+        
+        // 事件绑定
+        document.addEventListener('DOMContentLoaded', function() {
+            initPage();
+            updateInfoPanel();
+            
+            // 移动端按钮事件
+            const mobileBtn = document.getElementById('mobile-info-btn');
+            if (mobileBtn) {
+                mobileBtn.addEventListener('click', toggleMobileInfoPanel);
+            }
+            
+            // 电脑端按钮事件
+            const desktopBtn = document.getElementById('desktop-info-btn');
+            if (desktopBtn) {
+                desktopBtn.addEventListener('click', toggleDesktopSidebar);
+            }
+            
+            // 遮罩层点击关闭
+            document.addEventListener('click', function(e) {
+                if (e.target.id === 'mobile-overlay') {
+                    hideMobileInfoPanel();
+                }
+            });
+            
+            // ESC键关闭
+            document.addEventListener('keydown', function(e) {
+                if (e.keyCode === 27) {
+                    hideMobileInfoPanel();
+                    hideDesktopSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

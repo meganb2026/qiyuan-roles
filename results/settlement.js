@@ -20,8 +20,125 @@ function startSettlement() {
         return;
     }
     
-    // 直接跳转到结算页面
-    window.location.href = getRelativePathTo('results/settlement.html') + '?character=' + currentCharacter;
+    // 先计算出结局，然后跳转到结局过渡页面
+    calculateEndingAndRedirect(currentCharacter);
+}
+
+// 辅助函数：计算结局并跳转到结局过渡页面
+function calculateEndingAndRedirect(currentCharacter, from = '') {
+    // 计算结局
+    const result = calculateSettlementResult(currentCharacter, from);
+    
+    // 从localStorage获取游戏状态
+    const savedState = localStorage.getItem('qiyuanGameState');
+    const gameState = savedState ? JSON.parse(savedState) : {
+        selectedCharacter: currentCharacter,
+        playerInventory: [],
+        allCharactersItems: {},
+        npcs: []
+    };
+    
+    // 记录结局ID
+    recordDiscoveredEnding(currentCharacter, gameState.playerInventory || [], result, from);
+    
+    // 获取结局ID
+    let endingId = '';
+    if (from === 'map-discard') {
+        endingId = 'general-failure-map';
+    } else if (from === 'dice') {
+        endingId = 'general-failure-dice';
+    } else if (result.title === '你登基了') {
+        endingId = 'easter-egg-ascend';
+    } else if (result.title === '你成功了' && result.content.includes('你看了看痒痒挠')) {
+        endingId = 'general-success-scratcher';
+    } else if (result.title === '你成功了' && result.content.includes('你把隔离霜涂在脸上')) {
+        endingId = 'general-success-primer';
+    } else {
+        // 根据角色和背包物品确定结局ID
+        const inventory = gameState.playerInventory || [];
+        switch (currentCharacter) {
+            case 'claudius':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('clothes')) {
+                        endingId = 'claudius-success-clothes';
+                    } else if (inventory.includes('mentor-notes')) {
+                        endingId = 'claudius-success-notes';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'claudius-failure';
+                }
+                break;
+            case 'chengying':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('diving-equipment')) {
+                        endingId = 'chengying-success-diving';
+                    } else if (inventory.includes('mentor-notes')) {
+                        endingId = 'chengying-success-notes';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'chengying-failure';
+                }
+                break;
+            case 'hefei':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('weekly-report')) {
+                        endingId = 'hefei-success-report';
+                    } else if (inventory.includes('pearl-pass')) {
+                        endingId = 'hefei-success-pass';
+                    }
+                } else if (result.title === '你失败了') {
+                    if (inventory.includes('flashlight')) {
+                        endingId = 'hefei-failure-flashlight';
+                    } else if (inventory.includes('crown')) {
+                        endingId = 'hefei-failure-crown';
+                    } else {
+                        endingId = 'hefei-failure';
+                    }
+                }
+                break;
+            case 'lixiang':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('sleeping-pill')) {
+                        endingId = 'lixiang-success-pill';
+                    } else if (inventory.includes('weekly-report')) {
+                        endingId = 'lixiang-success-report';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'lixiang-failure';
+                }
+                break;
+            case 'wangweiguo':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('pearl-pass')) {
+                        endingId = 'wangweiguo-success-pass';
+                    } else if (inventory.includes('underground-system-blueprint')) {
+                        endingId = 'wangweiguo-success-blueprint';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'wangweiguo-failure';
+                }
+                break;
+            case 'wuzhizhe':
+                if (result.title === '你成功了') {
+                    if (inventory.includes('chinese-herbs')) {
+                        endingId = 'wuzhizhe-success-herbs';
+                    } else if (inventory.includes('underground-system-blueprint')) {
+                        endingId = 'wuzhizhe-success-blueprint';
+                    }
+                } else if (result.title === '你失败了') {
+                    endingId = 'wuzhizhe-failure';
+                }
+                break;
+            default:
+                if (result.title === '你失败了') {
+                    endingId = currentCharacter + '-failure';
+                }
+                break;
+        }
+    }
+    
+    // 跳转到结局过渡页面
+    window.location.href = getRelativePathTo('results/ending-transition.html') + '?character=' + currentCharacter + '&endingId=' + endingId;
 }
 
 // 辅助函数：获取从当前页面到目标路径的相对路径
@@ -334,9 +451,8 @@ function handleMapDiscard() {
     const gameState = JSON.parse(savedState);
     const currentCharacter = gameState.selectedCharacter || 'claudius';
     
-    // 跳转到结算页面，并传递失败原因
-    // 使用统一可靠的路径计算方法
-    window.location.href = getRelativePathTo('results/settlement.html') + '?character=' + currentCharacter + '&from=map-discard';
+    // 计算结局并跳转到结局过渡页面
+    calculateEndingAndRedirect(currentCharacter, 'map-discard');
 }
 
 // 记录发现的结局
@@ -474,6 +590,7 @@ function recordDiscoveredEnding(character, inventory, result, from) {
 if (typeof window !== 'undefined') {
     window.startSettlement = startSettlement;
     window.calculateSettlementResult = calculateSettlementResult;
+    window.calculateEndingAndRedirect = calculateEndingAndRedirect;
     window.handleMapDiscard = handleMapDiscard;
     window.recordDiscoveredEnding = recordDiscoveredEnding;
 }
