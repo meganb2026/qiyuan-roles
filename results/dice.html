@@ -266,8 +266,6 @@
         <button class="control-btn" id="controlBtn">开始转动</button>
         
         <button class="control-btn" id="continueBtn" style="display: none; margin-top: 15px;">继续</button>
-        
-        <div class="result" id="result"></div>
     </div>
     
     <script>
@@ -275,7 +273,6 @@
         const dice = document.getElementById('dice');
         const controlBtn = document.getElementById('controlBtn');
         const continueBtn = document.getElementById('continueBtn');
-        const result = document.getElementById('result');
         
         // 状态变量
         let hasRolled = false;
@@ -311,7 +308,6 @@
         function startSpinning() {
             isSpinning = true;
             controlBtn.textContent = '停';
-            result.textContent = '';
             
             // 开始快速转动
             dice.classList.add('spinning');
@@ -349,9 +345,6 @@
             
             // 设置骰子的最终状态
             dice.style.transform = randomResult.rotation;
-            
-            // 显示结果
-            result.textContent = `结果: ${randomResult.value}`;
             
             // 控制按钮显示
             if (!hasRolled) {
