@@ -372,7 +372,36 @@ function createLocationMarker(location) {
     return marker;
 }
 
+// 初始化地图
+function initMap(character, day) {
+    // 获取地图容器
+    const mapContainer = document.getElementById('map-container');
+    
+    // 清空地图容器
+    mapContainer.innerHTML = '';
+    
+    // 创建立方体地图容器
+    const cubeMapDiv = document.createElement('div');
+    cubeMapDiv.id = 'cube-map';
+    cubeMapDiv.style.width = '100%';
+    cubeMapDiv.style.height = '100%';
+    cubeMapDiv.style.position = 'absolute';
+    cubeMapDiv.style.top = '0';
+    cubeMapDiv.style.left = '0';
+    cubeMapDiv.style.display = 'flex';
+    cubeMapDiv.style.justifyContent = 'center';
+    cubeMapDiv.style.alignItems = 'center';
+    cubeMapDiv.style.transformStyle = 'preserve-3d';
+    cubeMapDiv.style.perspective = '1000px';
+    
+    mapContainer.appendChild(cubeMapDiv);
+    
+    // 生成立方体地图
+    generateCubeMap();
+}
+
 // 导出函数给全局使用
 window.toggleMapPanel = toggleMapPanel;
 window.generateCubeMap = generateCubeMap;
 window.createLocationMarker = createLocationMarker;
+window.initMap = initMap;
