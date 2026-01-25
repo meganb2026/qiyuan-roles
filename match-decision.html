@@ -270,46 +270,57 @@
             if (choice === 'heat') {
                 // 用火柴加热寒冰的处理
                 
-                // 1. 移除背包中的寒冰
-                const iceIndex = gameState.playerInventory.indexOf('ice');
-                if (iceIndex > -1) {
-                    gameState.playerInventory.splice(iceIndex, 1);
-                }
-                
-                // 移除角色物品列表中的寒冰
-                if (gameState.allCharactersItems[gameState.selectedCharacter]) {
-                    const charIceIndex = gameState.allCharactersItems[gameState.selectedCharacter].indexOf('ice');
-                    if (charIceIndex > -1) {
-                        gameState.allCharactersItems[gameState.selectedCharacter].splice(charIceIndex, 1);
-                    }
-                }
-                
-                // 2. 生成随机物品
-                const randomItem = getRandomIceItem();
-                
-                // 3. 将新物品添加到背包
-                if (!gameState.playerInventory.includes(randomItem.itemKey)) {
-                    gameState.playerInventory.push(randomItem.itemKey);
-                    
-                    // 记录发现的物品
-                    if (window.recordDiscoveredItem) {
-                        window.recordDiscoveredItem(randomItem.itemKey);
+                // 再次检查背包中是否有寒冰
+                const hasIce = gameState.playerInventory.includes('ice');
+                if (hasIce) {
+                    // 1. 移除背包中的寒冰
+                    const iceIndex = gameState.playerInventory.indexOf('ice');
+                    if (iceIndex > -1) {
+                        gameState.playerInventory.splice(iceIndex, 1);
                     }
                     
-                    // 将物品添加到当前角色的物品列表
-                    if (!gameState.allCharactersItems[gameState.selectedCharacter]) {
-                        gameState.allCharactersItems[gameState.selectedCharacter] = [];
+                    // 移除角色物品列表中的寒冰
+                    if (gameState.allCharactersItems[gameState.selectedCharacter]) {
+                        const charIceIndex = gameState.allCharactersItems[gameState.selectedCharacter].indexOf('ice');
+                        if (charIceIndex > -1) {
+                            gameState.allCharactersItems[gameState.selectedCharacter].splice(charIceIndex, 1);
+                        }
                     }
-                    if (!gameState.allCharactersItems[gameState.selectedCharacter].includes(randomItem.itemKey)) {
-                        gameState.allCharactersItems[gameState.selectedCharacter].push(randomItem.itemKey);
+                    
+                    // 2. 生成随机物品
+                    const randomItem = getRandomIceItem();
+                    
+                    // 3. 将新物品添加到背包
+                    if (!gameState.playerInventory.includes(randomItem.itemKey)) {
+                        gameState.playerInventory.push(randomItem.itemKey);
+                        
+                        // 记录发现的物品
+                        if (window.recordDiscoveredItem) {
+                            window.recordDiscoveredItem(randomItem.itemKey);
+                        }
+                        
+                        // 将物品添加到当前角色的物品列表
+                        if (!gameState.allCharactersItems[gameState.selectedCharacter]) {
+                            gameState.allCharactersItems[gameState.selectedCharacter] = [];
+                        }
+                        if (!gameState.allCharactersItems[gameState.selectedCharacter].includes(randomItem.itemKey)) {
+                            gameState.allCharactersItems[gameState.selectedCharacter].push(randomItem.itemKey);
+                        }
                     }
+                    
+                    // 4. 保存状态
+                    saveGameState();
+                    
+                    // 5. 直接跳转到火柴揭秘页面，不显示弹出框
+                    window.location.href = `match-reveal.html?character=${currentCharacter}&day=${gameState.currentDay}&newItem=${randomItem.itemKey}`;
+                } else {
+                    // 没有寒冰，直接跳转到nightmare-dialogue.html
+                    // 保存状态
+                    saveGameState();
+                    
+                    // 跳转到nightmare-dialogue页面
+                    window.location.href = `nightmare-dialogue.html?character=${currentCharacter}&day=${gameState.currentDay}`;
                 }
-                
-                // 4. 保存状态
-                saveGameState();
-                
-                // 5. 直接跳转到火柴揭秘页面，不显示弹出框
-                window.location.href = `match-reveal.html?character=${currentCharacter}&day=${gameState.currentDay}&newItem=${randomItem.itemKey}`;
             } else if (choice === 'light') {
                 // 直接划开火柴的处理
                 // 保存状态
