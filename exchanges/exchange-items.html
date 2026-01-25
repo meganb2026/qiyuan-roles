@@ -55,7 +55,7 @@
             playerInventory: [],
             allCharactersItems: {},
             npcs: [],
-            exchangeCompleted: false // 添加交换完成标记
+            exchangedDays: [] // 记录已经交换过物品的章节
         };
 
         // 从localStorage加载游戏状态
@@ -94,6 +94,9 @@
             const currentChar = window.characters[currentCharacter];
             const targetChar = window.characters[targetCharacter];
 
+            // 检查当前章节是否已经交换过物品
+            const hasExchanged = gameState.exchangedDays.includes(gameState.currentDay);
+
             const currentItems = gameState.allCharactersItems[currentCharacter] || [];
             const targetItems = gameState.allCharactersItems[targetCharacter] || [];
 
@@ -112,7 +115,7 @@
                         <h3>你的物品</h3>
                         <div class="items-grid">
                             ${currentItems.map((item, index) => `
-                                <div class="exchange-item player-item" data-item="${item}" data-index="${index}" ${gameState.exchangeCompleted ? 'style="pointer-events: none; opacity: 0.7;"' : ''}>
+                                <div class="exchange-item player-item" data-item="${item}" data-index="${index}" ${hasExchanged ? 'style="pointer-events: none; opacity: 0.7;"' : ''}>
                                     ${getItemDisplayName(item)}
                                 </div>
                             `).join('')}
@@ -120,8 +123,8 @@
                     </div>
 
                     <div class="exchange-controls">
-                        <button class="action-btn secondary" onclick="swapItems()" ${gameState.exchangeCompleted ? 'disabled' : ''} style="${gameState.exchangeCompleted ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
-                            ${gameState.exchangeCompleted ? '交换已完成' : '⇄ 交换物品'}
+                        <button class="action-btn secondary" onclick="swapItems()" ${hasExchanged ? 'disabled' : ''} style="${hasExchanged ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                            ${hasExchanged ? '交换已完成' : '⇄ 交换物品'}
                         </button>
                     </div>
 
@@ -129,7 +132,7 @@
                         <h3>${targetChar.name}的物品</h3>
                         <div class="items-grid">
                             ${targetItems.map((item, index) => `
-                                <div class="exchange-item target-item" data-item="${item}" data-index="${index}" ${gameState.exchangeCompleted ? 'style="pointer-events: none; opacity: 0.7;"' : ''}>
+                                <div class="exchange-item target-item" data-item="${item}" data-index="${index}" ${hasExchanged ? 'style="pointer-events: none; opacity: 0.7;"' : ''}>
                                     ${getItemDisplayName(item)}
                                 </div>
                             `).join('')}
@@ -171,8 +174,8 @@
 
         // 检查是否可以交换
         function checkSwapReady() {
-            // 如果交换已完成，不执行任何操作
-            if (gameState.exchangeCompleted) {
+            // 如果当前章节已经交换过物品，不执行任何操作
+            if (gameState.exchangedDays.includes(gameState.currentDay)) {
                 return;
             }
             
@@ -190,6 +193,12 @@
         function swapItems() {
             if (!selectedPlayerItem || !selectedTargetItem) {
                 alert('请选择要交换的物品！');
+                return;
+            }
+
+            // 检查当前章节是否已经交换过物品
+            if (gameState.exchangedDays.includes(gameState.currentDay)) {
+                alert('今天已经交换过装备了！');
                 return;
             }
 
@@ -218,8 +227,8 @@
                     window.recordDiscoveredItem(newItem);
                 }
 
-                // 标记交换已完成，只能交换一次
-                gameState.exchangeCompleted = true;
+                // 记录当前章节已交换物品
+                gameState.exchangedDays.push(gameState.currentDay);
 
                 // 保存状态
                 saveGameState();
@@ -397,8 +406,6 @@
         // 事件绑定
         document.addEventListener('DOMContentLoaded', function() {
             loadGameState();
-            // 页面初始化时，重置交换完成状态，确保每次进入交换页面只能交换一次
-            gameState.exchangeCompleted = false;
             showExchangePage();
 
             // 移动端按钮事件
