@@ -55,7 +55,7 @@ function calculateEndingAndRedirect(currentCharacter, from = '') {
         endingId = 'easter-egg-ascend';
     } else if (result.title === '你成功了' && result.content.includes('你看了看痒痒挠')) {
         endingId = 'general-success-scratcher';
-    } else if (result.title === '你成功了' && result.content.includes('你把隔离霜涂在脸上')) {
+    } else if (result.title === '你成功了' && result.content.includes('隔离霜假白')) {
         endingId = 'general-success-primer';
     } else {
         // 根据角色和背包物品确定结局ID
@@ -250,7 +250,7 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
             },
             'general-success-primer': {
                 title: '你成功了',
-                content: '你把隔离霜涂在脸上，它假白。你被洗白了。'
+                content: '隔离霜假白。你被洗白了。'
             },
             'easter-egg-ascend': {
                 title: '你登基了',
@@ -259,7 +259,7 @@ function calculateSettlementResult(currentCharacter = 'claudius', from = '') {
             // 角色特定结局
             'claudius-success-clothes': {
                 title: '你成功了',
-                content: '一定有什么不符合常理的。等等，李想那小子不是每天穿风衣吗，为什么有这么多羽绒服？原来他是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。'
+                content: '原来李想是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。'
             },
             'claudius-success-notes': {
                 title: '你成功了',
@@ -635,7 +635,7 @@ function recordDiscoveredEnding(character, inventory, result, from) {
     } else if (result.title === '你成功了' && result.content.includes('你看了看痒痒挠')) {
         // 痒痒挠成功结局（通用）
         endingId = 'general-success-scratcher';
-    } else if (result.title === '你成功了' && result.content.includes('你把隔离霜涂在脸上')) {
+    } else if (result.title === '你成功了' && result.content.includes('隔离霜假白')) {
         // 隔离霜成功结局（通用）
         endingId = 'general-success-primer';
     } else {
