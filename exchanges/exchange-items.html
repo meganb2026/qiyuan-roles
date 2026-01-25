@@ -403,10 +403,15 @@
             }
         }
 
-        // 事件绑定
-        document.addEventListener('DOMContentLoaded', function() {
+        // 更新页面状态
+        function updatePageState() {
             loadGameState();
             showExchangePage();
+        }
+
+        // 事件绑定
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePageState();
 
             // 移动端按钮事件
             const mobileBtn = document.getElementById('mobile-info-btn');
@@ -434,6 +439,21 @@
                     hideDesktopSidebar();
                 }
             });
+        });
+
+        // 添加pageshow事件监听，确保页面从缓存中加载时也能更新状态
+        window.addEventListener('pageshow', function(e) {
+            // 检查是否是从缓存中加载的页面
+            if (e.persisted) {
+                updatePageState();
+            }
+        });
+
+        // 添加visibilitychange事件监听，确保页面重新可见时更新状态
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                updatePageState();
+            }
         });
     </script>
 </body>
