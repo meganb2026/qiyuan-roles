@@ -264,6 +264,77 @@
             }
         }
 
+        // 显示自定义弹窗
+        function showCustomAlert(message, onConfirm) {
+            // 创建弹窗容器
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 2000;
+            `;
+            
+            // 创建弹窗内容
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                background: white;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                text-align: center;
+                max-width: 400px;
+                width: 90%;
+            `;
+            
+            // 创建消息文本
+            const messageText = document.createElement('p');
+            messageText.textContent = message;
+            messageText.style.cssText = `
+                margin-bottom: 20px;
+                font-size: 18px;
+                color: #333;
+            `;
+            
+            // 创建确认按钮
+            const confirmBtn = document.createElement('button');
+            confirmBtn.textContent = '确定';
+            confirmBtn.style.cssText = `
+                padding: 12px 24px;
+                font-size: 16px;
+                background: #667eea;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.3s;
+            `;
+            confirmBtn.onmouseover = function() {
+                this.style.background = '#5568d3';
+            };
+            confirmBtn.onmouseout = function() {
+                this.style.background = '#667eea';
+            };
+            confirmBtn.onclick = function() {
+                document.body.removeChild(overlay);
+                if (onConfirm) {
+                    onConfirm();
+                }
+            };
+            
+            // 组装弹窗
+            popup.appendChild(messageText);
+            popup.appendChild(confirmBtn);
+            overlay.appendChild(popup);
+            document.body.appendChild(overlay);
+        }
+
         // 处理火柴决策
         function handleMatchDecision(choice) {
             // 根据选择进行不同的处理
@@ -319,17 +390,16 @@
                 } else {
                     // 检查冰块是否已经化过
                     if (gameState.iceMelted) {
-                        // 冰块已经化过，显示弹窗
-                        alert('你已经化过冰块啦，卡bug 的不是好爱猫人士哦');
+                        // 冰块已经化过，显示自定义弹窗
+                        showCustomAlert('你已经化过冰块啦，卡bug 的不是好爱猫人士哦', function() {
+                            // 保存状态
+                            saveGameState();
+
+                            // 点击确定后跳转到nightmare-dialogue页面
+                            window.location.href = `nightmare-dialogue.html?character=${currentCharacter}&day=${gameState.currentDay}`;
+                        });
                         return;
                     }
-
-                    // 没有寒冰，直接跳转到nightmare-dialogue.html
-                    // 保存状态
-                    saveGameState();
-                    
-                    // 跳转到nightmare-dialogue页面
-                    window.location.href = `nightmare-dialogue.html?character=${currentCharacter}&day=${gameState.currentDay}`;
                 }
             } else if (choice === 'light') {
                 // 直接划开火柴的处理
