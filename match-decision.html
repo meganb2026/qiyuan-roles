@@ -172,7 +172,8 @@
             playerInventory: [],
             allCharactersItems: {},
             npcs: [],
-            iceMelted: false // 记录冰块是否已经化过
+            iceMelted: false, // 记录冰块是否已经化过
+            matchUsed: false // 记录火柴是否已经使用过
         };
 
         // 从localStorage加载游戏状态
@@ -337,6 +338,19 @@
 
         // 处理火柴决策
         function handleMatchDecision(choice) {
+            // 检查火柴是否已经使用过
+            if (gameState.matchUsed) {
+                // 火柴已经使用过，显示提示弹窗
+                showCustomAlert('你已经划掉第三根火柴啦，卡bug 的不是好爱猫人士哦', function() {
+                    // 保存状态
+                    saveGameState();
+                    
+                    // 点击确定后跳转到nightmare-dialogue页面
+                    window.location.href = `nightmare-dialogue.html?character=${currentCharacter}&day=${gameState.currentDay}`;
+                });
+                return;
+            }
+            
             // 根据选择进行不同的处理
             if (choice === 'heat') {
                 // 用火柴加热寒冰的处理
@@ -382,10 +396,13 @@
                     // 4. 设置冰块已化标志
                     gameState.iceMelted = true;
                     
-                    // 5. 保存状态
+                    // 5. 设置火柴已使用标志
+                    gameState.matchUsed = true;
+                    
+                    // 6. 保存状态
                     saveGameState();
                     
-                    // 6. 直接跳转到火柴揭秘页面，不显示弹出框
+                    // 7. 直接跳转到火柴揭秘页面，不显示弹出框
                     window.location.href = `match-reveal.html?character=${currentCharacter}&day=${gameState.currentDay}&newItem=${randomItem.itemKey}`;
                 } else {
                     // 检查冰块是否已经化过
@@ -393,6 +410,7 @@
                         // 冰块已经化过，显示自定义弹窗
                         showCustomAlert('你已经化过冰块啦，卡bug 的不是好爱猫人士哦', function() {
                             // 保存状态
+                            gameState.matchUsed = true;
                             saveGameState();
 
                             // 点击确定后跳转到nightmare-dialogue页面
@@ -400,8 +418,20 @@
                         });
                         return;
                     }
+                    
+                    // 设置火柴已使用标志
+                    gameState.matchUsed = true;
+                    
+                    // 保存状态
+                    saveGameState();
+                    
+                    // 跳转到nightmare-dialogue页面
+                    window.location.href = `nightmare-dialogue.html?character=${currentCharacter}&day=${gameState.currentDay}`;
                 }
             } else if (choice === 'light') {
+                // 设置火柴已使用标志
+                gameState.matchUsed = true;
+                
                 // 直接划开火柴的处理
                 // 保存状态
                 saveGameState();
@@ -409,6 +439,9 @@
                 // 跳转到梦魇页面
                 window.location.href = `match-nightmare.html?character=${currentCharacter}&day=${gameState.currentDay}`;
             } else {
+                // 设置火柴已使用标志
+                gameState.matchUsed = true;
+                
                 // 没有寒冰，直接继续
                 // 保存状态
                 saveGameState();
