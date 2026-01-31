@@ -113,7 +113,7 @@
         }
 
         // 显示物品详情
-        function showItemDetail() {
+        function displayItemDetail() {
             const itemData = window.itemStories[itemName];
             if (itemData) {
                 document.getElementById('item-name').textContent = itemData.name;
@@ -131,6 +131,14 @@
             }
 
             updateInfoPanel();
+        }
+
+        // 处理物品点击事件
+        function handleItemClick(item) {
+            // 显示物品详情模态框
+            if (window.showItemDetail) {
+                window.showItemDetail(item);
+            }
         }
 
         // 继续调查
@@ -192,7 +200,7 @@
                         ${gameState.playerInventory.length === 0 ?
                             '<div style="color: #999; font-style: italic;">背包是空的</div>' :
                             gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
+                                `<div onclick="handleItemClick('${item}')" style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#e6e6e6'" onmouseout="this.style.background='#f5f5f5'">${getItemDisplayName(item)}</div>`
                             ).join('')
                         }
                     </div>
@@ -244,7 +252,7 @@
                         ${gameState.playerInventory.length === 0 ?
                             '<div style="color: #999; font-style: italic; padding: 10px;">背包是空的</div>' :
                             gameState.playerInventory.map(item =>
-                                `<div style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea;">${getItemDisplayName(item)}</div>`
+                                `<div onclick="handleItemClick('${item}')" style="padding: 8px; margin: 5px 0; background: #f8f9ff; border-radius: 5px; border-left: 3px solid #667eea; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#e6e9ff'" onmouseout="this.style.background='#f8f9ff'">${getItemDisplayName(item)}</div>`
                             ).join('')
                         }
                     </div>
@@ -298,7 +306,7 @@
                             ${gameState.playerInventory.length === 0 ?
                                 '<div style="color: #999; font-style: italic;">背包是空的</div>' :
                                 gameState.playerInventory.map(item =>
-                                    `<div style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px;">${getItemDisplayName(item)}</div>`
+                                    `<div onclick="handleItemClick('${item}')" style="padding: 8px; margin: 5px 0; background: #f5f5f5; border-radius: 5px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#e6e6e6'" onmouseout="this.style.background='#f5f5f5'">${getItemDisplayName(item)}</div>`
                                 ).join('')
                             }
                         </div>
@@ -317,7 +325,7 @@
         // 事件绑定
         document.addEventListener('DOMContentLoaded', function() {
             loadGameState();
-            showItemDetail();
+            displayItemDetail();
 
             // 移动端按钮事件
             const mobileBtn = document.getElementById('mobile-info-btn');
