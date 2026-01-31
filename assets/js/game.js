@@ -714,61 +714,58 @@ class Game {
     }
 }
 
-// 初始化游戏
-    const game = new Game();
-    
-    // 持久化物品发现记录系统
-    function initDiscoveredItemsSystem() {
-        // 检查是否存在发现物品记录，如果不存在则创建
-        if (!localStorage.getItem('qiyuanDiscoveredItems')) {
-            localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify([]));
-        }
+// 持久化物品发现记录系统
+function initDiscoveredItemsSystem() {
+    // 检查是否存在发现物品记录，如果不存在则创建
+    if (!localStorage.getItem('qiyuanDiscoveredItems')) {
+        localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify([]));
     }
+}
+
+// 记录发现的物品
+function recordDiscoveredItem(itemKey) {
+    // 获取当前发现物品列表
+    const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
     
-    // 记录发现的物品
-    function recordDiscoveredItem(itemKey) {
-        // 获取当前发现物品列表
-        const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
-        
-        // 检查物品是否已经被记录
+    // 检查物品是否已经被记录
+    if (!discoveredItems.includes(itemKey)) {
+        // 添加到发现列表
+        discoveredItems.push(itemKey);
+        // 保存回localStorage
+        localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify(discoveredItems));
+    }
+}
+
+// 记录多个发现的物品
+function recordMultipleDiscoveredItems(itemKeys) {
+    // 获取当前发现物品列表
+    const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+    let hasNewItems = false;
+    
+    // 检查每个物品是否已经被记录
+    itemKeys.forEach(itemKey => {
         if (!discoveredItems.includes(itemKey)) {
             // 添加到发现列表
             discoveredItems.push(itemKey);
-            // 保存回localStorage
-            localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify(discoveredItems));
+            hasNewItems = true;
         }
+    });
+    
+    // 如果有新物品，保存回localStorage
+    if (hasNewItems) {
+        localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify(discoveredItems));
     }
-    
-    // 记录多个发现的物品
-    function recordMultipleDiscoveredItems(itemKeys) {
-        // 获取当前发现物品列表
-        const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
-        let hasNewItems = false;
-        
-        // 检查每个物品是否已经被记录
-        itemKeys.forEach(itemKey => {
-            if (!discoveredItems.includes(itemKey)) {
-                // 添加到发现列表
-                discoveredItems.push(itemKey);
-                hasNewItems = true;
-            }
-        });
-        
-        // 如果有新物品，保存回localStorage
-        if (hasNewItems) {
-            localStorage.setItem('qiyuanDiscoveredItems', JSON.stringify(discoveredItems));
-        }
-    }
-    
-    // 获取所有发现的物品
-    function getDiscoveredItems() {
-        return JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
-    }
-    
-    // 初始化物品发现系统
-    initDiscoveredItemsSystem();
-    
-    // 添加到全局对象
-    window.recordDiscoveredItem = recordDiscoveredItem;
-    window.recordMultipleDiscoveredItems = recordMultipleDiscoveredItems;
-    window.getDiscoveredItems = getDiscoveredItems;
+}
+
+// 获取所有发现的物品
+function getDiscoveredItems() {
+    return JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+}
+
+// 初始化物品发现系统
+initDiscoveredItemsSystem();
+
+// 添加到全局对象
+window.recordDiscoveredItem = recordDiscoveredItem;
+window.recordMultipleDiscoveredItems = recordMultipleDiscoveredItems;
+window.getDiscoveredItems = getDiscoveredItems;
