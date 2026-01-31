@@ -769,3 +769,9 @@ initDiscoveredItemsSystem();
 window.recordDiscoveredItem = recordDiscoveredItem;
 window.recordMultipleDiscoveredItems = recordMultipleDiscoveredItems;
 window.getDiscoveredItems = getDiscoveredItems;
+
+// 只在game.html页面加载时自动创建Game实例
+if (window.location.pathname.includes('game.html') || window.location.pathname.endsWith('game.html')) {
+    // 初始化游戏
+    window.game = new Game();
+}
