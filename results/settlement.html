@@ -1053,6 +1053,13 @@
             if (typeof generateSnowflakeIdWithDash === 'undefined') {
                 window.generateSnowflakeIdWithDash = function() {
                     try {
+                        // 首先检查localStorage中是否已经存在雪花ID
+                        const storedSnowflakeId = localStorage.getItem('qiyuanSnowflakeId');
+                        if (storedSnowflakeId) {
+                            return storedSnowflakeId;
+                        }
+                        
+                        // 如果不存在，生成新的雪花ID
                         const snowflake = new Snowflake();
                         const id = snowflake.nextId();
                         
@@ -1067,7 +1074,13 @@
                         if (!matched) {
                             return '000000-000000-000000';
                         }
-                        return matched.join('-');
+                        
+                        const finalId = matched.join('-');
+                        
+                        // 将生成的雪花ID存储到localStorage中
+                        localStorage.setItem('qiyuanSnowflakeId', finalId);
+                        
+                        return finalId;
                     } catch (error) {
                         return '000000-000000-000000';
                     }
@@ -1214,7 +1227,7 @@
                         const allItemsCollected = checkAllItemsCollected();
                         
                         if (allItemsCollected) {
-                            // 显示全图鉴收集弹窗
+                            // 每次集齐全图鉴时都显示弹窗
                             showFullEncyclopediaAlert();
                         }
                         
@@ -1262,7 +1275,7 @@
                 
                 // 添加按钮事件
                 document.getElementById('restart-btn').addEventListener('click', function() {
-                    // 重置游戏状态
+                    // 重置游戏状态，保留物品、结局和雪花ID
                     localStorage.removeItem('qiyuanGameState');
                     // 跳转到首页
                     window.location.href = '../index.html';
@@ -1285,7 +1298,7 @@
                 const restartBtn = document.getElementById('restart-btn');
                 if (restartBtn) {
                     restartBtn.addEventListener('click', function() {
-                        // 重置游戏状态
+                        // 重置游戏状态，保留物品、结局和雪花ID
                         localStorage.removeItem('qiyuanGameState');
                         // 跳转到首页
                         window.location.href = '../index.html';
