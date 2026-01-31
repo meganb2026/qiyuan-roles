@@ -974,7 +974,7 @@
             // 确保Snowflake类已定义
             if (typeof Snowflake === 'undefined') {
                 window.Snowflake = class {
-                    constructor(workerId = 0, datacenterId = 0) {
+                    constructor(workerId = Math.floor(Math.random() * 10), datacenterId = Math.floor(Math.random() * 10)) {
                         this.workerId = workerId;
                         this.datacenterId = datacenterId;
                         this.sequence = 0;
@@ -990,8 +990,8 @@
                         this.maxDatacenterId = 31; // 5位datacenterId最大31
                         this.sequenceMask = 4095; // 12位sequence最大4095
                         
-                        // 起始时间戳（2024-01-01 00:00:00）
-                        this.epoch = 1704067200000;
+                        // 起始时间戳（2026-01-01 00:00:00）
+                        this.epoch = 1767225600000;
                     }
                     
                     nextId() {
@@ -1019,11 +1019,24 @@
                         // 更新上次生成ID的时间戳
                         this.lastTimestamp = timestamp;
                         
-                        // 移位并通过或运算拼到一起组成64位ID
-                        return ((timestamp - this.epoch) << this.timestampLeftShift) |
-                               (this.datacenterId << this.datacenterIdShift) |
-                               (this.workerId << this.workerIdShift) |
-                               this.sequence;
+                        // 计算各部分的值
+                        const timestampPart = (timestamp - this.epoch);
+                        const datacenterPart = this.datacenterId;
+                        const workerPart = this.workerId;
+                        const sequencePart = this.sequence;
+                        
+                        // 使用字符串拼接的方式生成ID，避免位运算溢出
+                        // 确保各部分的长度
+                        const timestampStr = timestampPart.toString().padStart(10, '0');
+                        const datacenterStr = datacenterPart.toString().padStart(2, '0');
+                        const workerStr = workerPart.toString().padStart(2, '0');
+                        const sequenceStr = sequencePart.toString().padStart(4, '0');
+                        
+                        // 拼接成完整的ID字符串
+                        const idStr = timestampStr + datacenterStr + workerStr + sequenceStr;
+                        
+                        // 转换为数字
+                        return parseInt(idStr);
                     }
                     
                     tilNextMillis(lastTimestamp) {
@@ -1041,9 +1054,14 @@
                 window.generateSnowflakeIdWithDash = function() {
                     try {
                         const snowflake = new Snowflake();
-                        const id = snowflake.nextId().toString();
+                        const id = snowflake.nextId();
+                        
+                        // 确保ID是正数，并转换为字符串
+                        const idStr = Math.abs(id).toString();
+                        
                         // 确保ID至少有18位
-                        const paddedId = id.padStart(18, '0').slice(-18);
+                        const paddedId = idStr.padStart(18, '0').slice(-18);
+                        
                         // 每6位中间加一个-
                         const matched = paddedId.match(/.{1,6}/g);
                         if (!matched) {
