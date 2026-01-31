@@ -960,14 +960,51 @@
             // 确保checkAllItemsCollected函数已定义
             if (typeof checkAllItemsCollected === 'undefined') {
                 window.checkAllItemsCollected = function() {
-                    // 获取所有物品
+                    // 检查物品是否全部集齐
                     const allItems = Object.keys(window.itemStories || {});
-                    
-                    // 获取已发现的物品
                     const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+                    const allItemsCollected = discoveredItems.length === allItems.length;
                     
-                    // 检查是否所有物品都已发现
-                    return discoveredItems.length === allItems.length;
+                    // 检查结局是否全部集齐（所有25个结局）
+                    const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+                    
+                    // 定义需要集齐的所有25个结局
+                    const requiredEndings = [
+                        'wangweiguo-success-pass',
+                        'general-failure-dice',
+                        'general-failure-map',
+                        'general-success-scratcher',
+                        'general-success-primer',
+                        'claudius-success-clothes',
+                        'claudius-success-notes',
+                        'claudius-failure',
+                        'chengying-success-diving',
+                        'chengying-success-notes',
+                        'chengying-failure',
+                        'hefei-success-report',
+                        'hefei-success-pass',
+                        'hefei-failure-flashlight',
+                        'hefei-failure-crown',
+                        'hefei-failure',
+                        'lixiang-success-pill',
+                        'lixiang-success-report',
+                        'lixiang-failure',
+                        'wangweiguo-success-blueprint',
+                        'wangweiguo-failure',
+                        'wuzhizhe-success-herbs',
+                        'wuzhizhe-success-blueprint',
+                        'wuzhizhe-failure',
+                        'general-failure-code',
+                        'easter-egg-ascend'
+                    ];
+                    
+                    // 检查是否所有requiredEndings都已发现
+                    const allEndingsCollected = requiredEndings.every(endingId => 
+                        discoveredEndings.includes(endingId)
+                    );
+                    
+                    // 只有当物品和结局都全部集齐时，才返回true
+                    return allItemsCollected && allEndingsCollected;
                 };
             }
 
