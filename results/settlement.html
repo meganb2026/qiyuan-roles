@@ -757,245 +757,538 @@
         const from = urlParams.get('from') || '';
         const endingId = urlParams.get('endingId') || '';
 
-        // 页面加载时计算并显示结算结果
-        document.addEventListener('DOMContentLoaded', function() {
-            const result = calculateSettlementResult(currentCharacter, from);
-            
-            // 更新页面内容
-            const html = `
-                <div>
-                    <h1 class="result-title">${result.title}</h1>
-                    <div class="result-content">
-                        ${result.content.split('\n').map(line => `<p>${line}</p>`).join('')}
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('dynamic-result-content').innerHTML = html;
-            
-            // 添加按钮事件
-        document.getElementById('restart-btn').addEventListener('click', function() {
-            // 重置游戏状态
-            localStorage.removeItem('qiyuanGameState');
-            // 跳转到首页
-            window.location.href = '../index.html';
-        });
-        
-        document.getElementById('contributors-btn').addEventListener('click', function() {
-            showContributors();
-        });
-        
-        document.getElementById('encyclopedia-btn').addEventListener('click', function() {
-            showEncyclopedia();
-        });
-        });
-        
-        // 显示贡献者模态框
-        function showContributors() {
-            const modal = document.getElementById('contributorsModal');
-            modal.style.display = 'block';
-        }
-        
-        // 关闭贡献者模态框
-        function closeContributors() {
-            const modal = document.getElementById('contributorsModal');
-            modal.style.display = 'none';
-        }
-        
-        // 显示图鉴模态框
-        function showEncyclopedia() {
-            const modal = document.getElementById('encyclopediaModal');
-            modal.style.display = 'block';
-            generateItemsGrid();
-            generateEndingsGrid();
-        }
-        
-        // 关闭图鉴模态框
-        function closeEncyclopedia() {
-            const modal = document.getElementById('encyclopediaModal');
-            modal.style.display = 'none';
-        }
-        
-        // 生成物品栏网格
-        function generateItemsGrid() {
-            const itemsGrid = document.getElementById('items-grid');
-            itemsGrid.innerHTML = '';
-            
-            // 获取持久化的发现物品列表
-            const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
-            
-            // 获取所有物品列表
-            const allItems = Object.values(window.itemStories || {});
-            const itemKeys = Object.keys(window.itemStories || {});
-            
-            // 为每个物品创建一个格子
-            allItems.forEach(item => {
-                const itemCell = document.createElement('div');
-                itemCell.className = 'item-cell';
-                
-                // 查找当前物品对应的英文键名
-                let itemKey = '';
-                for (const key of itemKeys) {
-                    if (window.itemStories[key].name === item.name) {
-                        itemKey = key;
-                        break;
+        // 确保所有必要的函数都已定义
+        function ensureFunctionsDefined() {
+            // 确保showContributors函数已定义
+            if (typeof showContributors === 'undefined') {
+                window.showContributors = function() {
+                    const modal = document.getElementById('contributorsModal');
+                    modal.style.display = 'block';
+                };
+            }
+
+            // 确保closeContributors函数已定义
+            if (typeof closeContributors === 'undefined') {
+                window.closeContributors = function() {
+                    const modal = document.getElementById('contributorsModal');
+                    modal.style.display = 'none';
+                };
+            }
+
+            // 确保closeEncyclopedia函数已定义
+            if (typeof closeEncyclopedia === 'undefined') {
+                window.closeEncyclopedia = function() {
+                    const modal = document.getElementById('encyclopediaModal');
+                    modal.style.display = 'none';
+                };
+            }
+
+            // 确保closeEndingDetail函数已定义
+            if (typeof closeEndingDetail === 'undefined') {
+                window.closeEndingDetail = function() {
+                    const modal = document.getElementById('endingDetailModal');
+                    modal.style.display = 'none';
+                };
+            }
+
+            // 确保showEndingDetail函数已定义
+            if (typeof showEndingDetail === 'undefined') {
+                window.showEndingDetail = function(ending) {
+                    const modal = document.getElementById('endingDetailModal');
+                    const titleElement = document.getElementById('endingDetailTitle');
+                    const contentElement = document.getElementById('endingDetailContent');
+                    
+                    titleElement.textContent = ending.title;
+                    contentElement.textContent = ending.content;
+                    modal.style.display = 'block';
+                };
+            }
+
+            // 确保generateItemsGrid函数已定义
+            if (typeof generateItemsGrid === 'undefined') {
+                window.generateItemsGrid = function() {
+                    const itemsGrid = document.getElementById('items-grid');
+                    if (!itemsGrid) {
+                        return;
                     }
-                }
-                
-                // 检查物品是否已经被发现
-                const isDiscovered = discoveredItems.includes(itemKey);
-                
-                if (isDiscovered) {
-                    itemCell.className += ' discovered';
-                    itemCell.textContent = item.name;
-                } else {
-                    itemCell.className += ' unknown';
-                    itemCell.textContent = '?';
-                }
-                
-                itemsGrid.appendChild(itemCell);
-            });
-        }
-        
-        // 生成结局栏内容
-        function generateEndingsGrid() {
-            console.log('=== 开始生成结局栏 ===');
-            // 强制从localStorage获取最新的发现结局列表
-            const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
-            console.log('从localStorage获取的已发现结局:', discoveredEndings);
-            
-            // 定义所有结局
-            const allEndings = {
-                // 克劳狄斯结局
-                claudius: [
-                    { id: 'claudius-success-clothes', type: 'success', title: '你成功了', content: '一定有什么不符合常理的。等等，李想那小子不是每天穿风衣吗，为什么有这么多羽绒服？原来他是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。' },
-                    { id: 'claudius-success-notes', type: 'success', title: '你成功了', content: '你找到了篡位的证据，原来藏在吴智哲老师的手稿里。你偷偷销毁了它，至于那个傻小子，呵。' },
-                    { id: 'claudius-failure', type: 'failure', title: '你失败了', content: '你当年篡位的证据被发现并公之于众。天下皆惊竟有人为了皇位弄死自己的兄长，你被愤怒的人们处死。' }
-                ],
-                
-                // 程婴结局
-                chengying: [
-                    { id: 'chengying-success-diving', type: 'success', title: '你成功了', content: '你不顾寒冷，穿着潜水服跳进下水道找到了克劳狄斯谋反的证据。下水道虽窄，你的义举犹如一人渡过了七条大河。' },
-                    { id: 'chengying-success-notes', type: 'success', title: '你成功了', content: '你仔细辨认吴智哲老师的手稿，猜到了藏匿秘密的地方，并告诉了吴智哲。吴智哲无谓，不怕冬天的下水道有多冷，跳下去找到了克劳狄斯谋反的证据。' },
-                    { id: 'chengying-failure', type: 'failure', title: '你失败了', content: '你没有找到克劳狄斯谋反的证据。众人也没有找到凶杀案的真凶。' }
-                ],
-                
-                // 何非结局
-                hefei: [
-                    { id: 'hefei-success-report', type: 'success', title: '你成功了', content: '你在周报中敏锐地发现材料运输数量减少的问题，编造了一个故事，说是李想的设计有问题王卫国他们替他遮掩了，成功嫁祸李想和王卫国。克劳狄斯因此给你了一笔钱。' },
-                    { id: 'hefei-success-pass', type: 'success', title: '你成功了', content: '通关令牌这东西没什么用啊…不过对有些人来讲是有用的。你把令牌卖给王卫国，让他的施工队可以继续施工不受案情影响，拿到的钱还清了赌债。' },
-                    { id: 'hefei-failure-flashlight', type: 'failure', title: '你失败了', content: '大家都没有头绪。克劳狄斯问，你不是要让他眼前一亮吗？你打开了手电筒。' },
-                    { id: 'hefei-failure-crown', type: 'failure', title: '你失败了', content: '你没有凑够钱，把目光移向了手上的珍珠想要卖了换钱。可恶克劳狄斯竟然给珍珠下毒，你被毒死了。' },
-                    { id: 'hefei-failure', type: 'failure', title: '你失败了', content: '你没有凑够钱。加之所有人都没有找到元凶，克劳狄斯大怒觉得你耍他，把你处死了。' }
-                ],
-                
-                // 李想结局
-                lixiang: [
-                    { id: 'lixiang-success-pill', type: 'success', title: '你成功了', content: '你拿着安眠药去找了程婴，他告诉你前一夜皇宫上天降暴雨。这恰好证明下水道系统排水很好所以第二天没有看到水。至于尸体，不是淹死的，说明和下水道设计无关。' },
-                    { id: 'lixiang-success-report', type: 'success', title: '你成功了', content: '王卫国的周报里记录了每周的工作。上面记录了下水道在发大水时快速排水。至于尸体，不是淹死的，说明和下水道设计无关。' },
-                    { id: 'lixiang-failure', type: 'failure', title: '你失败了', content: '时间到了，你没能证明下水道设计没有问题。何非编造了一个故事，让克劳狄斯把你处死了。' }
-                ],
-                
-                // 王卫国结局
-                wangweiguo: [
-                    { id: 'wangweiguo-success-pass', type: 'success', title: '你成功了', content: '你拿着通关令牌让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。' },
-                    { id: 'wangweiguo-success-blueprint', type: 'success', title: '你成功了', content: '你拿着下水道图纸让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。' },
-                    { id: 'wangweiguo-failure', type: 'failure', title: '你失败了', content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，说你报告尸体是因为心虚，让克劳狄斯把你处死了。' }
-                ],
-                
-                // 吴智哲结局
-                wuzhizhe: [
-                    { id: 'wuzhizhe-success-herbs', type: 'success', title: '你成功了', content: '你吃了人参，大补。于是凭着一腔孤勇跳下了水，摸到一个机关，上面的图案和导师手记上的一模一样。原来这里有一个暗室，里面藏着克劳狄斯当年为了皇位谋杀了自己的哥哥的证物。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。' },
-                    { id: 'wuzhizhe-success-blueprint', type: 'success', title: '你成功了', content: '你认真读了下水道的设计图纸，和建筑设计图一比对，发现了一个暗室。在里面找到一个证物，赫然写着克劳狄斯当年为了皇位谋杀了自己的哥哥。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。' },
-                    { id: 'wuzhizhe-failure', type: 'failure', title: '你失败了', content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，让克劳狄斯把你处死了。' }
-                ],
-                
-                // 通用结局
-        general: [
-            { id: 'general-failure-map', type: 'failure', title: '你失败了', content: '失去了地图的你迷路了。' },
-            { id: 'general-failure-dice', type: 'failure', title: '你失败了', content: '敢把命运交给骰子，你才是真的何非。' },
-            { id: 'general-failure-code', type: 'failure', title: '你失败了', content: '你达成了: 404 not found' },
-            { id: 'general-success-scratcher', type: 'success', title: '你成功了', content: '大家都没有找到凶手，克劳狄斯听说了勃然大怒。你看了看痒痒挠，决定得挠人处且挠人。你挠了挠他，他笑了。' },
-            { id: 'general-success-primer', type: 'success', title: '你成功了', content: '你把隔离霜涂在脸上，它假白。你被洗白了。' }
-        ],
-                
-                // 彩蛋结局
-                'easter-egg': [
-                    { id: 'easter-egg-ascend', type: 'ascend', title: '你登基了', content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。' }
-                ]
-            };
-            
-            // 为每个角色生成结局按钮
-            console.log('开始生成结局按钮');
-            Object.keys(allEndings).forEach(character => {
-                const container = document.getElementById(`${character}-endings`);
-                if (container) {
-                    console.log('处理角色:', character);
-                    container.innerHTML = '';
-                    allEndings[character].forEach(ending => {
-                        console.log('处理结局:', ending.id);
-                        const button = document.createElement('div');
-                        button.className = 'ending-btn';
+                    itemsGrid.innerHTML = '';
+                    
+                    // 获取持久化的发现物品列表
+                    const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+                    
+                    // 获取所有物品列表
+                    const allItems = Object.values(window.itemStories || {});
+                    const itemKeys = Object.keys(window.itemStories || {});
+                    
+                    // 为每个物品创建一个格子
+                    allItems.forEach((item) => {
+                        const itemCell = document.createElement('div');
+                        itemCell.className = 'item-cell';
                         
-                        // 检查结局是否已经被发现
-                        const isDiscovered = discoveredEndings.includes(ending.id);
-                        console.log('结局是否被发现:', ending.id, isDiscovered);
-                        if (isDiscovered) {
-                            button.className += ` discovered ${ending.type}`;
-                            // 根据结局类型显示不同的图标
-                            if (ending.type === 'success') {
-                                button.textContent = '✓';
-                            } else if (ending.type === 'failure') {
-                                button.textContent = '✗';
-                            } else if (ending.type === 'ascend') {
-                                button.textContent = '👑';
+                        // 查找当前物品对应的英文键名
+                        let itemKey = '';
+                        for (const key of itemKeys) {
+                            if (window.itemStories[key].name === item.name) {
+                                itemKey = key;
+                                break;
                             }
-                            
-                            // 添加点击事件，显示结局详情
-                            button.addEventListener('click', () => {
-                                showEndingDetail(ending);
-                            });
-                        } else {
-                            button.textContent = '?';
-                            // 未被发现的结局按钮不可点击
-                            button.style.cursor = 'not-allowed';
-                            button.style.opacity = '0.5';
                         }
                         
-                        container.appendChild(button);
+                        // 检查物品是否已经被发现
+                        const isDiscovered = discoveredItems.includes(itemKey);
+                        
+                        if (isDiscovered) {
+                            itemCell.className += ' discovered';
+                            itemCell.textContent = item.name;
+                        } else {
+                            itemCell.className += ' unknown';
+                            itemCell.textContent = '?';
+                        }
+                        
+                        itemsGrid.appendChild(itemCell);
                     });
-                } else {
-                    console.log('未找到容器:', `${character}-endings`);
-                }
-            });
-            console.log('=== 结局栏生成完成 ===');
-        }
-        
-        // 显示结局详情
-        function showEndingDetail(ending) {
-            const modal = document.getElementById('endingDetailModal');
-            const titleElement = document.getElementById('endingDetailTitle');
-            const contentElement = document.getElementById('endingDetailContent');
+                };
+            }
+
+            // 确保generateEndingsGrid函数已定义
+            if (typeof generateEndingsGrid === 'undefined') {
+                window.generateEndingsGrid = function() {
+                    // 强制从localStorage获取最新的发现结局列表
+                    const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
+                    
+                    // 定义所有结局
+                    const allEndings = {
+                        // 克劳狄斯结局
+                        claudius: [
+                            { id: 'claudius-success-clothes', type: 'success', title: '你成功了', content: '一定有什么不符合常理的。等等，李想那小子不是每天穿风衣吗，为什么有这么多羽绒服？原来他是哈姆雷特易容的，穿羽绒服是因为要到英格兰去。' },
+                            { id: 'claudius-success-notes', type: 'success', title: '你成功了', content: '你找到了篡位的证据，原来藏在吴智哲老师的手稿里。你偷偷销毁了它，至于那个傻小子，呵。' },
+                            { id: 'claudius-failure', type: 'failure', title: '你失败了', content: '你当年篡位的证据被发现并公之于众。天下皆惊竟有人为了皇位弄死自己的兄长，你被愤怒的人们处死。' }
+                        ],
+                        
+                        // 程婴结局
+                        chengying: [
+                            { id: 'chengying-success-diving', type: 'success', title: '你成功了', content: '你不顾寒冷，穿着潜水服跳进下水道找到了克劳狄斯谋反的证据。下水道虽窄，你的义举犹如一人渡过了七条大河。' },
+                            { id: 'chengying-success-notes', type: 'success', title: '你成功了', content: '你仔细辨认吴智哲老师的手稿，猜到了藏匿秘密的地方，并告诉了吴智哲。吴智哲无谓，不怕冬天的下水道有多冷，跳下去找到了克劳狄斯谋反的证据。' },
+                            { id: 'chengying-failure', type: 'failure', title: '你失败了', content: '你没有找到克劳狄斯谋反的证据。众人也没有找到凶杀案的真凶。' }
+                        ],
+                        
+                        // 何非结局
+                        hefei: [
+                            { id: 'hefei-success-report', type: 'success', title: '你成功了', content: '你在周报中敏锐地发现材料运输数量减少的问题，编造了一个故事，说是李想的设计有问题王卫国他们替他遮掩了，成功嫁祸李想和王卫国。克劳狄斯因此给你了一笔钱。' },
+                            { id: 'hefei-success-pass', type: 'success', title: '你成功了', content: '通关令牌这东西没什么用啊…不过对有些人来讲是有用的。你把令牌卖给王卫国，让他的施工队可以继续施工不受案情影响，拿到的钱还清了赌债。' },
+                            { id: 'hefei-failure-flashlight', type: 'failure', title: '你失败了', content: '大家都没有头绪。克劳狄斯问，你不是要让他眼前一亮吗？你打开了手电筒。' },
+                            { id: 'hefei-failure-crown', type: 'failure', title: '你失败了', content: '你没有凑够钱，把目光移向了手上的珍珠想要卖了换钱。可恶克劳狄斯竟然给珍珠下毒，你被毒死了。' },
+                            { id: 'hefei-failure', type: 'failure', title: '你失败了', content: '你没有凑够钱。加之所有人都没有找到元凶，克劳狄斯大怒觉得你耍他，把你处死了。' }
+                        ],
+                        
+                        // 李想结局
+                        lixiang: [
+                            { id: 'lixiang-success-pill', type: 'success', title: '你成功了', content: '你拿着安眠药去找了程婴，他告诉你前一夜皇宫上天降暴雨。这恰好证明下水道系统排水很好所以第二天没有看到水。至于尸体，不是淹死的，说明和下水道设计无关。' },
+                            { id: 'lixiang-success-report', type: 'success', title: '你成功了', content: '王卫国的周报里记录了每周的工作。上面记录了下水道在发大水时快速排水。至于尸体，不是淹死的，说明和下水道设计无关。' },
+                            { id: 'lixiang-failure', type: 'failure', title: '你失败了', content: '时间到了，你没能证明下水道设计没有问题。何非编造了一个故事，让克劳狄斯把你处死了。' }
+                        ],
+                        
+                        // 王卫国结局
+                        wangweiguo: [
+                            { id: 'wangweiguo-success-pass', type: 'success', title: '你成功了', content: '你拿着通关令牌让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。' },
+                            { id: 'wangweiguo-success-blueprint', type: 'success', title: '你成功了', content: '你拿着下水道图纸让兄弟们顺利继续施工，成功结算回家过了一个好年。至于凶杀案，听说克劳狄斯找到了元凶。' },
+                            { id: 'wangweiguo-failure', type: 'failure', title: '你失败了', content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，说你报告尸体是因为心虚，让克劳狄斯把你处死了。' }
+                        ],
+                        
+                        // 吴智哲结局
+                        wuzhizhe: [
+                            { id: 'wuzhizhe-success-herbs', type: 'success', title: '你成功了', content: '你吃了人参，大补。于是凭着一腔孤勇跳下了水，摸到一个机关，上面的图案和导师手记上的一模一样。原来这里有一个暗室，里面藏着克劳狄斯当年为了皇位谋杀了自己的哥哥的证物。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。' },
+                            { id: 'wuzhizhe-success-blueprint', type: 'success', title: '你成功了', content: '你认真读了下水道的设计图纸，和建筑设计图一比对，发现了一个暗室。在里面找到一个证物，赫然写着克劳狄斯当年为了皇位谋杀了自己的哥哥。你推测死者也是想去寻找这个证据，因为意外遭遇了不幸。' },
+                            { id: 'wuzhizhe-failure', type: 'failure', title: '你失败了', content: '时间到了，所有人都没有找到元凶。何非编造了一个故事，让克劳狄斯把你处死了。' }
+                        ],
+                        
+                        // 通用结局
+                        general: [
+                            { id: 'general-failure-map', type: 'failure', title: '你失败了', content: '失去了地图的你迷路了。' },
+                            { id: 'general-failure-dice', type: 'failure', title: '你失败了', content: '敢把命运交给骰子，你才是真的何非。' },
+                            { id: 'general-failure-code', type: 'failure', title: '你失败了', content: '你达成了: 404 not found' },
+                            { id: 'general-success-scratcher', type: 'success', title: '你成功了', content: '大家都没有找到凶手，克劳狄斯听说了勃然大怒。你看了看痒痒挠，决定得挠人处且挠人。你挠了挠他，他笑了。' },
+                            { id: 'general-success-primer', type: 'success', title: '你成功了', content: '你把隔离霜涂在脸上，它假白。你被洗白了。' }
+                        ],
+                        
+                        // 彩蛋结局
+                        'easter-egg': [
+                            { id: 'easter-egg-ascend', type: 'ascend', title: '你登基了', content: '你查了半块窗帘布的出处，克劳狄斯穿的“黄袍”竟真是窗帘布。看着手上的权杖，你福至心灵。' }
+                        ]
+                    };
+                    
+                    // 为每个角色生成结局按钮
+                    Object.keys(allEndings).forEach(character => {
+                        const container = document.getElementById(`${character}-endings`);
+                        if (container) {
+                            container.innerHTML = '';
+                            allEndings[character].forEach(ending => {
+                                const button = document.createElement('div');
+                                button.className = 'ending-btn';
+                                
+                                // 检查结局是否已经被发现
+                                const isDiscovered = discoveredEndings.includes(ending.id);
+                                if (isDiscovered) {
+                                    button.className += ` discovered ${ending.type}`;
+                                    // 根据结局类型显示不同的图标
+                                    if (ending.type === 'success') {
+                                        button.textContent = '✓';
+                                    } else if (ending.type === 'failure') {
+                                        button.textContent = '✗';
+                                    } else if (ending.type === 'ascend') {
+                                        button.textContent = '👑';
+                                    }
+                                    
+                                    // 添加点击事件，显示结局详情
+                                    button.addEventListener('click', () => {
+                                        showEndingDetail(ending);
+                                    });
+                                } else {
+                                    button.textContent = '?';
+                                    // 未被发现的结局按钮不可点击
+                                    button.style.cursor = 'not-allowed';
+                                    button.style.opacity = '0.5';
+                                }
+                                
+                                container.appendChild(button);
+                            });
+                        }
+                    });
+                };
+            }
+
+            // 确保checkAllItemsCollected函数已定义
+            if (typeof checkAllItemsCollected === 'undefined') {
+                window.checkAllItemsCollected = function() {
+                    // 获取所有物品
+                    const allItems = Object.keys(window.itemStories || {});
+                    
+                    // 获取已发现的物品
+                    const discoveredItems = JSON.parse(localStorage.getItem('qiyuanDiscoveredItems') || '[]');
+                    
+                    // 检查是否所有物品都已发现
+                    return discoveredItems.length === allItems.length;
+                };
+            }
+
+            // 确保Snowflake类已定义
+            if (typeof Snowflake === 'undefined') {
+                window.Snowflake = class {
+                    constructor(workerId = 0, datacenterId = 0) {
+                        this.workerId = workerId;
+                        this.datacenterId = datacenterId;
+                        this.sequence = 0;
+                        this.lastTimestamp = -1;
+                        
+                        // 移位偏移量定义
+                        this.timestampLeftShift = 22;
+                        this.datacenterIdShift = 17;
+                        this.workerIdShift = 12;
+                        
+                        // 最大值定义
+                        this.maxWorkerId = 31; // 4位workerId最大31
+                        this.maxDatacenterId = 31; // 5位datacenterId最大31
+                        this.sequenceMask = 4095; // 12位sequence最大4095
+                        
+                        // 起始时间戳（2024-01-01 00:00:00）
+                        this.epoch = 1704067200000;
+                    }
+                    
+                    nextId() {
+                        let timestamp = Date.now();
+                        
+                        // 如果当前时间小于上一次生成ID的时间戳，说明系统时钟回退过
+                        if (timestamp < this.lastTimestamp) {
+                            throw new Error(`Clock moved backwards. Refusing to generate id for ${this.lastTimestamp - timestamp} milliseconds`);
+                        }
+                        
+                        // 如果是同一时间生成的，则进行序列号自增
+                        if (this.lastTimestamp === timestamp) {
+                            this.sequence = (this.sequence + 1) & this.sequenceMask;
+                            
+                            // 同一时间的序列数已经达到最大
+                            if (this.sequence === 0) {
+                                // 阻塞到下一个毫秒，获得新的时间戳
+                                timestamp = this.tilNextMillis(this.lastTimestamp);
+                            }
+                        } else {
+                            // 时间戳改变，重置序列
+                            this.sequence = 0;
+                        }
+                        
+                        // 更新上次生成ID的时间戳
+                        this.lastTimestamp = timestamp;
+                        
+                        // 移位并通过或运算拼到一起组成64位ID
+                        return ((timestamp - this.epoch) << this.timestampLeftShift) |
+                               (this.datacenterId << this.datacenterIdShift) |
+                               (this.workerId << this.workerIdShift) |
+                               this.sequence;
+                    }
+                    
+                    tilNextMillis(lastTimestamp) {
+                        let timestamp = Date.now();
+                        while (timestamp <= lastTimestamp) {
+                            timestamp = Date.now();
+                        }
+                        return timestamp;
+                    }
+                };
+            }
+
+            // 确保generateSnowflakeIdWithDash函数已定义
+            if (typeof generateSnowflakeIdWithDash === 'undefined') {
+                window.generateSnowflakeIdWithDash = function() {
+                    try {
+                        const snowflake = new Snowflake();
+                        const id = snowflake.nextId().toString();
+                        // 确保ID至少有18位
+                        const paddedId = id.padStart(18, '0').slice(-18);
+                        // 每6位中间加一个-
+                        const matched = paddedId.match(/.{1,6}/g);
+                        if (!matched) {
+                            return '000000-000000-000000';
+                        }
+                        return matched.join('-');
+                    } catch (error) {
+                        return '000000-000000-000000';
+                    }
+                };
+            }
+
+            // 确保showFullEncyclopediaAlert函数已定义
+            if (typeof showFullEncyclopediaAlert === 'undefined') {
+                window.showFullEncyclopediaAlert = function() {
+                    try {
+                        // 检查document对象是否存在
+                        if (typeof document === 'undefined') {
+                            return;
+                        }
+                        
+                        // 创建弹窗元素
+                        const dialogOverlay = document.createElement('div');
+                        
+                        dialogOverlay.style.cssText = `
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100vw;
+                            height: 100vh;
+                            background: rgba(0, 0, 0, 0.8);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 10000;
+                            font-family: 'Microsoft YaHei', 'SimHei', Arial, sans-serif;
+                        `;
+                        
+                        const dialogContent = document.createElement('div');
+                        
+                        dialogContent.style.cssText = `
+                            background: white;
+                            padding: 30px;
+                            border-radius: 15px;
+                            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                            text-align: center;
+                            max-width: 500px;
+                            width: 90%;
+                        `;
+                        
+                        const dialogTitle = document.createElement('h2');
+                        dialogTitle.textContent = '恭喜你收集到全图鉴了！';
+                        dialogTitle.style.cssText = `
+                            color: #667eea;
+                            margin-top: 0;
+                            margin-bottom: 15px;
+                            font-size: 24px;
+                        `;
+                        
+                        const showoffText = document.createElement('p');
+                        showoffText.textContent = '快去和大家炫耀一下吧！';
+                        showoffText.style.cssText = `
+                            color: #666;
+                            margin-bottom: 15px;
+                            font-size: 14px;
+                        `;
+                        
+                        const idText = document.createElement('p');
+                        idText.textContent = '这是你的定制编号：';
+                        idText.style.cssText = `
+                            color: #666;
+                            margin-bottom: 15px;
+                            font-size: 14px;
+                        `;
+                        
+                        const idDiv = document.createElement('div');
+                        
+                        // 生成雪花ID
+                        try {
+                            const snowflakeId = generateSnowflakeIdWithDash();
+                            idDiv.textContent = snowflakeId;
+                        } catch (e) {
+                            idDiv.textContent = '000000-000000-000000';
+                        }
+                        
+                        idDiv.style.cssText = `
+                            font-size: 20px;
+                            font-weight: bold;
+                            color: #667eea;
+                            background: #f0f4ff;
+                            padding: 15px;
+                            border-radius: 8px;
+                            margin: 20px 0;
+                            letter-spacing: 1px;
+                        `;
+                        
+                        const closeButton = document.createElement('button');
+                        closeButton.textContent = '确定';
+                        closeButton.style.cssText = `
+                            padding: 12px 30px;
+                            font-size: 16px;
+                            background: #667eea;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            transition: background 0.3s;
+                        `;
+                        
+                        // 添加事件监听器
+                        closeButton.addEventListener('mouseover', function() {
+                            this.style.background = '#5568d3';
+                        });
+                        
+                        closeButton.addEventListener('mouseout', function() {
+                            this.style.background = '#667eea';
+                        });
+                        
+                        closeButton.addEventListener('click', function() {
+                            try {
+                                document.body.removeChild(dialogOverlay);
+                            } catch (e) {
+                                // 忽略移除时的错误
+                            }
+                        });
+                        
+                        // 组装弹窗
+                        dialogContent.appendChild(dialogTitle);
+                        dialogContent.appendChild(showoffText);
+                        dialogContent.appendChild(idText);
+                        dialogContent.appendChild(idDiv);
+                        dialogContent.appendChild(closeButton);
+                        dialogOverlay.appendChild(dialogContent);
+                        
+                        // 添加到页面
+                        if (document.body) {
+                            document.body.appendChild(dialogOverlay);
+                        }
+                    } catch (error) {
+                        // 静默处理错误
+                    }
+                };
+            }
+
+            // 确保showEncyclopedia函数已定义
+            if (typeof showEncyclopedia === 'undefined') {
+                window.showEncyclopedia = function() {
+                    try {
+                        // 检查是否集齐全图鉴
+                        const allItemsCollected = checkAllItemsCollected();
+                        
+                        if (allItemsCollected) {
+                            // 显示全图鉴收集弹窗
+                            showFullEncyclopediaAlert();
+                        }
+                        
+                        // 显示图鉴模态框
+                        const modal = document.getElementById('encyclopediaModal');
+                        if (modal) {
+                            modal.style.display = 'block';
+                        }
+                        
+                        // 生成物品栏和结局栏
+                        generateItemsGrid();
+                        generateEndingsGrid();
+                    } catch (error) {
+                        // 即使出错也要尝试显示模态框
+                        const modal = document.getElementById('encyclopediaModal');
+                        if (modal) {
+                            modal.style.display = 'block';
+                        }
+                    }
+                };
+            }
             
-            titleElement.textContent = ending.title;
-            contentElement.textContent = ending.content;
-            modal.style.display = 'block';
+
         }
-        
-        // 关闭结局详情
-        function closeEndingDetail() {
-            const modal = document.getElementById('endingDetailModal');
-            modal.style.display = 'none';
-        }
-        
-        // 记录发现的结局 - 这个函数已被settlement.js中的函数替代
-        // function recordDiscoveredEnding(endingId) {
-        //     const discoveredEndings = JSON.parse(localStorage.getItem('qiyuanDiscoveredEndings') || '[]');
-        //     if (!discoveredEndings.includes(endingId)) {
-        //         discoveredEndings.push(endingId);
-        //         localStorage.setItem('qiyuanDiscoveredEndings', JSON.stringify(discoveredEndings));
-        //     }
-        // }
+
+        // 页面加载时计算并显示结算结果
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const result = calculateSettlementResult(currentCharacter, from);
+                
+                // 更新页面内容
+                const html = `
+                    <div>
+                        <h1 class="result-title">${result.title}</h1>
+                        <div class="result-content">
+                            ${result.content.split('\n').map(line => `<p>${line}</p>`).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('dynamic-result-content').innerHTML = html;
+                
+                // 确保所有必要的函数都已定义
+                ensureFunctionsDefined();
+                
+                // 添加按钮事件
+                document.getElementById('restart-btn').addEventListener('click', function() {
+                    // 重置游戏状态
+                    localStorage.removeItem('qiyuanGameState');
+                    // 跳转到首页
+                    window.location.href = '../index.html';
+                });
+                
+                document.getElementById('contributors-btn').addEventListener('click', function() {
+                    showContributors();
+                });
+                
+                document.getElementById('encyclopedia-btn').addEventListener('click', function() {
+                    showEncyclopedia();
+                });
+                
+
+            } catch (error) {
+                // 即使出错也要确保按钮可以点击
+                ensureFunctionsDefined();
+                
+                // 添加按钮事件
+                const restartBtn = document.getElementById('restart-btn');
+                if (restartBtn) {
+                    restartBtn.addEventListener('click', function() {
+                        // 重置游戏状态
+                        localStorage.removeItem('qiyuanGameState');
+                        // 跳转到首页
+                        window.location.href = '../index.html';
+                    });
+                }
+                
+                const contributorsBtn = document.getElementById('contributors-btn');
+                if (contributorsBtn) {
+                    contributorsBtn.addEventListener('click', function() {
+                        showContributors();
+                    });
+                }
+                
+                const encyclopediaBtn = document.getElementById('encyclopedia-btn');
+                if (encyclopediaBtn) {
+                    encyclopediaBtn.addEventListener('click', function() {
+                        showEncyclopedia();
+                    });
+                }
+            }
+        });
         
         // 点击模态框外部关闭模态框
         window.onclick = function(event) {
@@ -1011,13 +1304,7 @@
             }
         }
         
-        // 清除localStorage中的结局数据（用于调试）
-        function clearEndings() {
-            localStorage.removeItem('qiyuanDiscoveredEndings');
-            console.log('已清除localStorage中的结局数据');
-            // 重新生成结局栏
-            generateEndingsGrid();
-        }
+
     </script>
 </body>
 </html>
