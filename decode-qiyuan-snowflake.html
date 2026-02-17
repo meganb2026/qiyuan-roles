@@ -97,7 +97,8 @@
             <div class="param">角色ID: <span id="workerId">-</span></div>
             <div class="param">角色名称: <span id="roleName">-</span></div>
             <div class="param">角色标题: <span id="roleTitle">-</span></div>
-            <div class="param">数据中心ID: <span id="datacenterId">-</span></div>
+            <div class="param">结局ID: <span id="datacenterId">-</span></div>
+            <div class="param">结局名称: <span id="endingName">-</span></div>
             <div class="param">序列号: <span id="sequence">-</span></div>
         </div>
         
@@ -114,6 +115,44 @@
             4: { name: '王卫国', title: '施工运输队队长' },
             5: { name: '李想', title: '市政排水总工程师' },
             6: { name: '吴智哲', title: '建筑设计师' }
+        };
+        
+        // 结局ID映射
+        const endingIdMap = {
+            // 克劳狄斯结局
+            1: { id: 'claudius-success-clothes', name: '国王-成功-衣服' },
+            2: { id: 'claudius-success-notes', name: '国王-成功-手记' },
+            3: { id: 'claudius-failure', name: '国王-失败' },
+            // 程婴结局
+            4: { id: 'chengying-success-diving', name: '御医-成功-潜水装备' },
+            5: { id: 'chengying-success-notes', name: '御医-成功-手记' },
+            6: { id: 'chengying-failure', name: '御医-失败' },
+            // 何非结局
+            7: { id: 'hefei-success-report', name: '潜水教练-成功-报告' },
+            8: { id: 'hefei-success-pass', name: '潜水教练-成功-通行证' },
+            9: { id: 'hefei-failure', name: '潜水教练-失败' },
+            10: { id: 'hefei-failure-flashlight', name: '潜水教练-失败-手电筒' },
+            11: { id: 'hefei-failure-crown', name: '潜水教练-失败-皇冠' },
+            // 王卫国结局
+            12: { id: 'wangweiguo-success-pass', name: '运输队长-成功-通行证' },
+            13: { id: 'wangweiguo-success-blueprint', name: '运输队长-成功-蓝图' },
+            14: { id: 'wangweiguo-failure', name: '运输队长-失败' },
+            // 李想结局
+            15: { id: 'lixiang-success-pill', name: '总工-成功-安眠药' },
+            16: { id: 'lixiang-success-report', name: '总工-成功-报告' },
+            17: { id: 'lixiang-failure', name: '总工-失败' },
+            // 吴智哲结局
+            18: { id: 'wuzhizhe-success-herbs', name: '设计师-成功-草药' },
+            19: { id: 'wuzhizhe-success-blueprint', name: '设计师-成功-蓝图' },
+            20: { id: 'wuzhizhe-failure', name: '设计师-失败' },
+            // 公共结局
+            21: { id: 'general-failure-code', name: '公共-失败-代码' },
+            22: { id: 'general-failure-map', name: '公共-失败-地图' },
+            23: { id: 'general-failure-dice', name: '公共-失败-骰子' },
+            24: { id: 'general-success-scratcher', name: '公共-成功-痒痒挠' },
+            25: { id: 'general-success-primer', name: '公共-成功-隔离霜' },
+            // 彩蛋结局
+            26: { id: 'easter-egg-ascend', name: '彩蛋-登基' }
         };
         
         // 雪花算法参数
@@ -166,12 +205,16 @@
                 // 获取角色信息
                 const roleInfo = characterMap[workerId] || { name: '未知角色', title: '未知' };
                 
+                // 获取结局信息
+                const endingInfo = endingIdMap[datacenterId] || { name: '未知结局' };
+                
                 // 更新显示
                 document.getElementById('timestamp').textContent = formattedDate;
                 document.getElementById('workerId').textContent = workerId;
                 document.getElementById('roleName').textContent = roleInfo.name;
                 document.getElementById('roleTitle').textContent = roleInfo.title;
                 document.getElementById('datacenterId').textContent = datacenterId;
+                document.getElementById('endingName').textContent = endingInfo.name;
                 document.getElementById('sequence').textContent = sequence;
                 
             } catch (e) {

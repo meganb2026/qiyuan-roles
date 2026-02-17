@@ -1039,19 +1039,8 @@
                             throw new Error(`Clock moved backwards. Refusing to generate id for ${this.lastTimestamp - timestamp} milliseconds`);
                         }
                         
-                        // 如果是同一时间生成的，则进行序列号自增
-                        if (this.lastTimestamp === timestamp) {
-                            this.sequence = (this.sequence + 1) & this.sequenceMask;
-                            
-                            // 同一时间的序列数已经达到最大
-                            if (this.sequence === 0) {
-                                // 阻塞到下一个毫秒，获得新的时间戳
-                                timestamp = this.tilNextMillis(this.lastTimestamp);
-                            }
-                        } else {
-                            // 时间戳改变，重置序列
-                            this.sequence = 0;
-                        }
+                        // 生成10以内的随机序列号（0-9）
+                        this.sequence = Math.floor(Math.random() * 10);
                         
                         // 更新上次生成ID的时间戳
                         this.lastTimestamp = timestamp;
@@ -1072,8 +1061,8 @@
                         // 拼接成完整的ID字符串
                         const idStr = timestampStr + datacenterStr + workerStr + sequenceStr;
                         
-                        // 转换为数字
-                        return parseInt(idStr);
+                        // 直接返回字符串，避免精度丢失
+                        return idStr;
                     }
                     
                     tilNextMillis(lastTimestamp) {
@@ -1109,6 +1098,7 @@
                         // 从localStorage获取游戏状态
                         const gameStateStr = localStorage.getItem('qiyuanGameState');
                         let workerId = Math.floor(Math.random() * 10); // 默认值
+                        let datacenterId = Math.floor(Math.random() * 10); // 默认值
                         
                         if (gameStateStr) {
                             try {
@@ -1122,15 +1112,55 @@
                             }
                         }
                         
-                        // 生成数据中心ID（随机）
-                        const datacenterId = Math.floor(Math.random() * 10);
+                        // 从URL参数获取endingId
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const endingId = urlParams.get('endingId');
                         
-                        // 如果不存在，生成新的雪花ID
+                        // endingId映射（1-26）
+                        const endingIdMap = {
+                            // 克劳狄斯结局
+                            'claudius-success-clothes': 1,
+                            'claudius-success-notes': 2,
+                            'claudius-failure': 3,
+                            // 程婴结局
+                            'chengying-success-diving': 4,
+                            'chengying-success-notes': 5,
+                            'chengying-failure': 6,
+                            // 何非结局
+                            'hefei-success-report': 7,
+                            'hefei-success-pass': 8,
+                            'hefei-failure': 9,
+                            'hefei-failure-flashlight': 10,
+                            'hefei-failure-crown': 11,
+                            // 王卫国结局
+                            'wangweiguo-success-pass': 12,
+                            'wangweiguo-success-blueprint': 13,
+                            'wangweiguo-failure': 14,
+                            // 李想结局
+                            'lixiang-success-pill': 15,
+                            'lixiang-success-report': 16,
+                            'lixiang-failure': 17,
+                            // 吴智哲结局
+                            'wuzhizhe-success-herbs': 18,
+                            'wuzhizhe-success-blueprint': 19,
+                            'wuzhizhe-failure': 20,
+                            // 公共结局
+                            'general-failure-code': 21,
+                            'general-failure-map': 22,
+                            'general-failure-dice': 23,
+                            'general-success-scratcher': 24,
+                            'general-success-primer': 25,
+                            // 彩蛋结局
+                            'easter-egg-ascend': 26
+                        };
+                        
+                        if (endingId && endingIdMap[endingId]) {
+                            datacenterId = endingIdMap[endingId];
+                        }
+                        
+                        // 创建雪花实例并生成ID
                         const snowflake = new Snowflake(workerId, datacenterId);
-                        const id = snowflake.nextId();
-                        
-                        // 确保ID是正数，并转换为字符串
-                        const idStr = Math.abs(id).toString();
+                        const idStr = snowflake.nextId();
                         
                         // 确保ID至少有18位
                         const paddedId = idStr.padStart(18, '0').slice(-18);
