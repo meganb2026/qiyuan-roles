@@ -68,9 +68,15 @@
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1rem;
             margin: 2rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .features {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
         }
 
         .feature {
@@ -88,13 +94,12 @@
 
         <div class="description">
             <p class="typewriter-text" data-text="伟大的丹麦王克劳狄斯正在修缮他的宫殿，如今距离预计交付仅剩3天，突发巨变"></p>
-            <p class="typewriter-text" data-text="请探寻真相，揭开谜团"></p>
+            <p style="margin: 0.5rem auto; width: fit-content; max-width: 100%; line-height: 1.4;">请探寻真相，揭开谜团</p>
         </div>
 
         <style>
             .typewriter-text {
                 overflow: hidden;
-                white-space: nowrap;
                 margin: 0.5rem auto;
                 letter-spacing: 0.05em;
                 border-right: 2px solid #ffd700;
@@ -102,11 +107,13 @@
                 animation-fill-mode: forwards;
                 animation-delay: var(--delay, 0s);
                 width: fit-content;
+                max-width: 100%;
+                line-height: 1.4;
             }
 
             @keyframes typing {
                 from { width: 0 }
-                to { width: fit-content }
+                to { width: 100% }
             }
 
             @keyframes blink-caret {
@@ -117,27 +124,26 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const typewriterTexts = document.querySelectorAll('.typewriter-text');
-                typewriterTexts.forEach((element, index) => {
-                    const text = element.getAttribute('data-text');
-                    element.textContent = '';
-                    element.style.setProperty('--delay', `${index * 4}s`);
+                const typewriterText = document.querySelector('.typewriter-text');
+                if (typewriterText) {
+                    const text = typewriterText.getAttribute('data-text');
+                    typewriterText.textContent = '';
                     
                     let i = 0;
                     const typingSpeed = 200;
                     
                     function type() {
                         if (i < text.length) {
-                            element.textContent += text.charAt(i);
+                            typewriterText.textContent += text.charAt(i);
                             i++;
                             setTimeout(type, typingSpeed);
                         } else {
-                            element.style.borderRight = 'none';
+                            typewriterText.style.borderRight = 'none';
                         }
                     }
                     
-                    setTimeout(type, index * 4000);
-                });
+                    type();
+                }
             });
         </script>
 
