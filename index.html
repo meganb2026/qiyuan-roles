@@ -93,8 +93,9 @@
         <p class="subtitle">奇迹元元的皇宫冒险 · 文字解密游戏</p>
 
         <div class="description">
-            <p class="typewriter-text" data-text="伟大的丹麦王克劳狄斯正在修缮他的宫殿，如今距离预计交付仅剩3天，突发巨变"></p>
-            <p style="margin: 0.5rem auto; width: fit-content; max-width: 100%; line-height: 1.4;">请探寻真相，揭开谜团</p>
+            <p class="typewriter-text" data-text="伟大的丹麦王克劳狄斯正在修缮他的宫殿"></p>
+            <p class="typewriter-text" data-text="如今距离预计交付仅剩3天，突发巨变"></p>
+            <!-- 第三行将在两行打字完成后动态添加 -->
         </div>
 
         <style>
@@ -103,47 +104,61 @@
                 margin: 0.5rem auto;
                 letter-spacing: 0.05em;
                 border-right: 2px solid #ffd700;
-                animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-                animation-fill-mode: forwards;
-                animation-delay: var(--delay, 0s);
                 width: fit-content;
                 max-width: 100%;
                 line-height: 1.4;
-            }
-
-            @keyframes typing {
-                from { width: 0 }
-                to { width: 100% }
-            }
-
-            @keyframes blink-caret {
-                from, to { border-color: transparent }
-                50% { border-color: #ffd700; }
+                min-height: 3em;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                white-space: normal;
             }
         </style>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const typewriterText = document.querySelector('.typewriter-text');
-                if (typewriterText) {
-                    const text = typewriterText.getAttribute('data-text');
-                    typewriterText.textContent = '';
+                const typewriterTexts = document.querySelectorAll('.typewriter-text');
+                const descriptionDiv = document.querySelector('.description');
+                let currentLine = 0;
+                
+                // 初始化所有打字文本
+                typewriterTexts.forEach(element => {
+                    element.textContent = '';
+                });
+                
+                function startTyping(lineIndex) {
+                    if (lineIndex >= typewriterTexts.length) {
+                        // 所有行打字完成后显示第三行
+                        if (descriptionDiv) {
+                            const thirdLine = document.createElement('p');
+                            thirdLine.textContent = '请探寻真相，揭开谜团';
+                            thirdLine.style.cssText = 'margin: 0.5rem auto; width: fit-content; max-width: 100%; line-height: 1.4;';
+                            descriptionDiv.appendChild(thirdLine);
+                        }
+                        return;
+                    }
                     
+                    const element = typewriterTexts[lineIndex];
+                    const text = element.getAttribute('data-text');
                     let i = 0;
                     const typingSpeed = 200;
                     
                     function type() {
                         if (i < text.length) {
-                            typewriterText.textContent += text.charAt(i);
+                            element.textContent += text.charAt(i);
                             i++;
                             setTimeout(type, typingSpeed);
                         } else {
-                            typewriterText.style.borderRight = 'none';
+                            element.style.borderRight = 'none';
+                            // 当前行完成后开始下一行
+                            startTyping(lineIndex + 1);
                         }
                     }
                     
                     type();
                 }
+                
+                // 开始第一行打字
+                startTyping(0);
             });
         </script>
 
