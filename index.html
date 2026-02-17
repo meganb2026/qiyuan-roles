@@ -103,7 +103,7 @@
                 overflow: hidden;
                 margin: 0.5rem auto;
                 letter-spacing: 0.05em;
-                border-right: 2px solid #ffd700;
+                border-right: none;
                 width: fit-content;
                 max-width: 100%;
                 line-height: 1.4;
@@ -111,6 +111,10 @@
                 word-wrap: break-word;
                 overflow-wrap: break-word;
                 white-space: normal;
+            }
+            
+            .typewriter-text.typing {
+                border-right: 2px solid #ffd700;
             }
         </style>
 
@@ -142,13 +146,17 @@
                     let i = 0;
                     const typingSpeed = 200;
                     
+                    // 添加typing类以显示光标
+                    element.classList.add('typing');
+                    
                     function type() {
                         if (i < text.length) {
                             element.textContent += text.charAt(i);
                             i++;
                             setTimeout(type, typingSpeed);
                         } else {
-                            element.style.borderRight = 'none';
+                            // 移除typing类以隐藏光标
+                            element.classList.remove('typing');
                             // 当前行完成后开始下一行
                             startTyping(lineIndex + 1);
                         }
