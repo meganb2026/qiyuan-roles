@@ -87,9 +87,59 @@
         <p class="subtitle">奇迹元元的皇宫冒险 · 文字解密游戏</p>
 
         <div class="description">
-            <p>伟大的丹麦王克劳狄斯正在修缮他的宫殿，如今距离预计交付仅剩3天，突发巨变</p>
-            <p>请探寻真相，揭开谜团</p>
+            <p class="typewriter-text" data-text="伟大的丹麦王克劳狄斯正在修缮他的宫殿，如今距离预计交付仅剩3天，突发巨变"></p>
+            <p class="typewriter-text" data-text="请探寻真相，揭开谜团"></p>
         </div>
+
+        <style>
+            .typewriter-text {
+                overflow: hidden;
+                white-space: nowrap;
+                margin: 0.5rem auto;
+                letter-spacing: 0.05em;
+                border-right: 2px solid #ffd700;
+                animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+                animation-fill-mode: forwards;
+                animation-delay: var(--delay, 0s);
+                width: fit-content;
+            }
+
+            @keyframes typing {
+                from { width: 0 }
+                to { width: fit-content }
+            }
+
+            @keyframes blink-caret {
+                from, to { border-color: transparent }
+                50% { border-color: #ffd700; }
+            }
+        </style>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const typewriterTexts = document.querySelectorAll('.typewriter-text');
+                typewriterTexts.forEach((element, index) => {
+                    const text = element.getAttribute('data-text');
+                    element.textContent = '';
+                    element.style.setProperty('--delay', `${index * 4}s`);
+                    
+                    let i = 0;
+                    const typingSpeed = 200;
+                    
+                    function type() {
+                        if (i < text.length) {
+                            element.textContent += text.charAt(i);
+                            i++;
+                            setTimeout(type, typingSpeed);
+                        } else {
+                            element.style.borderRight = 'none';
+                        }
+                    }
+                    
+                    setTimeout(type, index * 4000);
+                });
+            });
+        </script>
 
         <div class="features">
             <div class="feature">
