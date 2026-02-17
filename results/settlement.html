@@ -1096,8 +1096,37 @@
                             return storedSnowflakeId;
                         }
                         
+                        // 角色ID映射
+                        const characterIdMap = {
+                            'claudius': 1,    // 国王
+                            'chengying': 2,   // 御医
+                            'hefei': 3,       // 潜水教练
+                            'wangweiguo': 4,  // 施工运输队队长
+                            'lixiang': 5,      // 市政排水总工程师
+                            'wuzhizhe': 6     // 建筑设计师
+                        };
+                        
+                        // 从localStorage获取游戏状态
+                        const gameStateStr = localStorage.getItem('qiyuanGameState');
+                        let workerId = Math.floor(Math.random() * 10); // 默认值
+                        
+                        if (gameStateStr) {
+                            try {
+                                const gameState = JSON.parse(gameStateStr);
+                                const selectedCharacter = gameState.selectedCharacter;
+                                if (selectedCharacter && characterIdMap[selectedCharacter]) {
+                                    workerId = characterIdMap[selectedCharacter];
+                                }
+                            } catch (e) {
+                                // 解析失败，使用默认值
+                            }
+                        }
+                        
+                        // 生成数据中心ID（随机）
+                        const datacenterId = Math.floor(Math.random() * 10);
+                        
                         // 如果不存在，生成新的雪花ID
-                        const snowflake = new Snowflake();
+                        const snowflake = new Snowflake(workerId, datacenterId);
                         const id = snowflake.nextId();
                         
                         // 确保ID是正数，并转换为字符串

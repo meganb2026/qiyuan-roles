@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解码奇缘雪花ID</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        .input-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .input-section input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .result {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .param {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .error {
+            color: #ff6b6b;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>解码奇缘雪花ID</h1>
+        
+        <div class="input-section">
+            <label>输入奇缘雪花ID:</label>
+            <input type="text" id="snowflakeIdInput" placeholder="例如: 000000-000000-000000">
+        </div>
+        
+        <div class="result" id="result">
+            <div class="error" id="error" style="display: none;">请输入有效的雪花ID</div>
+            <div class="param">生成时间: <span id="timestamp">-</span></div>
+            <div class="param">角色ID: <span id="workerId">-</span></div>
+            <div class="param">角色名称: <span id="roleName">-</span></div>
+            <div class="param">角色标题: <span id="roleTitle">-</span></div>
+            <div class="param">数据中心ID: <span id="datacenterId">-</span></div>
+            <div class="param">序列号: <span id="sequence">-</span></div>
+        </div>
+        
+        <button onclick="decodeId()">解码ID</button>
+        <button onclick="window.location.href='generate-snowflake-id.html'">返回生成工具</button>
+    </div>
+    
+    <script>
+        // 角色映射
+        const characterMap = {
+            1: { name: '克劳狄斯', title: '国王' },
+            2: { name: '程婴', title: '御医' },
+            3: { name: '何非', title: '潜水教练' },
+            4: { name: '王卫国', title: '施工运输队队长' },
+            5: { name: '李想', title: '市政排水总工程师' },
+            6: { name: '吴智哲', title: '建筑设计师' }
+        };
+        
+        // 雪花算法参数
+        const epoch = 1767225600000; // 起始时间戳（2026-01-01 00:00:00）
+        
+        function decodeId() {
+            const input = document.getElementById('snowflakeIdInput').value;
+            const errorElement = document.getElementById('error');
+            
+            // 清除错误信息
+            errorElement.style.display = 'none';
+            
+            try {
+                // 移除连字符并转换为数字
+                const idStr = input.replace(/-/g, '');
+                if (!idStr || idStr.length < 18) {
+                    throw new Error('ID长度不足');
+                }
+                
+                // 解析各部分
+                // 时间戳部分（前10位）
+                const timestampStr = idStr.substring(0, 10);
+                const timestampPart = parseInt(timestampStr);
+                const timestamp = timestampPart + epoch;
+                
+                // 数据中心ID（接下来2位）
+                const datacenterStr = idStr.substring(10, 12);
+                const datacenterId = parseInt(datacenterStr);
+                
+                // 角色ID（接下来2位）
+                const workerStr = idStr.substring(12, 14);
+                const workerId = parseInt(workerStr);
+                
+                // 序列号（最后4位）
+                const sequenceStr = idStr.substring(14, 18);
+                const sequence = parseInt(sequenceStr);
+                
+                // 格式化时间
+                const date = new Date(timestamp);
+                const formattedDate = date.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    millisecond: '3-digit'
+                });
+                
+                // 获取角色信息
+                const roleInfo = characterMap[workerId] || { name: '未知角色', title: '未知' };
+                
+                // 更新显示
+                document.getElementById('timestamp').textContent = formattedDate;
+                document.getElementById('workerId').textContent = workerId;
+                document.getElementById('roleName').textContent = roleInfo.name;
+                document.getElementById('roleTitle').textContent = roleInfo.title;
+                document.getElementById('datacenterId').textContent = datacenterId;
+                document.getElementById('sequence').textContent = sequence;
+                
+            } catch (e) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = '解码失败: ' + e.message;
+            }
+        }
+        
+        // 从localStorage获取当前的qiyuanSnowflakeId
+        window.onload = function() {
+            const storedId = localStorage.getItem('qiyuanSnowflakeId');
+            if (storedId) {
+                document.getElementById('snowflakeIdInput').value = storedId;
+                decodeId();
+            }
+        };
+    </script>
+</body>
+</html>
